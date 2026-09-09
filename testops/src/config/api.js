@@ -1,4 +1,6 @@
 const getApiBaseUrl = () => {
+  // En démonstration, un backend simulé répond à la place du serveur (voir src/demo/).
+  if (import.meta.env.VITE_DEMO === '1') return import.meta.env.BASE_URL.replace(/\/$/, '');
   if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
     return `http://${window.location.hostname}:5001`;
   }

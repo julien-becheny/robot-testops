@@ -1,0 +1,417 @@
+{
+  "environments": {
+    "active": "saucedemo",
+    "environments": [
+      {
+        "base": "https://www.saucedemo.com",
+        "id": "saucedemo",
+        "label": "SauceDemo — démo publique",
+        "modules": ["saucedemo"],
+        "tier": "demo"
+      },
+      {
+        "base": "https://opensource-demo.orangehrmlive.com",
+        "id": "orangehrm",
+        "label": "OrangeHRM — démo publique",
+        "modules": ["orangehrm"],
+        "tier": "demo"
+      }
+    ]
+  },
+  "configVars": {
+    "API_ALLOWED_ORIGINS": ["http://localhost:3000", "http://127.0.0.1:3000"],
+    "API_HOST": "127.0.0.1",
+    "API_PORT": "5001",
+    "LOG_LEVEL": "INFO",
+    "RF_ANDROID_ACTIVITY": null,
+    "RF_ANDROID_APP": null,
+    "RF_ANDROID_PACKAGE": null,
+    "RF_APPIUM_URL": "http://127.0.0.1:4723",
+    "RF_BROWSER": "chromium",
+    "RF_ENVIRONMENT": "saucedemo",
+    "RF_EXECUTION_MODE": "standard",
+    "RF_IOS_BUNDLE_ID": null,
+    "RF_IOS_UDID": null,
+    "RF_MOBILE_PLATFORM": "Android",
+    "RF_SECRET_SAUCEDEMO": "********"
+  },
+  "gitInfo": {
+    "branch": "main"
+  },
+  "smokeSuite": {
+    "file": "00_smoke.robot",
+    "tests": ["Smoke — Open Browser And Verify Title", "Smoke — Login Page Elements Visible"]
+  },
+  "catalogue": {
+    "tags": [
+      {
+        "name": "saucedemo",
+        "count": 13
+      },
+      {
+        "name": "web",
+        "count": 13
+      },
+      {
+        "name": "module:saucedemo",
+        "count": 12
+      },
+      {
+        "name": "regression",
+        "count": 11
+      },
+      {
+        "name": "cart",
+        "count": 4
+      },
+      {
+        "name": "checkout",
+        "count": 3
+      },
+      {
+        "name": "feat:saucedemo.panier.ajout_article",
+        "count": 3
+      },
+      {
+        "name": "navigation",
+        "count": 3
+      },
+      {
+        "name": "add",
+        "count": 2
+      },
+      {
+        "name": "feat:saucedemo.commande.finalisation",
+        "count": 2
+      },
+      {
+        "name": "feat:saucedemo.connexion.formulaire",
+        "count": 2
+      },
+      {
+        "name": "sanity",
+        "count": 2
+      },
+      {
+        "name": "smoke",
+        "count": 2
+      },
+      {
+        "name": "achat",
+        "count": 1
+      },
+      {
+        "name": "e2e",
+        "count": 1
+      },
+      {
+        "name": "error",
+        "count": 1
+      },
+      {
+        "name": "feat:orangehrm.pim.creation_employe",
+        "count": 1
+      },
+      {
+        "name": "feat:saucedemo.catalogue.consultation_produit",
+        "count": 1
+      },
+      {
+        "name": "feat:saucedemo.commande.controle_saisie",
+        "count": 1
+      },
+      {
+        "name": "feat:saucedemo.commande.resume",
+        "count": 1
+      },
+      {
+        "name": "feat:saucedemo.connexion.identifiants_valides",
+        "count": 1
+      },
+      {
+        "name": "feat:saucedemo.navigation.menu_lateral",
+        "count": 1
+      },
+      {
+        "name": "feat:saucedemo.panier.consultation",
+        "count": 1
+      },
+      {
+        "name": "feat:saucedemo.panier.retrait_article",
+        "count": 1
+      },
+      {
+        "name": "login",
+        "count": 1
+      },
+      {
+        "name": "menu",
+        "count": 1
+      },
+      {
+        "name": "module:orangehrm",
+        "count": 1
+      },
+      {
+        "name": "multi_moteur",
+        "count": 1
+      },
+      {
+        "name": "orangehrm",
+        "count": 1
+      },
+      {
+        "name": "pim",
+        "count": 1
+      },
+      {
+        "name": "product",
+        "count": 1
+      },
+      {
+        "name": "remove",
+        "count": 1
+      },
+      {
+        "name": "summary",
+        "count": 1
+      },
+      {
+        "name": "view",
+        "count": 1
+      }
+    ],
+    "total_tags": 34,
+    "total_tests": 14
+  },
+  "tests": [
+    {
+      "file": "test_suites\\multi_moteur\\achat_saucedemo.robot",
+      "name": "Achat — Deux Articles Jusqu'à La Confirmation",
+      "tags": [
+        "achat",
+        "feat:saucedemo.commande.finalisation",
+        "feat:saucedemo.panier.ajout_article",
+        "multi_moteur",
+        "saucedemo"
+      ]
+    },
+    {
+      "file": "test_suites\\web\\orangehrm\\01_pim_employes.robot",
+      "name": "PIM — Create Employee",
+      "tags": [
+        "feat:orangehrm.pim.creation_employe",
+        "module:orangehrm",
+        "orangehrm",
+        "pim",
+        "regression",
+        "web"
+      ]
+    },
+    {
+      "file": "test_suites\\web\\saucedemo\\00_smoke.robot",
+      "name": "Smoke — Open Browser And Verify Title",
+      "tags": [
+        "feat:saucedemo.connexion.formulaire",
+        "module:saucedemo",
+        "sanity",
+        "saucedemo",
+        "smoke",
+        "web"
+      ]
+    },
+    {
+      "file": "test_suites\\web\\saucedemo\\00_smoke.robot",
+      "name": "Smoke — Login Page Elements Visible",
+      "tags": [
+        "feat:saucedemo.connexion.formulaire",
+        "module:saucedemo",
+        "sanity",
+        "saucedemo",
+        "smoke",
+        "web"
+      ]
+    },
+    {
+      "file": "test_suites\\web\\saucedemo\\01_navigation.robot",
+      "name": "Navigation — Login And Access Inventory",
+      "tags": [
+        "feat:saucedemo.connexion.identifiants_valides",
+        "login",
+        "module:saucedemo",
+        "navigation",
+        "regression",
+        "saucedemo",
+        "web"
+      ]
+    },
+    {
+      "file": "test_suites\\web\\saucedemo\\01_navigation.robot",
+      "name": "Navigation — Access Product Detail",
+      "tags": [
+        "feat:saucedemo.catalogue.consultation_produit",
+        "module:saucedemo",
+        "navigation",
+        "product",
+        "regression",
+        "saucedemo",
+        "web"
+      ]
+    },
+    {
+      "file": "test_suites\\web\\saucedemo\\01_navigation.robot",
+      "name": "Navigation — Sidebar Menu",
+      "tags": [
+        "feat:saucedemo.navigation.menu_lateral",
+        "menu",
+        "module:saucedemo",
+        "navigation",
+        "regression",
+        "saucedemo",
+        "web"
+      ]
+    },
+    {
+      "file": "test_suites\\web\\saucedemo\\02_cart.robot",
+      "name": "Cart — Add Single Item",
+      "tags": [
+        "add",
+        "cart",
+        "feat:saucedemo.panier.ajout_article",
+        "module:saucedemo",
+        "regression",
+        "saucedemo",
+        "web"
+      ]
+    },
+    {
+      "file": "test_suites\\web\\saucedemo\\02_cart.robot",
+      "name": "Cart — Add Multiple Items",
+      "tags": [
+        "add",
+        "cart",
+        "feat:saucedemo.panier.ajout_article",
+        "module:saucedemo",
+        "regression",
+        "saucedemo",
+        "web"
+      ]
+    },
+    {
+      "file": "test_suites\\web\\saucedemo\\02_cart.robot",
+      "name": "Cart — Remove Item",
+      "tags": [
+        "cart",
+        "feat:saucedemo.panier.retrait_article",
+        "module:saucedemo",
+        "regression",
+        "remove",
+        "saucedemo",
+        "web"
+      ]
+    },
+    {
+      "file": "test_suites\\web\\saucedemo\\02_cart.robot",
+      "name": "Cart — View Cart Page",
+      "tags": [
+        "cart",
+        "feat:saucedemo.panier.consultation",
+        "module:saucedemo",
+        "regression",
+        "saucedemo",
+        "view",
+        "web"
+      ]
+    },
+    {
+      "file": "test_suites\\web\\saucedemo\\03_checkout.robot",
+      "name": "Checkout — Complete Purchase",
+      "tags": [
+        "checkout",
+        "e2e",
+        "feat:saucedemo.commande.finalisation",
+        "module:saucedemo",
+        "regression",
+        "saucedemo",
+        "web"
+      ]
+    },
+    {
+      "file": "test_suites\\web\\saucedemo\\03_checkout.robot",
+      "name": "Checkout — Missing Information Error",
+      "tags": [
+        "checkout",
+        "error",
+        "feat:saucedemo.commande.controle_saisie",
+        "module:saucedemo",
+        "regression",
+        "saucedemo",
+        "web"
+      ]
+    },
+    {
+      "file": "test_suites\\web\\saucedemo\\03_checkout.robot",
+      "name": "Checkout — Verify Order Summary",
+      "tags": [
+        "checkout",
+        "feat:saucedemo.commande.resume",
+        "module:saucedemo",
+        "regression",
+        "saucedemo",
+        "summary",
+        "web"
+      ]
+    }
+  ],
+  "run": {
+    "suite": "00 Smoke",
+    "tests": [
+      {
+        "name": "Smoke — Open Browser And Verify Title",
+        "status": "PASS",
+        "elapsed": 9336,
+        "steps": [
+          {
+            "name": "Open SauceDemo",
+            "failed": false
+          },
+          {
+            "name": "Get Title",
+            "failed": false
+          },
+          {
+            "name": "Close Browser",
+            "failed": false
+          }
+        ]
+      },
+      {
+        "name": "Smoke — Login Page Elements Visible",
+        "status": "PASS",
+        "elapsed": 1753,
+        "steps": [
+          {
+            "name": "Open SauceDemo",
+            "failed": false
+          },
+          {
+            "name": "Get Element States",
+            "failed": false
+          },
+          {
+            "name": "Get Element States",
+            "failed": false
+          },
+          {
+            "name": "Get Element States",
+            "failed": false
+          },
+          {
+            "name": "Close Browser",
+            "failed": false
+          }
+        ]
+      }
+    ]
+  }
+}

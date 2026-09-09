@@ -1,0 +1,62 @@
+# Publie la démonstration sur GitHub Pages : le frontend construit en mode démo,
+# avec un backend simulé (src/demo/). Aucun test n'y est exécuté.
+name: Démonstration
+
+"on":
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Un seul déploiement à la fois ; les pushes rapprochés annulent le précédent.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Construire la démonstration
+    runs-on: ubuntu-latest
+    steps:
+      - name: Récupérer le dépôt
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Installer Node.js 22.12
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22.12.0"
+          cache: npm
+          cache-dependency-path: testops/package-lock.json
+
+      - name: Installer les dépendances
+        working-directory: testops
+        run: npm ci
+
+      - name: Construire en mode démonstration
+        working-directory: testops
+        env:
+          VITE_DEMO: "1"
+        run: npm run build
+
+      - name: Préparer l'artefact Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: testops/build
+
+  deploy:
+    name: Déployer
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Mettre en ligne
+        id: deployment
+        uses: actions/deploy-pages@v4

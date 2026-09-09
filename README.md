@@ -7,6 +7,10 @@ React, exécution Playwright via [Browser library](https://marketsquare.github.i
 Les suites livrées visent deux applications de démonstration publiques — **SauceDemo** et
 **OrangeHRM** — pour que le dépôt soit exécutable tel quel, sans configuration ni compte.
 
+**→ [Voir l'interface en ligne](https://julien-becheny.github.io/robot-testops/)** — un run
+réel y est rejoué (logs, étapes, verdict, rapport Robot Framework). Rien n'y est exécuté :
+le backend est simulé, les données viennent d'une exécution enregistrée.
+
 > Le code et la documentation sont en français, langue de travail du projet.
 
 ## Le problème qu'il résout
