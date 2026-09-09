@@ -1,0 +1,6 @@
+# Popup de confirmation, partagée par toutes les suppressions de l'application.
+TO_DIALOG:
+  CTN_DIALOG: ".orangehrm-dialog-popup"
+  LBL_QUESTION: ".orangehrm-dialog-popup p:text-is('Are you Sure?')"
+  BTN_CONFIRM_DELETE: ".orangehrm-dialog-popup button.oxd-button--label-danger"
+  BTN_CANCEL: ".orangehrm-dialog-popup button:text-is('No, Cancel')"

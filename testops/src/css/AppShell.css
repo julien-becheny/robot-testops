@@ -1,0 +1,230 @@
+/* ===== COQUILLE : barre haute pleine largeur + rail de navigation + contenu ===== */
+
+.shell {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  font-family: var(--font-ui);
+  background: linear-gradient(160deg, var(--bg-1) 0%, var(--bg-2) 100%);
+}
+
+.shell-body {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+
+.shell-main {
+  flex: 1;
+  min-width: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  text-align: left;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+}
+
+.shell-main::-webkit-scrollbar {
+  width: 8px;
+}
+
+.shell-main::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.16);
+  border-radius: 10px;
+}
+
+/* Page maintenue montee hors ecran : `hidden` doit pouvoir la masquer. */
+.shell-page {
+  height: 100%;
+}
+
+/* ── Rail ── */
+
+.shell-sidebar {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  width: 236px;
+  background: var(--chrome);
+  /* L'arête et l'ombre portent le contraste autant que l'écart de luminance. */
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 6px 0 18px rgba(0, 0, 0, 0.45);
+  z-index: 1;
+  transition: width 0.18s ease;
+}
+
+.shell.collapsed .shell-sidebar {
+  width: 60px;
+}
+
+.shell.collapsed .shell-nav-label,
+.shell.collapsed .shell-nav-section-label {
+  display: none;
+}
+
+.shell.collapsed .shell-nav-item,
+.shell.collapsed .shell-collapse {
+  justify-content: center;
+}
+
+.shell-nav-scroll {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 14px 10px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.14) transparent;
+}
+
+.shell-nav-section + .shell-nav-section {
+  margin-top: 18px;
+}
+
+.shell-nav-section-label {
+  display: block;
+  padding: 0 10px 6px;
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.34);
+}
+
+.shell-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 8px 10px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--muted);
+  font-family: inherit;
+  font-size: 0.86rem;
+  text-align: left;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.15s ease;
+}
+
+.shell-nav-item + .shell-nav-item {
+  margin-top: 2px;
+}
+
+.shell-nav-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+}
+
+.shell-nav-item.active {
+  background: rgba(255, 255, 255, 0.07);
+  color: #fff;
+  font-weight: 600;
+}
+
+/* Le liseré d'accent signe l'entrée courante sans ajouter de bordure au rail. */
+.shell-nav-item.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 6px;
+  bottom: 6px;
+  width: 3px;
+  border-radius: 3px;
+  background: var(--accent);
+}
+
+/* Rail : une seule couleur de signature pour toutes les icones. */
+.shell-nav-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  flex-shrink: 0;
+  color: var(--signature);
+  opacity: 0.82;
+  transition: opacity 0.15s ease;
+}
+
+.shell-nav-item:hover .shell-nav-icon,
+.shell-nav-item.active .shell-nav-icon {
+  opacity: 1;
+}
+
+.shell-nav-item.active .shell-nav-icon {
+  filter: drop-shadow(0 0 8px rgba(var(--signature-rgb), 0.45));
+}
+
+.shell-nav-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ── Pied : run en cours + repli ── */
+
+.shell-sidebar-footer {
+  padding: 10px;
+  border-top: 1px solid var(--card-line);
+}
+
+.shell-run-badge.live {
+  color: #fff;
+  background: rgba(var(--accent-rgb), 0.1);
+}
+
+.shell-run-badge .shell-nav-icon {
+  color: var(--accent);
+}
+
+.shell-run-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 0 var(--accent-glow);
+  animation: shell-pulse 1.6s infinite;
+}
+
+@keyframes shell-pulse {
+  70% {
+    box-shadow: 0 0 0 7px rgba(var(--accent-rgb), 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(var(--accent-rgb), 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shell-run-dot {
+    animation: none;
+  }
+}
+
+.shell-collapse {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  margin-top: 6px;
+  padding: 8px 10px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.4);
+  font-family: inherit;
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.shell-collapse:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+}
+
+.shell-collapse svg {
+  flex-shrink: 0;
+  width: 18px;
+}

@@ -1,0 +1,11 @@
+paths = ["test_suites"]
+
+[variables]
+# Adaptateur par defaut des suites multi-moteur, pour les lancements a la main et
+# l'analyse statique. En execution reelle, c'est services/execution/commands.py qui
+# injecte -v ACTIONS (Playwright par defaut, Appium pour un run sur appareil).
+ACTIONS = { expr = "str(Path.cwd() / 'libraries/resources/common/actions_playwright.resource')" }
+
+# Seuls erreurs et warnings font échouer la CI ; suggestions et infos restent affichées.
+[tool.robotcode-analyze.code]
+exit-code-mask = ["hint", "info"]

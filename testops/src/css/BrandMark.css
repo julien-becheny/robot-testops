@@ -1,0 +1,66 @@
+/* Marque TestOps : une planète magenta en orbite. `--mark` règle toute la taille. */
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
+}
+
+.brand-mark {
+  --mark: 34px;
+  position: relative;
+  width: var(--mark);
+  height: var(--mark);
+  flex-shrink: 0;
+}
+
+.brand-core {
+  position: absolute;
+  inset: 26%;
+  border-radius: 50%;
+  background: radial-gradient(circle at 34% 28%, #ff9ce9, var(--signature) 58%, #6b1a5e);
+  box-shadow: 0 0 14px rgba(var(--signature-rgb), 0.55);
+}
+
+.brand-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1px solid rgba(var(--signature-rgb), 0.35);
+  border-top-color: rgba(var(--signature-rgb), 0.95);
+  animation: brand-spin 3.4s linear infinite;
+}
+
+.brand-ring.slow {
+  inset: -15%;
+  animation-duration: 6s;
+  animation-direction: reverse;
+  border-color: rgba(255, 255, 255, 0.08);
+  border-bottom-color: rgba(var(--accent-rgb), 0.7);
+}
+
+@keyframes brand-spin {
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+.brand-word {
+  font-family: var(--font-ui);
+  font-size: 1.35rem;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  color: #fff;
+  white-space: nowrap;
+}
+
+.brand-word b {
+  font-weight: 600;
+  color: var(--signature);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brand-ring {
+    animation: none;
+  }
+}

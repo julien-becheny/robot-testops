@@ -1,0 +1,13 @@
+TO_INVENTORY:
+  LNK_PRODUCT_FIRST: ".inventory_item:first-child .inventory_item_name"
+  BTN_ADD_BACKPACK: "button#add-to-cart-sauce-labs-backpack"
+  BTN_ADD_BIKE_LIGHT: "button#add-to-cart-sauce-labs-bike-light"
+  BTN_ADD_BOLT_TSHIRT: "button#add-to-cart-sauce-labs-bolt-t-shirt"
+  BTN_REMOVE_BACKPACK: "button#remove-sauce-labs-backpack"
+  LBL_CART_BADGE: ".shopping_cart_badge"
+  LNK_CART: ".shopping_cart_link"
+  BTN_BURGER_MENU: "button#react-burger-menu-btn"
+  BTN_CLOSE_MENU: "button#react-burger-cross-btn"
+  LNK_SIDEBAR_INVENTORY: "a#inventory_sidebar_link"
+  LNK_SIDEBAR_ABOUT: "a#about_sidebar_link"
+  LNK_SIDEBAR_LOGOUT: "a#logout_sidebar_link"

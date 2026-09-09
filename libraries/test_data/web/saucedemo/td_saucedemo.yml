@@ -1,0 +1,10 @@
+TD_SAUCEDEMO:
+  CHECKOUT:
+    FIRST_NAME: "Jean"
+    LAST_NAME: "Dupont"
+    POSTAL_CODE: "75001"
+  EXPECTED:
+    TITLE: "Swag Labs"
+    PRODUCT_BACKPACK: "Sauce Labs Backpack"
+    ORDER_CONFIRMATION: "Thank you for your order!"
+    ERROR_FIRST_NAME: "First Name is required"

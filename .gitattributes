@@ -1,0 +1,5 @@
+# Fins de ligne.
+# Les scripts shell et les hooks git sont exécutés par bash (y compris macOS/Linux) :
+# ils doivent RESTER en LF. Un CRLF y provoque des erreurs "\r" à l'exécution.
+*.sh        text eol=lf
+tools/hooks/* text eol=lf

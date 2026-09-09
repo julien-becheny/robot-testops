@@ -1,0 +1,287 @@
+/* ===== ACCUEIL — les deux facons de lancer ===== */
+
+.home-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  font-family: var(--font-ui);
+  animation: home-rise 0.45s ease both;
+}
+
+.home-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  width: 100%;
+  max-width: 1060px;
+  margin: 0 auto;
+  /* `safe` protege du rognage en haut quand le contenu depasse ; sinon la regle
+     est ignoree et le contenu reste aligne en haut. */
+  justify-content: safe center;
+  padding: 24px 30px 48px;
+}
+
+/* ── Bandeau du direct ── */
+
+.home-live {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  margin-bottom: 22px;
+  padding: 14px 20px;
+  border: 1px solid rgba(var(--accent-rgb), 0.3);
+  border-radius: 14px;
+  background: rgba(var(--accent-rgb), 0.08);
+  color: #fff;
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.home-live:hover {
+  background: rgba(var(--accent-rgb), 0.14);
+  border-color: rgba(var(--accent-rgb), 0.5);
+}
+
+.home-live-dot {
+  width: 9px;
+  height: 9px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 0 var(--accent-glow);
+  animation: home-ping 1.7s infinite;
+}
+
+.home-live-text {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 2px;
+  font-size: 0.86rem;
+}
+
+.home-live-text span {
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.home-live-go {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--accent);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+/* ── Les deux blocs ── */
+
+.home-blocks {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+  gap: 22px;
+}
+
+.home-block {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 300px;
+  padding: 32px 32px 28px;
+  border: 1px solid transparent;
+  border-radius: 20px;
+  /* Bordure en degrade : le liseré prend la teinte du bloc en bas a droite. */
+  background:
+    linear-gradient(var(--bg-2), var(--bg-2)) padding-box,
+    linear-gradient(150deg, rgba(255, 255, 255, 0.18), transparent 38%, var(--tint) 118%) border-box;
+  box-shadow: 0 26px 60px -34px rgba(0, 0, 0, 0.95);
+  overflow: hidden;
+}
+
+/* Filet lumineux en tete du bloc. */
+.home-block::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 26px;
+  right: 26px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--tint), transparent);
+  opacity: 0.6;
+}
+
+/* Halo teinte, ancre au coin haut-gauche : donne sa matiere au bloc. */
+.home-block-halo {
+  position: absolute;
+  top: -190px;
+  left: -120px;
+  width: 440px;
+  height: 380px;
+  background: radial-gradient(ellipse at center, var(--tint), transparent 66%);
+  filter: blur(50px);
+  opacity: 0.42;
+  pointer-events: none;
+}
+
+.home-block-icon {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  margin-bottom: 16px;
+  border-radius: 15px;
+  color: var(--tint);
+  box-shadow:
+    0 14px 30px -12px currentColor,
+    inset 0 0 0 1px currentColor;
+}
+
+/* Voile a la teinte du bloc, sans avoir a declarer un rgba() par bloc. */
+.home-block-icon::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: currentColor;
+  opacity: 0.24;
+}
+
+.home-block-icon svg {
+  position: relative;
+}
+
+.home-block-title {
+  position: relative;
+  margin: 0 0 6px;
+  font-size: 1.22rem;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  color: #fff;
+}
+
+.home-block-desc {
+  position: relative;
+  margin: 0 0 14px;
+  font-size: 0.88rem;
+  line-height: 1.45;
+  color: var(--muted);
+}
+
+.home-block-meta {
+  position: relative;
+  margin: 0 0 16px;
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  color: rgba(255, 255, 255, 0.42);
+}
+
+/* Ce que le run va reellement jouer : la preuve avant le clic. */
+.home-block-list {
+  position: relative;
+  margin: 0 0 20px;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.home-block-list li {
+  position: relative;
+  padding-left: 16px;
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.home-block-list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 8px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--tint);
+}
+
+.home-block-list li.more {
+  color: var(--muted);
+  font-size: 0.76rem;
+}
+
+.home-chips {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.home-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 11px;
+  border: 1px solid var(--btn-line);
+  border-radius: 999px;
+  background: var(--btn);
+  color: rgba(255, 255, 255, 0.82);
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  cursor: pointer;
+  transition:
+    border-color 0.18s ease,
+    background 0.18s ease,
+    color 0.18s ease;
+}
+
+.home-chip span {
+  color: var(--muted);
+  font-size: 0.68rem;
+}
+
+.home-chip:hover {
+  border-color: var(--tint);
+  background: var(--card-hover);
+  color: #fff;
+}
+
+.home-block-actions {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: auto;
+}
+
+/* ── Animations ── */
+
+@keyframes home-rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+@keyframes home-ping {
+  70% {
+    box-shadow: 0 0 0 8px rgba(var(--accent-rgb), 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(var(--accent-rgb), 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-page,
+  .home-live-dot {
+    animation: none;
+  }
+}

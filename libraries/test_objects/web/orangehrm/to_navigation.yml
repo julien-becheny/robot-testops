@@ -1,0 +1,8 @@
+# Cadre de l'application : menu latéral et bandeau supérieur, présents sur tous les écrans.
+# Le menu est ciblé par son `href` et non par son libellé : le chemin d'un module survit
+# à une traduction de l'interface, pas son texte.
+TO_NAVIGATION:
+  LNK_MENU_PIM: "a.oxd-main-menu-item[href*='/pim/viewPimModule']"
+  LNK_MENU_DASHBOARD: "a.oxd-main-menu-item[href*='/dashboard/index']"
+  LBL_MODULE: "h6.oxd-topbar-header-breadcrumb-module"
+  BTN_USER_MENU: ".oxd-userdropdown-tab"

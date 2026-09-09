@@ -1,0 +1,34 @@
+# Configuration des outils qualité (garde-fou / audit).
+#
+# Ce fichier ne déclare NI [project] NI [build-system] : le dépôt n'est PAS un
+# package Python. Il ne sert qu'à configurer les outils de qualité (ruff...).
+# Ajouter ici une nouvelle config d'outil plutôt que de multiplier les fichiers.
+
+[tool.ruff]
+line-length = 120
+# Dossiers générés / hors périmètre Python.
+extend-exclude = ["env", "testops", "temp", "Output", ".git", "__pycache__"]
+
+[tool.ruff.lint]
+# E/F = pyflakes + pycodestyle (défaut) · I = ordre des imports (règle maison :
+# 3 groupes PEP8) · B = bugbear (vrais pièges) · UP = modernisation · SIM = simplifications.
+select = ["E", "F", "I", "B", "UP", "SIM"]
+# E402 : les points d'entrée montent sys.path AVANT les imports (volontaire).
+ignore = ["E402"]
+
+[tool.ruff.lint.isort]
+# Imports « projet » reconnus comme first-party (3e groupe PEP8).
+known-first-party = ["core", "services", "api", "robot_listeners", "libraries"]
+
+# --- Robocop (Robot Framework) ---------------------------------------------
+# Laissé en défaut volontairement (surface DOC01/SPC03/... en avertissement).
+[tool.robocop.lint]
+# VAR06 (no-test-variable) : porter une donnée du test à son teardown est le cas
+# légitime que la règle reconnaît elle-même, et Robot n'offre pas d'autre canal.
+ignore = ["VAR06"]
+
+[tool.robocop.format]
+space-count = 2
+indent = 2
+continuation-indent = 2
+select = ["NormalizeSeparators", "IndentNestedKeywords", "NormalizeNewLines"]

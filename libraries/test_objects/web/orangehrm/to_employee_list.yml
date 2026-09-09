@@ -1,0 +1,17 @@
+# Liste des employés (PIM).
+#
+# Le formulaire de recherche compte sept champs dont aucun ne porte d'`id`, de `name`
+# ni de `data-testid` : ils ne se distinguent que par leur libellé. D'où le passage par
+# le groupe de saisie (`.oxd-input-group`) filtré sur son `label`, seul repère stable.
+#
+# Les entrées `{id}` sont des gabarits : le matricule y est injecté par `Format String`.
+# Une ligne se désigne par son contenu, jamais par son rang — la liste est partagée et
+# son ordre change d'un run à l'autre.
+TO_EMPLOYEE_LIST:
+  FLD_EMPLOYEE_ID: ".oxd-input-group:has(label:text-is('Employee Id')) input"
+  BTN_SEARCH: "button:text-is('Search')"
+  BTN_RESET: "button:text-is('Reset')"
+  BTN_ADD: "button:text-is('Add')"
+  ROW_ANY: ".oxd-table-card"
+  ROW_BY_ID: ".oxd-table-card:has-text('{id}')"
+  BTN_DELETE_BY_ID: ".oxd-table-card:has-text('{id}') button:has(i.bi-trash)"

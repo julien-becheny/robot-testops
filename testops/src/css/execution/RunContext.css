@@ -1,0 +1,42 @@
+/* Contexte figé d'un run, dans l'en-tête de son panneau de session. */
+
+.run-context {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  min-width: 0;
+}
+
+.run-context-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.82);
+  white-space: nowrap;
+}
+
+.run-context-item + .run-context-item {
+  padding-left: 14px;
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.run-context-item svg {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.run-context-planet {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 34% 28%, #ff9ce9, var(--signature) 60%, #6b1a5e);
+  box-shadow: 0 0 8px rgba(var(--signature-rgb), 0.6);
+}
+
+.run-context-fallback {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #e6e9ef;
+}

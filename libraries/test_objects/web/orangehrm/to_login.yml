@@ -1,0 +1,5 @@
+TO_LOGIN:
+  FLD_USERNAME: "input[name='username']"
+  FLD_PASSWORD: "input[name='password']"
+  BTN_LOGIN: "button.orangehrm-login-button"
+  LBL_TITLE: "h5:text-is('Login')"

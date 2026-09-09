@@ -1,0 +1,364 @@
+/* Header : une seule ligne. Tout le contexte d'un run tient derrière un déclencheur. */
+
+.header {
+  width: 100%;
+  position: relative;
+  z-index: 2;
+  background-color: var(--chrome);
+  color: white;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
+}
+
+.header-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 10px 24px;
+}
+
+/* Le code de test joué par les runs, dans la teinte de l'exécution par tags. */
+.header-branch {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+  color: #38bdf8;
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+/* ── Déclencheur ── */
+
+.ctx-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.88);
+  font-family: var(--font-ui);
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.ctx-trigger:hover:not(:disabled),
+.ctx-trigger.open {
+  border-color: rgba(var(--signature-rgb), 0.5);
+  background: rgba(var(--signature-rgb), 0.08);
+}
+
+.ctx-trigger.idle {
+  cursor: default;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.ctx-trigger-env {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.ctx-trigger-sep {
+  width: 1px;
+  height: 16px;
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.ctx-trigger-icons {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.ctx-trigger-count {
+  padding: 1px 8px;
+  border-radius: 10px;
+  background: rgba(var(--signature-rgb), 0.18);
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 600;
+}
+
+.ctx-trigger-caret {
+  color: rgba(255, 255, 255, 0.45);
+  transition: transform 0.18s ease;
+}
+
+.ctx-trigger.open .ctx-trigger-caret {
+  transform: rotate(180deg);
+}
+
+/* La planète prend la teinte de l'installation : viser la production doit se voir. */
+.ctx-planet {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: radial-gradient(circle at 34% 28%, #ff9ce9, var(--signature) 60%, #6b1a5e);
+  box-shadow: 0 0 8px rgba(var(--signature-rgb), 0.6);
+}
+
+.tier-prod .ctx-planet {
+  background: radial-gradient(circle at 34% 28%, #ffc2ca, #fb7185 60%, #7d2233);
+  box-shadow: 0 0 8px rgba(251, 113, 133, 0.7);
+}
+
+.tier-preprod .ctx-planet {
+  background: radial-gradient(circle at 34% 28%, #fde3a7, #fbbf24 60%, #7a5a06);
+  box-shadow: 0 0 8px rgba(251, 191, 36, 0.6);
+}
+
+.ctx-trigger.tier-prod {
+  border-color: rgba(251, 113, 133, 0.55);
+  background: rgba(251, 113, 133, 0.12);
+  color: #fda4af;
+}
+
+.ctx-trigger.tier-preprod {
+  border-color: rgba(251, 191, 36, 0.45);
+  background: rgba(251, 191, 36, 0.1);
+  color: #fcd34d;
+}
+
+/* ── Panneau ── */
+
+.ctx-panel {
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.ctx-columns {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 24px;
+  padding: 18px 24px;
+}
+
+.ctx-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.38);
+}
+
+.ctx-all {
+  border: none;
+  background: none;
+  padding: 0;
+  color: rgba(var(--signature-rgb), 0.75);
+  font-family: inherit;
+  font-size: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  cursor: pointer;
+}
+
+.ctx-all:hover {
+  color: var(--signature);
+}
+
+.ctx-choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.ctx-choice {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  width: 84px;
+  padding: 12px 6px;
+  border-radius: 10px;
+  border: 1px solid var(--btn-line);
+  background: var(--btn);
+  color: rgba(255, 255, 255, 0.6);
+  font-family: var(--font-ui);
+  font-size: 0.76rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.ctx-choice.wide {
+  flex-direction: row;
+  justify-content: flex-start;
+  gap: 9px;
+  width: 100%;
+  padding: 11px 14px;
+}
+
+.ctx-choice:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #fff;
+}
+
+.ctx-choice.active {
+  border-color: rgba(var(--signature-rgb), 0.55);
+  background: rgba(var(--signature-rgb), 0.12);
+  color: #fff;
+}
+
+.ctx-choice.active.tier-prod {
+  border-color: rgba(251, 113, 133, 0.6);
+  background: rgba(251, 113, 133, 0.14);
+}
+
+.ctx-choice.active.tier-preprod {
+  border-color: rgba(251, 191, 36, 0.5);
+  background: rgba(251, 191, 36, 0.12);
+}
+
+.ctx-choice-hint {
+  font-style: normal;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  color: rgba(255, 255, 255, 0.32);
+}
+
+/* ── Options ── */
+
+.ctx-options {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 32px;
+  padding: 16px 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.ctx-presets {
+  display: flex;
+  gap: 5px;
+}
+
+.ctx-preset {
+  padding: 4px 11px;
+  border-radius: 7px;
+  border: 1px solid var(--btn-line);
+  background: var(--btn);
+  color: rgba(255, 255, 255, 0.55);
+  font-family: var(--font-ui);
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.ctx-preset:hover {
+  color: #fff;
+}
+
+.ctx-preset.active {
+  border-color: rgba(var(--signature-rgb), 0.55);
+  background: rgba(var(--signature-rgb), 0.14);
+  color: #fff;
+}
+
+.ctx-badge {
+  padding: 2px 7px;
+  border-radius: 10px;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+.ctx-badge.ok {
+  color: #66bb6a;
+  background: rgba(76, 175, 80, 0.12);
+  border: 1px solid rgba(76, 175, 80, 0.3);
+}
+
+.ctx-badge.ko {
+  color: #ffb74d;
+  background: rgba(255, 152, 0, 0.12);
+  border: 1px solid rgba(255, 152, 0, 0.3);
+}
+
+.ctx-checks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  margin-bottom: 8px;
+}
+
+.ctx-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.74rem;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.ctx-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.ctx-dot.ok {
+  background: #4caf50;
+}
+
+.ctx-dot.ko {
+  background: #ff9800;
+}
+
+.ctx-dot.na {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.ctx-appium {
+  padding: 5px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(var(--signature-rgb), 0.4);
+  background: rgba(var(--signature-rgb), 0.1);
+  color: var(--signature);
+  font-family: inherit;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.ctx-appium:hover:not(:disabled) {
+  background: rgba(var(--signature-rgb), 0.18);
+}
+
+.ctx-appium:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.ctx-hint {
+  font-size: 0.74rem;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.ctx-foot {
+  padding: 9px 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.02);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.38);
+}
+
+@media (max-width: 860px) {
+  .header-bar {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+}

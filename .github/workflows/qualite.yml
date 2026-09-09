@@ -1,0 +1,54 @@
+# Vérifications du dépôt sur une machine GitHub temporaire, détruite en fin de job.
+# Aucun déploiement, aucun test navigateur, aucun secret.
+name: Qualité
+
+"on":
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    name: Contrôles qualité
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Récupérer le dépôt
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Installer Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: |
+            pip_requirements.txt
+            pip_requirements-dev.txt
+
+      - name: Installer Node.js 22.12
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22.12.0"
+          cache: npm
+          cache-dependency-path: testops/package-lock.json
+
+      - name: Installer les dépendances Python
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r pip_requirements.txt -r pip_requirements-dev.txt
+
+      # Reproduit strictement package-lock.json : ni npm install, ni --legacy-peer-deps.
+      - name: Installer les dépendances frontend
+        working-directory: testops
+        run: npm ci
+
+      # Un seul point d'entrée, identique en local : la CI et le poste ne peuvent pas diverger.
+      - name: Contrôles qualité
+        run: python tools/ci_local.py

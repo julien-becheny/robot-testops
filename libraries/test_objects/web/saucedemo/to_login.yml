@@ -1,0 +1,6 @@
+TO_LOGIN:
+  FLD_USERNAME: "input#user-name"
+  FLD_PASSWORD: "input#password"
+  BTN_LOGIN: "input#login-button"
+  MSG_ERROR: "h3[data-test='error']"
+  CTN_ERROR: ".error-message-container"

@@ -1,0 +1,8 @@
+# Formulaire de création d'un employé (PIM > Add Employee).
+TO_ADD_EMPLOYEE:
+  FLD_FIRST_NAME: "input[name='firstName']"
+  FLD_MIDDLE_NAME: "input[name='middleName']"
+  FLD_LAST_NAME: "input[name='lastName']"
+  FLD_EMPLOYEE_ID: ".oxd-input-group:has(label:text-is('Employee Id')) input"
+  BTN_SAVE: "button[type='submit']"
+  LBL_TITLE: "h6.orangehrm-main-title:text-is('Add Employee')"

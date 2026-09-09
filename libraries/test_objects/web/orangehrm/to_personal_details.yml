@@ -1,0 +1,8 @@
+# Fiche d'un employé, onglet « Personal Details » — écran d'arrivée après création.
+#
+# Trois titres partagent la classe `orangehrm-main-title` sur cet écran (Personal Details,
+# Custom Fields, Attachments) : le filtre sur le texte exact est ce qui rend le repère unique.
+TO_PERSONAL_DETAILS:
+  LBL_TITLE: "h6.orangehrm-main-title:text-is('Personal Details')"
+  FLD_FIRST_NAME: "input[name='firstName']"
+  FLD_LAST_NAME: "input[name='lastName']"

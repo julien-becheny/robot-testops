@@ -1,0 +1,4 @@
+TO_CART:
+  CTN_CART_ITEM: ".cart_item"
+  LBL_ITEM_NAME: ".inventory_item_name"
+  BTN_CHECKOUT: "button#checkout"

@@ -1,0 +1,139 @@
+.config-page {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.config-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.config-header h2 {
+  color: #fff;
+  font-size: 1.5rem;
+}
+
+.config-table {
+  background: #1a1a2e;
+  border: 1px solid #2a2a4a;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.config-row {
+  display: grid;
+  grid-template-columns: 200px 1fr 80px;
+  align-items: center;
+  padding: 0.8rem 1.2rem;
+  border-bottom: 1px solid #1f1f35;
+}
+
+.config-row:last-child {
+  border-bottom: none;
+}
+
+.config-row.header-row {
+  background: #0f0f1a;
+  font-weight: 600;
+  color: #888;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.config-key {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--accent);
+}
+
+.config-value {
+  color: #ccc;
+  font-size: 0.9rem;
+}
+
+.config-value.editing {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.config-value.editing input {
+  background: #0f0f1a;
+  border: 1px solid rgba(var(--accent-rgb), 0.5);
+  color: #fff;
+  padding: 0.4rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  flex: 1;
+}
+
+.config-action {
+  display: flex;
+  justify-content: center;
+  gap: 0.25rem;
+}
+
+.edit-btn,
+.save-btn,
+.cancel-btn,
+.clear-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 0.3rem;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.edit-btn:hover {
+  background: #2a2a4a;
+}
+
+.save-btn:hover {
+  background: rgba(var(--accent-rgb), 0.13);
+}
+
+.save-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.35;
+}
+
+.cancel-btn {
+  color: #888;
+}
+
+.cancel-btn:hover {
+  background: #cc333320;
+  color: #cc3333;
+}
+
+.clear-btn {
+  color: #cc7777;
+  display: inline-flex;
+  align-items: center;
+}
+
+.clear-btn:hover {
+  background: #cc333320;
+  color: #ff7777;
+}
+
+.back-btn {
+  background: #2a2a4a;
+  border: 1px solid #3a3a5a;
+  color: #ccc;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+}
+
+.back-btn:hover {
+  background: #3a3a5a;
+  color: #fff;
+}

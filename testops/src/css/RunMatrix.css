@@ -1,0 +1,104 @@
+.run-matrix {
+  background: var(--card);
+  border: 1px solid var(--card-line);
+  border-radius: 12px;
+  padding: 18px 20px;
+  margin-bottom: 18px;
+  font-family: var(--font-ui);
+}
+
+.run-matrix-head h2 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+.run-matrix-head p {
+  margin: 6px 0 14px;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: var(--muted);
+  max-width: 68ch;
+}
+
+.run-matrix-empty {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.run-matrix table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.run-matrix th,
+.run-matrix td {
+  padding: 7px 10px;
+  border-bottom: 1px solid var(--card-line);
+  text-align: left;
+  font-size: 0.82rem;
+}
+
+.run-matrix thead th {
+  color: var(--muted);
+  font-weight: 500;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.run-matrix thead th:not(:first-child),
+.run-matrix tbody td {
+  text-align: center;
+  width: 9rem;
+}
+
+.run-matrix tbody th {
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.86);
+}
+
+/* Le motif que la grille sert à voir : les configurations ne sont pas d'accord. */
+.run-matrix tr.diverging th[scope='row'] {
+  color: #fff;
+  font-weight: 600;
+  box-shadow: inset 3px 0 0 var(--signature);
+}
+
+.run-matrix td svg {
+  vertical-align: middle;
+}
+
+.run-matrix td.pass {
+  color: #4ade80;
+}
+
+.run-matrix td.fail {
+  color: #fb7185;
+  background: rgba(251, 113, 133, 0.09);
+}
+
+.run-matrix td.skip {
+  color: #fbbf24;
+}
+
+.run-matrix td.absent,
+.run-matrix td.pending {
+  color: rgba(255, 255, 255, 0.28);
+}
+
+.run-matrix td.pending::after {
+  content: '·';
+}
+
+.run-matrix-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}

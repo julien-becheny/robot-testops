@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+*.py[cod]
+.ruff_cache/
+*.egg-info/
+dist/
+build/
+.eggs/
+*.egg
+env/
+venv/
+.venv/
+
+# Node
+node_modules/
+testops/build/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Config (contient des credentials)
+config/variables_config.json
+
+# Output
+Output/
+results/
+temp/
+*.log
+
+# OS
+.DS_Store
+Thumbs.db

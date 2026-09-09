@@ -1,0 +1,61 @@
+# Référentiel des environnements cibles — SOURCE UNIQUE des URLs.
+#
+# Deux dimensions, volontairement séparées :
+#   - l'ENVIRONNEMENT est choisi au lancement (TestOps) → il fixe le host ;
+#   - le MODULE est déclaré par le test lui-même → il fixe le chemin.
+# L'URL finale est résolue à l'exécution. Un run filtré par tags peut donc
+# traverser plusieurs modules, chacun tapant sa propre URL.
+#
+# base     : host de l'installation. C'est ce qui change d'un environnement à l'autre.
+# tier     : niveau de l'installation (demo, recette, preprod, prod). Il ne change rien
+#            à l'exécution : TestOps colore l'interface et fait confirmer un lancement
+#            sur `prod`. Non renseigné = `demo`, donc aucune protection : déclarez-le.
+# modules  : chemin de chaque module, relatif à `base`. Une URL absolue (https://…)
+#            remplace la base : pour un module hébergé ailleurs (brique tierce SIG, BIM…).
+# accounts : comptes disponibles. `password_ref` désigne la clé du mot de passe dans
+#            config/variables_config.json (RF_SECRET_<ref>), qui n'est pas versionné.
+#
+# ⚠ Ce fichier EST versionné : il ne doit contenir AUCUN mot de passe.
+
+saucedemo:
+  label: SauceDemo — démo publique
+  base: https://www.saucedemo.com
+  tier: demo
+  modules:
+    saucedemo: /
+  accounts:
+    STANDARD:
+      username: standard_user
+      password_ref: SAUCEDEMO  # pragma: allowlist secret
+    LOCKED:
+      username: locked_out_user
+      password_ref: SAUCEDEMO  # pragma: allowlist secret
+    PROBLEM:
+      username: problem_user
+      password_ref: SAUCEDEMO  # pragma: allowlist secret
+
+orangehrm:
+  label: OrangeHRM — démo publique
+  base: https://opensource-demo.orangehrmlive.com
+  tier: demo
+  modules:
+    orangehrm: /web/index.php/auth/login
+  accounts:
+    ADMIN:
+      username: Admin
+      password_ref: ORANGEHRM  # pragma: allowlist secret
+
+# Gabarit pour une application multi-modules — à adapter, puis décommenter :
+#
+# recette:
+#   label: Recette
+#   base: https://recette.exemple.fr/app
+#   tier: recette
+#   modules:
+#     clients: /clients
+#     facturation: /facturation
+#     reporting: https://bi-recette.exemple.fr/reporting   # host propre → URL absolue
+#   accounts:
+#     STANDARD:
+#       username: agent_test
+#       password_ref: RECETTE_AGENT

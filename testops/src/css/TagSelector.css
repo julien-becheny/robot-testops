@@ -1,0 +1,675 @@
+.tag-selection-page {
+  min-height: 100%;
+  background: transparent;
+  font-family: var(--font-ui);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ===== HÉROS : le chiffre, le contexte, l'action ===== */
+.tag-hero {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 24px;
+  padding: 4px 2px 22px;
+  border-bottom: 1px solid var(--card-line);
+}
+
+.tag-hero-eyebrow {
+  margin: 0 0 10px;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.tag-hero-count {
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin: 0;
+}
+
+/* Voile de signature : ce chiffre est la seule information decisive de la page. */
+.tag-hero-count::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: -20px;
+  width: 150px;
+  height: 92px;
+  transform: translateY(-50%);
+  background: radial-gradient(ellipse at center, rgba(var(--signature-rgb), 0.22), transparent 68%);
+  filter: blur(30px);
+  pointer-events: none;
+}
+
+.tag-hero-figure {
+  position: relative;
+  font-family: var(--font-mono);
+  font-size: 3.4rem;
+  font-weight: 400;
+  line-height: 1;
+  color: var(--signature);
+}
+
+.tag-hero-label {
+  position: relative;
+  max-width: 240px;
+  font-size: 0.92rem;
+  line-height: 1.35;
+  text-wrap: balance;
+  color: var(--muted);
+}
+
+.tag-hero-run {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+/* Conteneur principal : plus de cadre, le contenu porte seul la hierarchie. */
+.tag-body {
+  width: 90%;
+  max-width: 1400px;
+  margin: 22px auto 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+/* Conteneur de panneaux : inclure et exclure forment une paire, rien entre eux. */
+.tag-panels-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 25px;
+}
+
+/* Panneau commun : la teinte de --tint le distingue de son voisin. */
+.tag-panel {
+  position: relative;
+  /* Teinte par defaut ; les panneaux inclure/exclure la remplacent en style inline. */
+  --tint: var(--accent);
+  --tint-rgb: var(--accent-rgb);
+  border: 1px solid transparent;
+  border-radius: 14px;
+  /* Trois couches : halo teinte, fond opaque, puis lisere en degrade sur la bordure.
+     Le halo vit dans le fond, pas dans un pseudo : rien ne peut recouvrir le contenu
+     ni passer devant la liste deroulante. */
+  background:
+    radial-gradient(70% 110% at 0% 0%, rgba(var(--tint-rgb), 0.12), transparent 60%) padding-box,
+    linear-gradient(var(--bg-2), var(--bg-2)) padding-box,
+    linear-gradient(150deg, rgba(255, 255, 255, 0.14), transparent 40%, var(--tint) 130%) border-box;
+  box-shadow: 0 22px 50px -34px rgba(0, 0, 0, 0.95);
+  padding: 22px;
+  min-height: 250px;
+  display: flex;
+  flex-direction: column;
+  overflow: visible;
+}
+
+/* Filet lumineux en tete du panneau. */
+.tag-panel::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 24px;
+  right: 24px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--tint), transparent);
+  opacity: 0.55;
+}
+
+.options-panel {
+  min-height: 0;
+}
+
+.tag-panel-title {
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin: 0 0 15px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  color: #f0f0f0;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.tag-panel-icon {
+  color: var(--tint);
+  flex-shrink: 0;
+}
+
+/* Zone de recherche */
+.tag-search {
+  position: relative;
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+/* Saisie en ivoire : le seul endroit clair de la page, donc le seul ou l'oeil sait
+   qu'on peut ecrire. */
+.tag-search input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px 15px 12px 40px;
+  background: linear-gradient(180deg, #f8f3e8 0%, #eee6d5 100%);
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-family: inherit;
+  color: #2b2419;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.75),
+    0 8px 20px -12px rgba(0, 0, 0, 0.9);
+  transition: all 0.3s ease;
+}
+
+.tag-search-icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgba(43, 36, 25, 0.45);
+  z-index: 1;
+}
+
+.tag-search input:focus {
+  outline: none;
+  border-color: var(--tint);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.75),
+    0 0 0 3px rgba(var(--tint-rgb), 0.3);
+  background: linear-gradient(180deg, #fffbf2 0%, #f5edde 100%);
+}
+
+.tag-search input::placeholder {
+  color: rgba(43, 36, 25, 0.45);
+}
+
+/* Liste déroulante */
+.tag-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  max-height: 200px;
+  overflow-y: auto;
+  background: #1a2433;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  margin-top: 5px;
+  padding: 0;
+  list-style: none;
+  z-index: 100;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.tag-dropdown li {
+  padding: 10px 15px;
+  cursor: pointer;
+  transition: background 0.2s;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.tag-dropdown li:last-child {
+  border-bottom: none;
+}
+
+.tag-dropdown li:hover,
+.tag-dropdown li.hovered {
+  background: rgba(var(--tint-rgb), 0.12);
+}
+
+.tag-dropdown .no-results {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.5);
+  font-style: italic;
+  cursor: default;
+}
+
+/* Conteneur de chips de tags */
+.tag-chips-container {
+  flex: 1;
+  overflow-y: auto;
+  min-height: 72px;
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.18);
+  border-radius: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  gap: 8px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.tag-chips-container::-webkit-scrollbar {
+  width: 5px;
+}
+
+.tag-chips-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.tag-chips-container::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+}
+
+/* Chips de tags : la teinte du panneau, sans avoir a la redire pour chaque cas. */
+.tag-chip {
+  display: flex;
+  align-items: center;
+  padding: 5px 8px 5px 12px;
+  border: 1px solid rgba(var(--tint-rgb), 0.35);
+  border-radius: 30px;
+  max-width: 100%;
+  font-size: 0.9rem;
+  background: rgba(var(--tint-rgb), 0.1);
+  color: var(--tint);
+  transition: all 0.2s ease;
+}
+
+.tag-chip-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 90%;
+}
+
+.tag-chip:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.tag-chip-remove {
+  background: none;
+  border: none;
+  color: currentColor;
+  font-size: 1.2rem;
+  line-height: 1;
+  padding: 0 0 0 5px;
+  margin-left: 5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+
+.tag-chip-remove:hover {
+  opacity: 1;
+}
+
+.tag-chip-remove:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+/* Message vide */
+.tag-empty-message {
+  width: 100%;
+  margin: auto;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.4);
+  font-style: italic;
+}
+
+/* Suggestions : une proposition, pas une selection. Elles restent visibles apres
+   un premier choix, sinon le panneau se vide de sa substance des le premier clic. */
+.tag-suggestions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  margin-top: 14px;
+}
+
+.tag-suggestions-title {
+  margin: 0;
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.tag-suggestions-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.tag-suggestion {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  border: 1px dashed rgba(255, 255, 255, 0.22);
+  border-radius: 999px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.62);
+  font-family: inherit;
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.tag-suggestion:hover {
+  border-style: solid;
+  border-color: rgba(var(--tint-rgb), 0.5);
+  color: #fff;
+}
+
+.tag-suggestion span {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: rgba(255, 255, 255, 0.35);
+}
+
+/* Options */
+.tag-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.tag-option {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 18px;
+  flex: 1 1 300px;
+  padding: 14px 15px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: all 0.2s ease;
+}
+
+.tag-option:hover {
+  background: rgba(255, 255, 255, 0.05);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.tag-option-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.tag-option-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.tag-option-text small {
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.tag-option-icon {
+  font-size: 1.2rem;
+  color: rgba(var(--accent-rgb), 0.8);
+}
+
+/* Toggle switch */
+.tag-toggle {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 24px;
+  /* Piste de largeur fixe : la laisser se comprimer sort le rond de sa course. */
+  flex-shrink: 0;
+}
+
+.tag-toggle input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.tag-toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.1);
+  transition: 0.3s;
+  border-radius: 34px;
+}
+
+.tag-toggle-slider:before {
+  position: absolute;
+  content: '';
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: 0.3s;
+  border-radius: 50%;
+}
+
+input:checked + .tag-toggle-slider {
+  background-color: #69b6d6;
+}
+
+input:focus + .tag-toggle-slider {
+  box-shadow: 0 0 1px #69b6d6;
+}
+
+input:checked + .tag-toggle-slider:before {
+  transform: translateX(26px);
+}
+
+/* Nombre d'entrée */
+.tag-number-input {
+  background: rgba(var(--accent-rgb), 0.05);
+  border-radius: 10px;
+  padding: 14px;
+  border: 1px solid rgba(var(--accent-rgb), 0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 5px;
+  transition: all 0.2s ease;
+}
+
+.tag-number-input:hover {
+  background: rgba(var(--accent-rgb), 0.08);
+  border-color: rgba(var(--accent-rgb), 0.25);
+}
+
+.tag-number-input label {
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.85);
+  font-weight: 500;
+}
+
+.tag-number-input input {
+  padding: 10px 12px;
+  background: linear-gradient(180deg, #f8f3e8 0%, #eee6d5 100%);
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  border-radius: 6px;
+  color: #2b2419;
+  font-family: inherit;
+  font-size: 1rem;
+  width: 100%;
+  box-sizing: border-box;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.75);
+  transition: all 0.2s ease;
+}
+
+.tag-number-input input::placeholder {
+  color: rgba(43, 36, 25, 0.45);
+}
+
+.tag-number-input input:focus {
+  outline: none;
+  border-color: var(--tint);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.75),
+    0 0 0 3px rgba(var(--tint-rgb), 0.3);
+}
+
+.tag-browsers-summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tag-browsers-label {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.85rem;
+  font-weight: 400;
+}
+
+.tag-browsers-pills {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.tag-browser-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, rgba(var(--accent-rgb), 0.15), rgba(var(--accent-rgb), 0.08));
+  border: 1px solid rgba(var(--accent-rgb), 0.35);
+  color: var(--accent);
+  font-size: 0.82rem;
+  font-weight: 500;
+}
+
+.tag-browser-icon {
+  font-size: 0.9rem;
+  line-height: 1;
+}
+
+img.tag-browser-icon {
+  width: 1rem;
+  height: 1rem;
+  object-fit: contain;
+}
+
+.tag-device-pill {
+  background: linear-gradient(135deg, rgba(var(--accent-rgb), 0.15), rgba(var(--accent-rgb), 0.08));
+  border-color: rgba(var(--accent-rgb), 0.35);
+  color: var(--accent);
+}
+
+.tag-sessions-count {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.82rem;
+  font-weight: 600;
+  margin-left: 4px;
+}
+
+/* ===== APERÇU : les tests que le run va jouer, groupes par suite ===== */
+.tag-preview {
+  min-height: 0;
+}
+
+.tag-preview-note {
+  margin: 0 0 14px;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.tag-preview-suites {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 18px 26px;
+  margin: 0;
+  padding: 0;
+  max-height: 320px;
+  overflow-y: auto;
+  list-style: none;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+}
+
+.tag-preview-file {
+  margin: 0 0 8px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.42);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  /* Tronque le debut du chemin : la fin (le nom du fichier) est ce qui identifie. */
+  direction: rtl;
+  text-align: left;
+}
+
+.tag-preview-suite ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.tag-preview-suite li {
+  position: relative;
+  padding-left: 15px;
+  font-size: 0.84rem;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.tag-preview-suite li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 8px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--tint);
+}
+
+/* Action principale de la page : un cran au-dessus des autres boutons. */
+.action-btn.tag-run-button {
+  flex-shrink: 0;
+  height: 48px;
+  padding: 0 26px;
+  font-size: 0.94rem;
+  border-color: color-mix(in srgb, var(--tint) 70%, transparent);
+  background: color-mix(in srgb, var(--tint) 24%, transparent);
+  box-shadow: 5px 5px 0 0 var(--shade);
+}
+
+.action-btn.tag-run-button:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--tint) 34%, transparent);
+  box-shadow: 6px 6px 0 0 var(--shade);
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .tag-panels-container {
+    grid-template-columns: 1fr;
+  }
+}

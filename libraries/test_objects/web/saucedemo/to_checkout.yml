@@ -1,0 +1,13 @@
+TO_CHECKOUT:
+  FLD_FIRST_NAME: "input#first-name"
+  FLD_LAST_NAME: "input#last-name"
+  FLD_POSTAL_CODE: "input#postal-code"
+  BTN_CONTINUE: "input#continue"
+  BTN_FINISH: "button#finish"
+  LBL_TOTAL: ".summary_total_label"
+  LBL_SUBTOTAL: ".summary_subtotal_label"
+  LBL_TAX: ".summary_tax_label"
+  LBL_COMPLETE: ".complete-header"
+  LBL_ITEM_NAME: ".inventory_item_name"
+  MSG_ERROR: "h3[data-test='error']"
+  CTN_ERROR: ".error-message-container"
