@@ -47,16 +47,26 @@ def files_matching(pattern: re.Pattern) -> list[str]:
     return hits
 
 
-def test_no_tracked_file_names_the_local_account() -> None:
-    """Le nom du compte courant ne doit apparaître dans aucun fichier publié."""
+def home_directory_pattern(account: str) -> re.Pattern:
+    """Le compte en position de dossier personnel, seule forme qui trahisse une machine.
+
+    Chercher le nom seul serait ingérable : sur un exécuteur d'intégration continue il
+    vaut « runner », mot que ce dépôt emploie partout. Les doubles antislashs couvrent
+    les chemins Windows échappés dans un fichier généré (`C:\\\\Users\\\\…`).
+    """
+    return re.compile(rf"(?:Users|home)[\\/]{{1,2}}{re.escape(account)}", re.IGNORECASE)
+
+
+def test_no_tracked_file_exposes_the_local_home_directory() -> None:
+    """Aucun fichier publié ne doit contenir le dossier personnel du compte courant."""
     account = current_account()
-    if len(account) < 4:
+    if len(account) < 3:
         return  # Un nom trop court produirait des correspondances fortuites.
 
-    offenders = files_matching(re.compile(re.escape(account), re.IGNORECASE))
+    offenders = files_matching(home_directory_pattern(account))
 
     assert not offenders, (
-        f"le compte « {account} » est nommé dans des fichiers publiés :\n"
+        f"le dossier personnel de « {account} » apparaît dans des fichiers publiés :\n"
         + "\n".join(offenders)
     )
 
@@ -65,8 +75,10 @@ def test_the_check_still_bites(tmp_path: Path) -> None:
     """Un contrôle qui ne trouve plus rien doit rester un contrôle qui cherche encore."""
     report = tmp_path / "log.html"
     report.write_text(r'"source":"C:\\Users\\jdupont\\tests"', encoding="utf-8")
-    pattern = re.compile(re.escape("jdupont"), re.IGNORECASE)
+    content = report.read_text(encoding="utf-8")
 
-    assert pattern.search(report.read_text(encoding="utf-8"))
-    assert not pattern.search("aucun nom de compte ici")
+    assert home_directory_pattern("jdupont").search(content)
+    assert home_directory_pattern("jdupont").search("/home/jdupont/projet")
+    # Le nom cité hors chemin ne dit rien de la machine : « runner » est ici un métier.
+    assert not home_directory_pattern("runner").search("from services.execution.runner")
     assert tracked_files(), "sans fichier suivi, le contrôle passerait toujours"
