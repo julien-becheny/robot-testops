@@ -3,3 +3,8 @@
 # ils doivent RESTER en LF. Un CRLF y provoque des erreurs "\r" à l'exécution.
 *.sh        text eol=lf
 tools/hooks/* text eol=lf
+
+# Rapports Robot Framework rejoués par la démonstration : générés, pas écrits.
+# Sans ce marqueur, leur volume classe le dépôt en « HTML » plutôt qu'en Python.
+testops/public/demo/*.html      linguist-generated
+testops/public/logs/**/*.html   linguist-generated

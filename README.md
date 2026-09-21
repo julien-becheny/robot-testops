@@ -11,6 +11,8 @@ Les suites livrées visent deux applications de démonstration publiques — **S
 réel y est rejoué (logs, étapes, verdict, rapport Robot Framework). Rien n'y est exécuté :
 le backend est simulé, les données viennent d'une exécution enregistrée.
 
+[![L'accueil de TestOps : choix entre un smoke test et une exécution par tags, avec le contexte du run affiché en entête](docs/img/testops-accueil.png)](https://julien-becheny.github.io/robot-testops/)
+
 > Le code et la documentation sont en français, langue de travail du projet.
 
 ## Le problème qu'il résout
@@ -72,6 +74,8 @@ robot test_suites/web/saucedemo/00_smoke.robot
 
 Un run lancé continue de vivre quand on navigue ailleurs : la page d'exécution reste
 montée tant qu'une session existe, et le rail affiche un badge tant qu'un run tourne.
+
+![Suivi d'exécution : deux tests passés en trois secondes, chaque étape dépliée sous son test](docs/img/testops-execution.png)
 
 ## Organisation
 
