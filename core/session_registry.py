@@ -44,7 +44,7 @@ _UPDATABLE_FIELDS = frozenset(
 class SessionRegistry:
     """
     Registry thread-safe pour gérer N sessions d'exécution en parallèle.
-    Singleton — une seule instance partagée par tout le backend.
+    Singleton - une seule instance partagée par tout le backend.
     """
     _instance = None
     _instance_lock = threading.Lock()

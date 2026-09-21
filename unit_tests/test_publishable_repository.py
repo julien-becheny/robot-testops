@@ -19,7 +19,7 @@ TEXT_SUFFIXES = {
 
 
 def current_account() -> str:
-    """Le compte qui fait tourner les tests — celui dont le nom ne doit pas fuiter."""
+    """Le compte qui fait tourner les tests - celui dont le nom ne doit pas fuiter."""
     return os.environ.get("USERNAME") or os.environ.get("USER") or ""
 
 

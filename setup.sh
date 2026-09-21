@@ -1,9 +1,9 @@
 #!/bin/bash
-# ROBOT-TESTOPS — Installation de l'environnement (macOS / Linux)
+# ROBOT-TESTOPS - Installation de l'environnement (macOS / Linux)
 set -e
 
 echo "================================================================================"
-echo "       ROBOT-TESTOPS — INSTALLATION DE L'ENVIRONNEMENT"
+echo "       ROBOT-TESTOPS - INSTALLATION DE L'ENVIRONNEMENT"
 echo "================================================================================"
 echo ""
 echo "Ce script :"

@@ -1,5 +1,5 @@
 *** Settings ***
-Documentation       Adaptateur PLAYWRIGHT — traduit les primitives multi-moteur en keywords `Browser`.
+Documentation       Adaptateur PLAYWRIGHT - traduit les primitives multi-moteur en keywords `Browser`.
 ...
 ...                 À QUOI SERT CE FICHIER
 ...                 Les suites de `test_suites/multi_moteur/` sont écrites UNE SEULE FOIS, dans un
@@ -49,7 +49,7 @@ Type
 
 Type Secret
   [Documentation]  Saisit un mot de passe sans jamais l'écrire dans le log Robot.
-  ...  \${Secret} vient de `Get Account` (cf. common/environment.py) — jamais d'une chaîne en clair.
+  ...  \${Secret} vient de `Get Account` (cf. common/environment.py) - jamais d'une chaîne en clair.
   [Arguments]  ${Locator}  ${Secret}
   Fill Secret  ${Locator}  ${Secret}
 

@@ -2,7 +2,7 @@
  * Ruban de démonstration.
  *
  * Sans lui, un visiteur croit piloter une installation réelle : le bandeau dit
- * ce qui est rejoué et renvoie au dépôt. Il vit hors de React — tout le dossier
+ * ce qui est rejoué et renvoie au dépôt. Il vit hors de React - tout le dossier
  * `demo/` disparaît du bundle de production, l'application n'en sait rien.
  */
 const STYLE = `
@@ -67,7 +67,7 @@ export const mountDemoRibbon = () => {
   ribbon.className = 'demo-ribbon';
   ribbon.innerHTML = `
     <strong>Démonstration</strong>
-    <span>aucun test n'est réellement exécuté — un run enregistré est rejoué.</span>
+    <span>aucun test n'est réellement exécuté - un run enregistré est rejoué.</span>
     <a href="https://github.com/julien-becheny/robot-testops" target="_blank" rel="noreferrer">
       Voir le code
     </a>

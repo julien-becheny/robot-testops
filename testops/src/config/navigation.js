@@ -1,7 +1,7 @@
 import { FiHome, FiSliders, FiTag, FiZap } from 'react-icons/fi';
 
 // Source unique des entrées : la barre latérale et l'accueil lisent ce fichier.
-// `color` n'habille que les gros blocs de l'accueil — le rail, lui, reste monochrome.
+// `color` n'habille que les gros blocs de l'accueil - le rail, lui, reste monochrome.
 export const HOME_ITEM = { id: 'home', label: 'Accueil', icon: FiHome, color: '#38bdf8' };
 
 export const NAV_SECTIONS = [

@@ -44,14 +44,14 @@ test('attend que le backend réponde avant d’interroger le catalogue', () => {
 
 test('lance le smoke depuis son bloc, en annonçant ce qui va tourner', async () => {
   installFetch({
-    '/smoke-suite': { file: '00_smoke.robot', tests: ['Smoke — Titre', 'Smoke — Formulaire'] },
+    '/smoke-suite': { file: '00_smoke.robot', tests: ['Smoke - Titre', 'Smoke - Formulaire'] },
   });
   const onLaunchSmoke = vi.fn();
 
   render(<MenuPage setPage={vi.fn()} onLaunchSmoke={onLaunchSmoke} environmentStatus="ready" />);
 
-  expect(await screen.findByText('Smoke — Titre')).toBeInTheDocument();
-  expect(screen.getByText('Smoke — Formulaire')).toBeInTheDocument();
+  expect(await screen.findByText('Smoke - Titre')).toBeInTheDocument();
+  expect(screen.getByText('Smoke - Formulaire')).toBeInTheDocument();
   expect(screen.getByText('Suite fixe · 00_smoke.robot')).toBeInTheDocument();
 
   fireEvent.click(screen.getByRole('button', { name: /Lancer le smoke/ }));

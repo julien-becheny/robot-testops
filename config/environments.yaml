@@ -1,4 +1,4 @@
-# Référentiel des environnements cibles — SOURCE UNIQUE des URLs.
+# Référentiel des environnements cibles - SOURCE UNIQUE des URLs.
 #
 # Deux dimensions, volontairement séparées :
 #   - l'ENVIRONNEMENT est choisi au lancement (TestOps) → il fixe le host ;
@@ -18,7 +18,7 @@
 # ⚠ Ce fichier EST versionné : il ne doit contenir AUCUN mot de passe.
 
 saucedemo:
-  label: SauceDemo — démo publique
+  label: SauceDemo - démo publique
   base: https://www.saucedemo.com
   tier: demo
   modules:
@@ -35,7 +35,7 @@ saucedemo:
       password_ref: SAUCEDEMO  # pragma: allowlist secret
 
 orangehrm:
-  label: OrangeHRM — démo publique
+  label: OrangeHRM - démo publique
   base: https://opensource-demo.orangehrmlive.com
   tier: demo
   modules:
@@ -45,7 +45,7 @@ orangehrm:
       username: Admin
       password_ref: ORANGEHRM  # pragma: allowlist secret
 
-# Gabarit pour une application multi-modules — à adapter, puis décommenter :
+# Gabarit pour une application multi-modules - à adapter, puis décommenter :
 #
 # recette:
 #   label: Recette

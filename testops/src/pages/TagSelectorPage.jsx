@@ -178,7 +178,7 @@ const TagPicker = ({ kind, title, Icon, available, suggestions, selected, onAdd,
 
       {suggestions.length > 0 && (
         <div className="tag-suggestions">
-          <p className="tag-suggestions-title">Les plus portés — à ajouter d’un clic :</p>
+          <p className="tag-suggestions-title">Les plus portés - à ajouter d’un clic :</p>
           <div className="tag-suggestions-list">
             {suggestions.map((tag) => (
               <button

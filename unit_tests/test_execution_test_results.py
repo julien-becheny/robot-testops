@@ -26,8 +26,8 @@ def test_a_verdict_is_broadcast_to_its_own_session(client, emitted: Mock) -> Non
     """Sans le session_id, la grille attribuerait le résultat à la mauvaise configuration."""
     response = client.post('/test-result', json={
         'session_id': 'session-firefox',
-        'longname': 'Web.Saucedemo.02 Cart.Panier — Ajouter un article',
-        'name': 'Panier — Ajouter un article',
+        'longname': 'Web.Saucedemo.02 Cart.Panier - Ajouter un article',
+        'name': 'Panier - Ajouter un article',
         'status': 'FAIL',
         'message': 'Timeout',
         'elapsed': 4200,
@@ -37,8 +37,8 @@ def test_a_verdict_is_broadcast_to_its_own_session(client, emitted: Mock) -> Non
     emitted.assert_called_once_with(
         'test-result',
         {
-            'longname': 'Web.Saucedemo.02 Cart.Panier — Ajouter un article',
-            'name': 'Panier — Ajouter un article',
+            'longname': 'Web.Saucedemo.02 Cart.Panier - Ajouter un article',
+            'name': 'Panier - Ajouter un article',
             'status': 'FAIL',
             'message': 'Timeout',
             'elapsed': 4200,

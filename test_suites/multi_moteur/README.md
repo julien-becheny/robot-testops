@@ -12,7 +12,7 @@ s'exécuter des deux côtés sans traduction. C'est cette traduction qui vit dan
 `libraries/resources/common/actions_playwright.resource` et `actions_appium.resource`.
 
 L'intérêt n'est pas théorique : il permet de vérifier sur un **téléphone réel** un parcours
-déjà couvert en émulation, sans le réécrire — clavier virtuel, gestes, performances réelles,
+déjà couvert en émulation, sans le réécrire - clavier virtuel, gestes, performances réelles,
 Safari iOS le jour venu. Ce que l'émulation ne peut pas reproduire.
 
 ## Les trois couches
@@ -28,13 +28,13 @@ Les locators, eux, ne sont **pas** dupliqués : ce sont ceux des suites web
 
 ## Comment les lancer
 
-**Playwright** — rien à faire. Ces tests partent avec les runs habituels (smoke, tags,
+**Playwright** - rien à faire. Ces tests partent avec les runs habituels (smoke, tags,
 campagnes), qui injectent l'adaptateur Playwright par défaut.
 
-**Appium** — bouton « Tests sur mobile physique » dans TestOps. Il démarre le serveur Appium,
+**Appium** - bouton « Tests sur mobile physique » dans TestOps. Il démarre le serveur Appium,
 attend qu'il réponde, puis joue ce dossier et `test_suites/appium/` avec l'adaptateur Appium.
 
-À la main — `${ACTIONS}` doit être un chemin **absolu** : Robot résout un chemin relatif
+À la main - `${ACTIONS}` doit être un chemin **absolu** : Robot résout un chemin relatif
 depuis le fichier qui l'importe, pas depuis le répertoire courant.
 
 ```powershell
@@ -44,7 +44,7 @@ depuis le fichier qui l'importe, pas depuis le répertoire courant.
   -d temp\run_mobile test_suites\multi_moteur
 ```
 
-## Ce qu'on peut écrire ici — et ce qu'on ne peut pas
+## Ce qu'on peut écrire ici - et ce qu'on ne peut pas
 
 Un test de ce dossier n'appelle **que** les primitives de l'adaptateur : `Open Session`,
 `Close Session`, `Tap`, `Type`, `Type Secret`, `Wait Visible`, `Should Show Text`.
@@ -66,7 +66,7 @@ L'émulation est déjà en place ici : c'est le sélecteur « Appareils » de Te
 `libraries/resources/common/device_profiles.py`.
 
 Une **application native**, elle, imposera Appium et une suite séparée : les écrans et les
-locators n'ont plus rien de commun avec le web. Ce dossier ne sert donc pas à ça — il sert au
+locators n'ont plus rien de commun avec le web. Ce dossier ne sert donc pas à ça - il sert au
 cas intermédiaire : le même site, vu depuis un vrai téléphone.
 
 SauceDemo n'est qu'un support d'entraînement. Ce qui doit survivre, c'est la forme.

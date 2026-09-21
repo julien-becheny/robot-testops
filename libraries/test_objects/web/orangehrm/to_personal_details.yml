@@ -1,4 +1,4 @@
-# Fiche d'un employé, onglet « Personal Details » — écran d'arrivée après création.
+# Fiche d'un employé, onglet « Personal Details » - écran d'arrivée après création.
 #
 # Trois titres partagent la classe `orangehrm-main-title` sur cet écran (Personal Details,
 # Custom Fields, Attachments) : le filtre sur le texte exact est ce qui rend le repère unique.

@@ -54,7 +54,7 @@
   box-shadow: 2px 2px 0 0 rgba(255, 255, 255, 0.07);
 }
 
-/* Action secondaire : même geste, sans l'épaisseur — elle est réservée à l'action qui compte. */
+/* Action secondaire : même geste, sans l'épaisseur - elle est réservée à l'action qui compte. */
 .action-btn.ghost {
   border-color: var(--btn-line);
   background: var(--btn);

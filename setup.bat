@@ -2,7 +2,7 @@
 SETLOCAL EnableDelayedExpansion
 
 ECHO ================================================================================
-ECHO        ROBOT-TESTOPS — INSTALLATION DE L'ENVIRONNEMENT
+ECHO        ROBOT-TESTOPS - INSTALLATION DE L'ENVIRONNEMENT
 ECHO ================================================================================
 ECHO.
 ECHO Ce script :

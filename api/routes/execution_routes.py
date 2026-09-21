@@ -229,7 +229,7 @@ def receive_test_result():
     """Reçoit le verdict d'un test et le diffuse dans la room de session.
 
     Sans cet événement, l'interface devait deviner le résultat en cherchant des mots
-    dans les lignes de log — des chaînes d'affichage, pas un contrat.
+    dans les lignes de log - des chaînes d'affichage, pas un contrat.
     """
     try:
         data = require_json_object(request.get_json(silent=True))

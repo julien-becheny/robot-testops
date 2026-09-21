@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-"""Contrôles qualité du dépôt — source de vérité unique, locale et CI.
+"""Contrôles qualité du dépôt - source de vérité unique, locale et CI.
 
     python tools/ci_local.py           # les contrôles
     python tools/ci_local.py --full    # + `npm ci` (réinstalle node_modules)

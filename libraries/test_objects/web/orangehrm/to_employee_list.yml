@@ -5,7 +5,7 @@
 # le groupe de saisie (`.oxd-input-group`) filtré sur son `label`, seul repère stable.
 #
 # Les entrées `{id}` sont des gabarits : le matricule y est injecté par `Format String`.
-# Une ligne se désigne par son contenu, jamais par son rang — la liste est partagée et
+# Une ligne se désigne par son contenu, jamais par son rang - la liste est partagée et
 # son ordre change d'un run à l'autre.
 TO_EMPLOYEE_LIST:
   FLD_EMPLOYEE_ID: ".oxd-input-group:has(label:text-is('Employee Id')) input"

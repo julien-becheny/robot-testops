@@ -1,5 +1,5 @@
 *** Settings ***
-Documentation       Parcours d'achat SauceDemo — ÉCRIT UNE FOIS, JOUÉ SUR DEUX MOTEURS.
+Documentation       Parcours d'achat SauceDemo - ÉCRIT UNE FOIS, JOUÉ SUR DEUX MOTEURS.
 ...
 ...                 Le corps du test ne connaît ni Playwright ni Appium : il n'appelle que des
 ...                 keywords métier, qui eux-mêmes n'appellent que les primitives de l'adaptateur
@@ -24,7 +24,7 @@ Test Tags  saucedemo  achat
 
 
 *** Test Cases ***
-Achat — Deux Articles Jusqu'à La Confirmation
+Achat - Deux Articles Jusqu'à La Confirmation
   [Documentation]  Connexion, ajout de deux articles, tunnel de commande, confirmation.
   [Tags]  feat:saucedemo.panier.ajout_article  feat:saucedemo.commande.finalisation
   Ouvrir La Boutique

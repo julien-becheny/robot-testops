@@ -36,14 +36,14 @@ def test_nothing_is_recorded_when_the_setting_is_off(monkeypatch) -> None:
 
 def test_the_file_carries_the_test_name(monkeypatch) -> None:
     """Un nom de fichier illisible ne vaut pas mieux que pas de fichier du tout."""
-    _robot_context(monkeypatch, tracing_on="True", test_name="Navigation — Sidebar Menu")
+    _robot_context(monkeypatch, tracing_on="True", test_name="Navigation - Sidebar Menu")
 
     assert tracing.get_trace_target() == "browser/traces/navigation_sidebar_menu.zip"
 
 
 def test_two_tests_sharing_a_name_keep_their_own_trace(monkeypatch) -> None:
     """Deux suites peuvent nommer un test pareil : le second effacerait le premier."""
-    _robot_context(monkeypatch, tracing_on="True", test_name="Smoke — Login")
+    _robot_context(monkeypatch, tracing_on="True", test_name="Smoke - Login")
 
     first = tracing.get_trace_target()
     second = tracing.get_trace_target()
@@ -53,6 +53,6 @@ def test_two_tests_sharing_a_name_keep_their_own_trace(monkeypatch) -> None:
 
 def test_a_name_without_usable_characters_still_yields_a_file(monkeypatch) -> None:
     """Un nom vide donnerait un chemin invalide, et la trace serait perdue."""
-    _robot_context(monkeypatch, tracing_on="True", test_name="——— ///")
+    _robot_context(monkeypatch, tracing_on="True", test_name="--- ///")
 
     assert tracing.get_trace_target() == "browser/traces/test.zip"

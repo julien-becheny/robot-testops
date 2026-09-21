@@ -1,5 +1,5 @@
 *** Settings ***
-Documentation       Tests de navigation — vérifie la navigation entre pages SauceDemo.
+Documentation       Tests de navigation - vérifie la navigation entre pages SauceDemo.
 
 Resource  ../../../libraries/resources/web/saucedemo/kw_saucedemo.resource
 
@@ -9,14 +9,14 @@ Test Tags  saucedemo  navigation  web  regression
 
 
 *** Test Cases ***
-Navigation — Login And Access Inventory
+Navigation - Login And Access Inventory
   [Documentation]  Se connecte et vérifie l'accès à la page inventaire.
   [Tags]  login  feat:saucedemo.connexion.identifiants_valides
   Open And Login As  STANDARD
   Get Url  contains  inventory
   Get Title  contains  ${TD_SAUCEDEMO}[EXPECTED][TITLE]
 
-Navigation — Access Product Detail
+Navigation - Access Product Detail
   [Documentation]  Se connecte, clique sur un produit et vérifie la page détail.
   [Tags]  product  feat:saucedemo.catalogue.consultation_produit
   Open And Login As  STANDARD
@@ -27,7 +27,7 @@ Navigation — Access Product Detail
   Click  ${TO_PRODUCT_DETAIL}[BTN_BACK]
   Get Url  contains  inventory
 
-Navigation — Sidebar Menu
+Navigation - Sidebar Menu
   [Documentation]  Ouvre le menu latéral et vérifie les liens disponibles.
   [Tags]  menu  feat:saucedemo.navigation.menu_lateral
   Open And Login As  STANDARD

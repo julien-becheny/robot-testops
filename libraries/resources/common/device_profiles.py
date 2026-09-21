@@ -11,7 +11,7 @@ Limites (fiabilite) :
   on ne les applique que pour chromium/webkit (sinon erreur au lancement).
 - L'emulation reste une approximation d'un moteur desktop. Pour une validation
   finale mobile (iOS/Safari reel, appli native installee), utiliser de VRAIS
-  appareils (Appium / device cloud) — l'emulation ne les remplace pas.
+  appareils (Appium / device cloud) - l'emulation ne les remplace pas.
 
 Les viewports historiques (desktop/tablet/mobile) sont conserves pour ne pas
 changer les attentes de mise en page ; seuls UA / densite / tactile sont ajoutes.

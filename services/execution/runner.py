@@ -8,7 +8,7 @@ Gère l'exécution des tests avec :
 - Exécutions parallèles via session_id
 
 Chaque commande est une LISTE d'arguments (voir services/execution/commands.py),
-exécutée sans shell. Règle SHELL_STR — docs/regles_apprises.md.
+exécutée sans shell. Règle SHELL_STR - docs/regles_apprises.md.
 """
 
 import shlex

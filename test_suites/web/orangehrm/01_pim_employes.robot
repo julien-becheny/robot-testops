@@ -4,10 +4,10 @@ Documentation       Gestion des employés (module PIM).
 ...                 Traduction de la fiche de recette REC-PIM-001 « Création d'un nouvel
 ...                 employé ». Deux points de la fiche ont dû être précisés pour qu'elle
 ...                 devienne exécutable :
-...                 — « l'employé est créé » n'est pas vérifiable : l'assertion porte sur le
+...                 - « l'employé est créé » n'est pas vérifiable : l'assertion porte sur le
 ...                 fait qu'il ressorte d'une recherche, pas sur le message de confirmation,
 ...                 qui s'efface au bout de quelques secondes ;
-...                 — « nom au choix du testeur » : la base de démonstration est partagée,
+...                 - « nom au choix du testeur » : la base de démonstration est partagée,
 ...                 le matricule est donc généré à chaque run et supprimé en teardown.
 
 Resource  ../../../libraries/resources/web/orangehrm/kw_orangehrm.resource
@@ -24,7 +24,7 @@ ${CREATED_EMPLOYEE_ID}  ${EMPTY}
 
 
 *** Test Cases ***
-PIM — Create Employee
+PIM - Create Employee
   [Documentation]  Crée un employé et vérifie qu'il est bien enregistré côté serveur.
   [Tags]  feat:orangehrm.pim.creation_employe
   ${Employee_Id}=  New Employee Id

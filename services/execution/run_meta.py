@@ -2,7 +2,7 @@
 
 Un dossier de rapport ne dit pas sur quel commit ni dans quel contexte le run a
 tourné. Sans cette trace, l'analyse de stabilité ne pourrait pas distinguer un test
-fragile — vert puis rouge sur le **même** commit — d'une vraie régression du produit.
+fragile - vert puis rouge sur le **même** commit - d'une vraie régression du produit.
 
 Le nom du dossier porte bien navigateur et appareil, mais l'en déduire supposerait de
 le découper : un analyseur de nom de fichier casse au premier libellé contenant un

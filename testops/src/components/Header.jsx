@@ -329,7 +329,7 @@ const Header = ({
           <div className="ctx-foot">
             {sessions === 1
               ? '1 session'
-              : `${sessions} sessions — chaque combinaison navigateur × appareil est jouée`}
+              : `${sessions} sessions - chaque combinaison navigateur × appareil est jouée`}
           </div>
         </div>
       )}

@@ -1,5 +1,5 @@
 // Les trois appareils dessinés à la même échelle : c'est leur PROPORTION qui les distingue,
-// pas un pictogramme — les icônes tablette et mobile des jeux courants se confondent.
+// pas un pictogramme - les icônes tablette et mobile des jeux courants se confondent.
 const SHAPES = {
   desktop: { x: 1.5, y: 3, w: 21, h: 13.5, r: 1.6 },
   tablet: { x: 6, y: 1.5, w: 12, h: 18, r: 1.6 },

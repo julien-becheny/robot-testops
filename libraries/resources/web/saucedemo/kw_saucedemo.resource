@@ -1,5 +1,5 @@
 *** Settings ***
-Documentation       Keywords métier du module SauceDemo — TEMPLATE DE RÉFÉRENCE.
+Documentation       Keywords métier du module SauceDemo - TEMPLATE DE RÉFÉRENCE.
 ...                 Copier ce module pour créer le module d'une nouvelle application :
 ...                 1. libraries/resources/web/<module>/kw_<module>.resource
 ...                 2. libraries/test_objects/web/<module>/to_*.yml

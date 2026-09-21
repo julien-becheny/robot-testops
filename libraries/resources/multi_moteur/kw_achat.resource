@@ -1,10 +1,10 @@
 *** Settings ***
-Documentation       Keywords métier du parcours d'achat — INDÉPENDANTS DU MOTEUR.
+Documentation       Keywords métier du parcours d'achat - INDÉPENDANTS DU MOTEUR.
 ...
 ...                 Ces keywords disent ce que fait l'utilisateur (« se connecter », « finaliser la
 ...                 commande ») et n'appellent QUE les primitives de l'adaptateur : Tap, Type,
 ...                 Type Secret, Wait Visible, Should Show Text. Aucun keyword `Browser` ni
-...                 `AppiumLibrary` ne doit apparaître ici — c'est ce qui rend le scénario portable.
+...                 `AppiumLibrary` ne doit apparaître ici - c'est ce qui rend le scénario portable.
 ...
 ...                 D'OÙ VIENT CHAQUE CHOSE
 ...                 - le moteur   → `${ACTIONS}`, injecté au lancement (playwright ou appium) ;

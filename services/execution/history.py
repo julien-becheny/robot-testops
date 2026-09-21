@@ -20,7 +20,7 @@ LOG_FILE = "log.html"
 
 # Où un run dépose son résultat, du plus complet au plus brut. Un run ordinaire écrit
 # à la racine ; avec « rejouer les échecs », le premier passage va dans Output_original/
-# et la fusion dans Output_merge/ — la racine, elle, reste vide.
+# et la fusion dans Output_merge/ - la racine, elle, reste vide.
 RESULT_LAYOUTS = (
     ("Output_merge/output_merge.xml", "Output_merge/log_merge.html"),
     (OUTPUT_FILE, LOG_FILE),

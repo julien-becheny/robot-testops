@@ -143,7 +143,7 @@ const ConfigPage = () => {
                 ) : (
                   <>
                     <span className="config-value">
-                      {configuredSecret ? '••••••' : (value ?? '—')}
+                      {configuredSecret ? '••••••' : (value ?? '-')}
                     </span>
                     <span className="config-action">
                       <button

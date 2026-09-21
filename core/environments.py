@@ -2,8 +2,8 @@
 
 Deux dimensions sont volontairement séparées :
 
-- l'ENVIRONNEMENT (recette, préprod…) est choisi au lancement — il fixe le host ;
-- le MODULE (patrimoine, travaux…) est déclaré par le test lui-même — il fixe le chemin.
+- l'ENVIRONNEMENT (recette, préprod…) est choisi au lancement - il fixe le host ;
+- le MODULE (patrimoine, travaux…) est déclaré par le test lui-même - il fixe le chemin.
 
 Aucune URL n'est donc écrite en dur dans un test : elle est résolue à l'exécution par
 :func:`resolve_module_url`. Un run filtré par tags peut traverser plusieurs modules,

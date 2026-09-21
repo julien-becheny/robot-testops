@@ -42,7 +42,7 @@ const RunMatrix = ({ sessions = [], results = {} }) => {
         <h2>Comparaison des configurations</h2>
         <p>
           Une ligne entièrement rouge désigne le produit ; une colonne entière, la configuration ;
-          une cellule isolée, une spécificité du navigateur — ou une machine saturée.
+          une cellule isolée, une spécificité du navigateur - ou une machine saturée.
         </p>
       </header>
 
