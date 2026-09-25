@@ -114,6 +114,26 @@ def run_test():
     })
 
 
+@execution_bp.route('/run-appium', methods=['POST'])
+def run_appium_route():
+    """Lance les tests joués sur un appareil réel, via Appium."""
+    from services.execution.orchestrator import run_appium_suite
+
+    session = registry.create_session(workflow='appium')
+    thread = threading.Thread(
+        target=run_appium_suite,
+        kwargs={'session_id': session.session_id},
+        daemon=True,
+    )
+    try:
+        thread.start()
+    except (OSError, RuntimeError):
+        registry.remove(session.session_id)
+        raise
+    return jsonify({'status': 'started', 'session_id': session.session_id,
+                    'message': 'Run mobile Appium lancé'})
+
+
 @execution_bp.route('/smoke-suite', methods=['GET'])
 def smoke_suite():
     """Retourne ce que le smoke jouera : sa suite fixe et les tests qu'elle contient."""

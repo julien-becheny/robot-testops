@@ -1,0 +1,106 @@
+# Référentiel fonctionnel du module SauceDemo.
+#
+# BANC D'ESSAI - ce fichier sera supprimé avec les tests SauceDemo.
+# Il sert à rôder la mécanique ; seul le format survit.
+#
+# Ce fichier est le SEUL endroit où les écrans et les fonctionnalités sont nommés.
+# Le code des tests s'y réfère par identifiant ; `tools/coverage.py --check` refuse
+# toute référence à un identifiant absent d'ici.
+
+module: saucedemo
+label: SauceDemo (banc d'essai)
+plateformes: [web]
+
+# Écrans et popups : ce qu'un test TRAVERSE.
+# Renseignés dans le code par `Wait For Screen  <id>  <locator>`.
+ecrans:
+  - id: saucedemo.connexion
+    label: Page de connexion
+    type: page
+
+  - id: saucedemo.inventaire
+    label: Liste des produits
+    type: page
+
+  - id: saucedemo.produit.detail
+    label: Détail d'un produit
+    type: page
+
+  - id: saucedemo.menu_lateral
+    label: Menu latéral
+    type: popup
+
+  - id: saucedemo.panier
+    label: Panier
+    type: page
+
+  - id: saucedemo.checkout.informations
+    label: Commande - informations client
+    type: page
+
+  - id: saucedemo.checkout.resume
+    label: Commande - résumé avant validation
+    type: page
+
+  - id: saucedemo.checkout.confirmation
+    label: Commande - confirmation
+    type: page
+
+  - id: saucedemo.a_propos
+    label: Page « À propos »
+    type: page
+
+# Fonctionnalités métier : ce qu'un test VÉRIFIE.
+# Déclarées dans le code par le tag `feat:<id>` sur le test.
+fonctionnalites:
+  - id: saucedemo.connexion.formulaire
+    label: Afficher le formulaire de connexion
+    criticite: mineure
+
+  - id: saucedemo.connexion.identifiants_valides
+    label: Se connecter avec des identifiants valides
+    criticite: critique
+
+  - id: saucedemo.connexion.compte_bloque
+    label: Refuser la connexion d'un compte bloqué
+    criticite: majeure
+
+  - id: saucedemo.catalogue.consultation_produit
+    label: Consulter la fiche d'un produit
+    criticite: majeure
+
+  - id: saucedemo.catalogue.tri
+    label: Trier les produits du catalogue
+    criticite: mineure
+
+  - id: saucedemo.navigation.menu_lateral
+    label: Ouvrir le menu latéral
+    criticite: mineure
+
+  - id: saucedemo.session.deconnexion
+    label: Se déconnecter
+    criticite: majeure
+
+  - id: saucedemo.panier.ajout_article
+    label: Ajouter un article au panier
+    criticite: critique
+
+  - id: saucedemo.panier.retrait_article
+    label: Retirer un article du panier
+    criticite: majeure
+
+  - id: saucedemo.panier.consultation
+    label: Consulter le contenu du panier
+    criticite: majeure
+
+  - id: saucedemo.commande.controle_saisie
+    label: Bloquer la commande si les informations client sont incomplètes
+    criticite: majeure
+
+  - id: saucedemo.commande.resume
+    label: Vérifier le résumé de commande avant validation
+    criticite: majeure
+
+  - id: saucedemo.commande.finalisation
+    label: Finaliser une commande jusqu'à la confirmation
+    criticite: critique

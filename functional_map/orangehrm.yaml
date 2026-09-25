@@ -1,0 +1,58 @@
+# Référentiel fonctionnel du module OrangeHRM (progiciel RH de démonstration).
+#
+# BANC D'ESSAI - sert à éprouver la chaîne « cas nominal écrit → test automatisé »
+# sur une application métier que personne n'a modélisée à l'avance.
+#
+# Ce fichier est le SEUL endroit où les écrans et les fonctionnalités sont nommés.
+# Le code des tests s'y réfère par identifiant ; `tools/coverage.py --check` refuse
+# toute référence à un identifiant absent d'ici.
+
+module: orangehrm
+label: OrangeHRM (banc d'essai)
+plateformes: [web]
+
+# Écrans et popups : ce qu'un test TRAVERSE.
+# Renseignés dans le code par `Wait For Screen  <id>  <locator>`.
+ecrans:
+  - id: orangehrm.connexion
+    label: Page de connexion
+    type: page
+
+  - id: orangehrm.tableau_de_bord
+    label: Tableau de bord
+    type: page
+
+  - id: orangehrm.pim.liste_employes
+    label: PIM - Liste des employés
+    type: page
+
+  - id: orangehrm.pim.creation_employe
+    label: PIM - Formulaire de création d'un employé
+    type: page
+
+  - id: orangehrm.pim.details_employe
+    label: PIM - Fiche employé, informations personnelles
+    type: page
+
+  - id: orangehrm.popup_confirmation
+    label: Popup de confirmation de suppression
+    type: popup
+
+# Fonctionnalités métier : ce qu'un test VÉRIFIE.
+# Déclarées dans le code par le tag `feat:<id>` sur le test.
+fonctionnalites:
+  - id: orangehrm.connexion.identifiants_valides
+    label: Se connecter avec des identifiants valides
+    criticite: critique
+
+  - id: orangehrm.pim.creation_employe
+    label: Créer un employé
+    criticite: critique
+
+  - id: orangehrm.pim.recherche_par_matricule
+    label: Rechercher un employé par son matricule
+    criticite: majeure
+
+  - id: orangehrm.pim.suppression_employe
+    label: Supprimer un employé
+    criticite: majeure

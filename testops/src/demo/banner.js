@@ -67,7 +67,7 @@ export const mountDemoRibbon = () => {
   ribbon.className = 'demo-ribbon';
   ribbon.innerHTML = `
     <strong>Démonstration</strong>
-    <span>aucun test n'est réellement exécuté - un run enregistré est rejoué.</span>
+    <span>aucun test n'est réellement exécuté - des runs enregistrés sont rejoués.</span>
     <a href="https://github.com/julien-becheny/robot-testops" target="_blank" rel="noreferrer">
       Voir le code
     </a>

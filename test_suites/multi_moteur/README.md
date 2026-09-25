@@ -38,7 +38,7 @@ attend qu'il réponde, puis joue ce dossier et `test_suites/appium/` avec l'adap
 depuis le fichier qui l'importe, pas depuis le répertoire courant.
 
 ```powershell
-.\env\Scripts\robot.exe `
+uv run robot `
   -v ACTIONS:$PWD/libraries/resources/common/actions_appium.resource `
   -v ENVIRONMENT:saucedemo `
   -d temp\run_mobile test_suites\multi_moteur

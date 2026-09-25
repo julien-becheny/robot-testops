@@ -8,6 +8,9 @@ import platform
 import sys
 from pathlib import Path
 
+# Un dossier de run commence par son horodatage ; celui-ci ne peut donc pas en être un.
+CAMPAIGN_REPORT_PREFIX = "campaign_"
+
 
 class Paths:
     """Singleton de gestion des chemins du projet"""
@@ -40,7 +43,8 @@ class Paths:
         self.TEST_DATA = self.LIBRARIES / "test_data"
         self.TEST_OBJECTS = self.LIBRARIES / "test_objects"
 
-        # 📂 Rapports générés (index, artefacts de run)
+        # 📂 Couverture fonctionnelle : référentiel (source) et rapports (générés)
+        self.FUNCTIONAL_MAP = self.PROJECT_ROOT / "functional_map"
         self.RESULTS = self.PROJECT_ROOT / "results"
         
         # 📂 Dossiers de sortie (dépendent de l'OS)
@@ -94,6 +98,14 @@ class Paths:
     def get_report_folder(self, dt_stamp):
         """Retourne le chemin du dossier de rapport pour un timestamp donné"""
         return self.REPORTS / dt_stamp
+
+    def get_campaign_report_folder(self, campaign_id):
+        """Retourne le dossier du rapport agrégé d'une campagne : un agrégat de runs, pas un run."""
+        return self.REPORTS / f"{CAMPAIGN_REPORT_PREFIX}{campaign_id}"
+
+    def is_campaign_report_folder(self, folder):
+        """Indique si un dossier de rapports est le rapport agrégé d'une campagne."""
+        return Path(folder).name.startswith(CAMPAIGN_REPORT_PREFIX)
     
     def get_merge_dir(self, dt_stamp):
         """Retourne le chemin du dossier de fusion"""

@@ -55,6 +55,16 @@ def test_the_most_recent_run_wins(reports) -> None:
     assert history.last_run()["name"] == "Recent"
 
 
+def test_a_campaign_report_is_not_the_last_run(reports) -> None:
+    """Généré après coup, le rapport agrégé d'une campagne est plus récent que tout run."""
+    run = _write_run(reports, "2026_08_24-120000", name="Run")
+    report = _write_run(reports, "campaign_camp_2a9dfdafd577", name="Recette")
+    os.utime(run / history.OUTPUT_FILE, (1, 1))
+    os.utime(report / history.OUTPUT_FILE, (2_000_000_000, 2_000_000_000))
+
+    assert history.last_run()["name"] == "Run"
+
+
 def test_a_failed_run_is_reported_as_failed(reports) -> None:
     """Annoncer « réussi » sur un run rouge ferait perdre la confiance dans la page."""
     _write_run(reports, "2026_08_24-120000", passed=11, failed=3)

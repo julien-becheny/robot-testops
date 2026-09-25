@@ -1,0 +1,137 @@
+{
+  "preflight": {
+    "appium_online": false,
+    "checks": [
+      {
+        "detail": "C:\\Users\\qa\\AppData\\Roaming\\npm\\appium.CMD",
+        "hint": "",
+        "name": "Serveur Appium (CLI)",
+        "ok": true
+      },
+      {
+        "detail": "injoignable (http://127.0.0.1:4723)",
+        "hint": "Lancer : appium",
+        "name": "Serveur Appium (en ligne)",
+        "ok": false
+      },
+      {
+        "detail": "emulator-5554",
+        "hint": "",
+        "name": "Appareil Android",
+        "ok": true
+      },
+      {
+        "detail": "absent",
+        "hint": "appium driver install uiautomator2",
+        "name": "Driver Appium uiautomator2",
+        "ok": false
+      }
+    ],
+    "ok": false,
+    "platform": "android"
+  },
+  "preflightOnline": {
+    "appium_online": true,
+    "checks": [
+      {
+        "detail": "C:\\Users\\qa\\AppData\\Roaming\\npm\\appium.CMD",
+        "hint": "",
+        "name": "Serveur Appium (CLI)",
+        "ok": true
+      },
+      {
+        "detail": "http://127.0.0.1:4723 (HTTP 200)",
+        "hint": "",
+        "name": "Serveur Appium (en ligne)",
+        "ok": true
+      },
+      {
+        "detail": "emulator-5554",
+        "hint": "",
+        "name": "Appareil Android",
+        "ok": true
+      },
+      {
+        "detail": "absent",
+        "hint": "appium driver install uiautomator2",
+        "name": "Driver Appium uiautomator2",
+        "ok": false
+      }
+    ],
+    "ok": false,
+    "platform": "android"
+  },
+  "appiumStart": {
+    "detail": "demarrage lance - le serveur sera en ligne dans quelques secondes",
+    "ok": true,
+    "running": false
+  },
+  "appiumStop": {
+    "detail": "serveur Appium arrete",
+    "ok": true
+  },
+  "run": [
+    {
+      "name": "Smoke - Ouvrir Les Réglages Android",
+      "steps": [
+        {
+          "name": "Open Mobile App",
+          "failed": true
+        },
+        {
+          "name": "Wait Until Page Contains Element",
+          "failed": false
+        }
+      ],
+      "longname": "Appium.00 Smoke Appium.Smoke - Ouvrir Les Réglages Android",
+      "status": "FAIL",
+      "elapsed": 370,
+      "message": "WebDriverException: Message: Could not find a driver for automationName 'UiAutomator2' and platformName 'Android'. Have you installed a driver that supports those capabilities? Run 'appium driver list --installed' to see. (Lower-level error: Could not find installed driver to support given caps)\nStacktrace:\nUnknownError: Could not find a driver for automationName 'UiAutomator2' and platformName 'Android'. Have you installed a driver that supports those capabilities? Run 'appium driver list --installed' to see. (Lower-level error: Could not find installed driver to support given caps)\n    at getResponseForW3CError (C:\\Users\\qa\\AppData\\Roaming\\npm\\node_modules\\appium\\node_modules\\@appium\\base-driver\\lib\\protocol\\errors.ts:1103:34)\n    at asyncHandler (C:\\Users\\qa\\AppData\\Roaming\\npm\\node_modules\\appium\\node_modules\\@appium\\base-driver\\lib\\protocol\\protocol.ts:507:57)\nThe above error is caused by\nError: Could not find a driver for automationName 'UiAutomator2' and platformName 'Android'. Have you installed a driver that supports those capabilities? Run 'appium driver list --installed' to see. (Lower-level error: Could not find installed driver to support given caps)\n    at DriverConfig.findMatchingDriver (C:\\Users\\qa\\AppData\\Roaming\\npm\\node_modules\\appium\\lib\\extension\\driver-config.js:173:13)\n    at AppiumDriver.createSession (C:\\Users\\qa\\AppData\\Roaming\\npm\\node_modules\\appium\\lib\\appium.js:303:35)\n    at runCommandPromise (C:\\Users\\qa\\AppData\\Roaming\\npm\\node_modules\\appium\\node_modules\\@appium\\base-driver\\lib\\basedriver\\driver.ts:116:20)\n    at AppiumDriver.executeCommand (C:\\Users\\qa\\AppData\\Roaming\\npm\\node_modules\\appium\\node_modules\\@appium\\base-driver\\lib\\basedriver\\driver.ts:161:15)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at defaultBehavior (C:\\Users\\qa\\AppData\\Roaming\\npm\\node_modules\\appium\\lib\\appium.js:726:16)\n    at AppiumDriver.executeWrappedCommand (C:\\Users\\qa\\AppData\\Roaming\\npm\\node_modules\\appium\\lib\\appium.js:843:16)\n    at AppiumDriver.executeCommand (C:\\Users\\qa\\AppData\\Roaming\\npm\\node_modules\\appium\\lib\\appium.js:742:17)\n    at asyncHandler (C:\\Users\\qa\\AppData\\Roaming\\npm\\node_modules\\appium\\node_modules\\@appium\\base-driver\\lib\\protocol\\protocol.ts:409:19)"
+    },
+    {
+      "name": "Achat - Deux Articles Jusqu'à La Confirmation",
+      "steps": [
+        {
+          "name": "Ouvrir La Boutique",
+          "failed": true
+        },
+        {
+          "name": "Se Connecter",
+          "failed": false
+        },
+        {
+          "name": "Ajouter Deux Articles Au Panier",
+          "failed": false
+        },
+        {
+          "name": "Le Panier Doit Contenir",
+          "failed": false
+        },
+        {
+          "name": "Ouvrir Le Panier Et Passer Au Checkout",
+          "failed": false
+        },
+        {
+          "name": "Remplir Les Informations Client",
+          "failed": false
+        },
+        {
+          "name": "Un Total Doit Etre Affiche",
+          "failed": false
+        },
+        {
+          "name": "Finaliser La Commande",
+          "failed": false
+        },
+        {
+          "name": "La Commande Doit Etre Confirmee",
+          "failed": false
+        }
+      ],
+      "longname": "Multi Moteur.Achat Saucedemo.Achat - Deux Articles Jusqu'à La Confirmation",
+      "status": "FAIL",
+      "elapsed": 146,
+      "message": "WebDriverException: Message: Could not find a driver for automationName 'UiAutomator2' and platformName 'Android'. Have you installed a driver that supports those capabilities? Run 'appium driver list --installed' to see. (Lower-level error: Could not find installed driver to support given caps)\nStacktrace:\nUnknownError: Could not find a driver for automationName 'UiAutomator2' and platformName 'Android'. Have you installed a driver that supports those capabilities? Run 'appium driver list --installed' to see. (Lower-level error: Could not find installed driver to support given caps)\n    at getResponseForW3CError (C:\\Users\\qa\\AppData\\Roaming\\npm\\node_modules\\appium\\node_modules\\@appium\\base-driver\\lib\\protocol\\errors.ts:1103:34)\n    at asyncHandler (C:\\Users\\qa\\AppData\\Roaming\\npm\\node_modules\\appium\\node_modules\\@appium\\base-driver\\lib\\protocol\\protocol.ts:507:57)\nThe above error is caused by\nError: Could not find a driver for automationName 'UiAutomator2' and platformName 'Android'. Have you installed a driver that supports those capabilities? Run 'appium driver list --installed' to see. (Lower-level error: Could not find installed driver to support given caps)\n    at DriverConfig.findMatchingDriver (C:\\Users\\qa\\AppData\\Roaming\\npm\\node_modules\\appium\\lib\\extension\\driver-config.js:173:13)\n    at AppiumDriver.createSession (C:\\Users\\qa\\AppData\\Roaming\\npm\\node_modules\\appium\\lib\\appium.js:303:35)\n    at runCommandPromise (C:\\Users\\qa\\AppData\\Roaming\\npm\\node_modules\\appium\\node_modules\\@appium\\base-driver\\lib\\basedriver\\driver.ts:116:20)\n    at AppiumDriver.executeCommand (C:\\Users\\qa\\AppData\\Roaming\\npm\\node_modules\\appium\\node_modules\\@appium\\base-driver\\lib\\basedriver\\driver.ts:161:15)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at defaultBehavior (C:\\Users\\qa\\AppData\\Roaming\\npm\\node_modules\\appium\\lib\\appium.js:726:16)\n    at AppiumDriver.executeWrappedCommand (C:\\Users\\qa\\AppData\\Roaming\\npm\\node_modules\\appium\\lib\\appium.js:843:16)\n    at AppiumDriver.executeCommand (C:\\Users\\qa\\AppData\\Roaming\\npm\\node_modules\\appium\\lib\\appium.js:742:17)\n    at asyncHandler (C:\\Users\\qa\\AppData\\Roaming\\npm\\node_modules\\appium\\node_modules\\@appium\\base-driver\\lib\\protocol\\protocol.ts:409:19)"
+    }
+  ]
+}

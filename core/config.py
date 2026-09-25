@@ -80,6 +80,8 @@ class Config:
     
     _instance = None
     _initialized = False
+    # Vrai quand le fichier existe mais n'a pas pu être lu : il ne doit plus être réécrit.
+    _unreadable = False
 
     def __new__(cls):
         """Retourne l'unique gestionnaire de configuration du processus."""
@@ -108,9 +110,11 @@ class Config:
 
         Si le fichier n'existe pas, il est créé avec les valeurs par défaut. Un
         fichier illisible, mal formé ou dont la racine n'est pas un objet JSON
-        est conservé sur disque pour diagnostic, mais les valeurs par défaut sont
-        utilisées en mémoire.
+        est conservé sur disque pour diagnostic, les valeurs par défaut sont
+        utilisées en mémoire, et aucune sauvegarde ne le remplace jusqu'au
+        prochain chargement réussi.
         """
+        self._unreadable = False
         if not self.config_file.exists():
             logger.warning("Fichier de configuration introuvable : %s", self.config_file)
             self._config_vars = _default_config()
@@ -119,21 +123,25 @@ class Config:
             return
 
         try:
-            loaded_data = json.loads(self.config_file.read_text(encoding="utf-8"))
+            # Sur les octets, json détecte seul le BOM UTF-8 et l'UTF-16 de PowerShell 5.
+            loaded_data = json.loads(self.config_file.read_bytes())
         except json.JSONDecodeError as exc:
             logger.error("Configuration JSON mal formée : %s", exc)
             logger.debug("Détail du décodage de la configuration", exc_info=True)
             self._config_vars = _default_config()
+            self._unreadable = True
             return
-        except OSError as exc:
+        except (OSError, UnicodeDecodeError) as exc:
             logger.error("Lecture de la configuration impossible : %s", exc)
             logger.debug("Détail de la lecture de la configuration", exc_info=True)
             self._config_vars = _default_config()
+            self._unreadable = True
             return
 
         if not isinstance(loaded_data, dict):
             logger.error("La racine de la configuration doit être un objet JSON")
             self._config_vars = _default_config()
+            self._unreadable = True
             return
 
         self._config_vars = loaded_data.copy()
@@ -187,6 +195,10 @@ class Config:
         Returns:
             ``True`` si le fichier a été remplacé, sinon ``False``.
         """
+        if self._unreadable:
+            logger.error("Configuration illisible : %s n'est pas réécrit, il peut contenir des "
+                         "secrets. Le corriger, puis recharger la configuration.", self.config_file)
+            return False
         temporary_path: Path | None = None
         try:
             serialized_config = json.dumps(self._config_vars, indent=4, ensure_ascii=False)

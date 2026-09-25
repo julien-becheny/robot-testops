@@ -95,6 +95,20 @@ def test_invalid_smoke_payload_creates_no_session(
     thread_factory.assert_not_called()
 
 
+def test_run_appium_needs_no_parameter_and_starts_one_session(
+    client,
+    execution_starters,
+) -> None:
+    """Le run mobile ne prend plus de moteur en paramètre : il découle des suites ciblées."""
+    create_session, _thread_factory, thread_instance = execution_starters
+
+    response = client.post('/run-appium')
+
+    assert response.status_code == 200
+    create_session.assert_called_once_with(workflow='appium')
+    thread_instance.start.assert_called_once()
+
+
 def test_tag_filters_use_catalog_without_arbitrary_count_limit() -> None:
     """Les tags sont canoniques et dédupliqués sans seuil numérique artificiel."""
     catalog = [f'tag-{index}' for index in range(150)]

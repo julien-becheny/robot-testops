@@ -31,24 +31,29 @@ def robot_command() -> list[str]:
 
 
 def _listener_arg(session_id=None, phase: str = 'run') -> list[str]:
-    """Construit l'argument --listener avec session_id et phase du run.
+    """Construit les arguments --listener : avancement du run, puis diagnostic.
 
     La phase (`run` ou `rerun`) distingue le premier passage du rejeu : les deux
     envoient leur propre avancement, sur la meme session.
+
+    Le diagnostic de locator ne coute rien tant qu'aucun keyword Browser n'echoue :
+    il n'ouvre rien, il interroge la page deja ouverte.
     """
     listener = "robot_listeners.execution_listener.ExecutionListener"
-    if session_id:
-        return ["--listener", f"{listener}:{session_id}:{phase}"]
-    return ["--listener", f"{listener}::{phase}"]
+    suffixe = f"{session_id}:{phase}" if session_id else f":{phase}"
+    return ["--listener", f"{listener}:{suffixe}",
+            "--listener", "robot_listeners.locator_diagnostic.LocatorDiagnostic"]
 
 
 def _default_exclusions() -> list[str]:
     """Tags jamais joues par les runs habituels.
 
+    `appium` designe les suites qui exigent un appareil connecte (test_suites/appium/) :
+    sans lui, elles echoueraient sans rien apprendre. Elles se lancent par get_appium_cmd.
     `quarantaine` met de cote un test juge instable : il sort du verdict sans disparaitre
     du depot, et la page de sante de la suite le rappelle a l'ordre.
     """
-    excluded = ("not_ready", "in_dev", "blocked", "deprecated", "quarantaine")
+    excluded = ("not_ready", "in_dev", "blocked", "deprecated", "appium", "quarantaine")
     return [arg for tag in excluded for arg in ("-e", tag)]
 
 
@@ -83,16 +88,16 @@ def _environment_arg() -> list[str]:
     return ["-v", f"ENVIRONMENT:{environments.active_environment() or ''}"]
 
 
-def _actions_arg() -> list[str]:
+def _actions_arg(engine: str = 'playwright') -> list[str]:
     """Injecte -v ACTIONS : l'adaptateur qui traduit les primitives multi-moteur.
 
     Les suites de test_suites/multi_moteur/ sont ecrites une seule fois, dans un
-    vocabulaire neutre, et s'executent avec l'adaptateur designe ici. Un second moteur
-    (Appium, par exemple) s'ajoute en ecrivant son propre `actions_<moteur>.resource`,
-    sans toucher aux tests. Les autres suites ignorent cette variable : elles appellent
-    leur librairie directement.
+    vocabulaire neutre, et s'executent avec Playwright ou Appium selon l'adaptateur
+    designe ici. Les autres suites ignorent cette variable : elles appellent leur
+    librairie directement.
     """
-    actions = (paths.RESOURCES / 'common' / 'actions_playwright.resource').as_posix()
+    engine = 'appium' if str(engine).lower() == 'appium' else 'playwright'
+    actions = (paths.RESOURCES / 'common' / f'actions_{engine}.resource').as_posix()
     return ["-v", f"ACTIONS:{actions}"]
 
 
@@ -282,5 +287,30 @@ def get_campaign_cmd(dt_stamp: str, tests: list, rerun_failed: bool = False,
     cmd += _actions_arg()
     cmd += ["-N", f"Campaign_Tests_{browser.capitalize()}_{device.capitalize()}"]
     cmd += [str(paths.TEST_SUITES)]
+
+    return cmd
+
+
+def get_appium_cmd(dt_stamp: str, session_id: str = None) -> list[str]:
+    """
+    Commande RF pour les tests joues sur un appareil reel, via Appium.
+
+    Deux dossiers sont cibles : `test_suites/appium/` (specifiquement mobile, exclu
+    des runs habituels) et `test_suites/multi_moteur/` (ecrit une seule fois, joue ici
+    avec l'adaptateur Appium au lieu de Playwright).
+
+    Le serveur Appium doit tourner : c'est l'orchestrateur qui le demarre en amont.
+    """
+    report_dir = paths.REPORTS / dt_stamp
+
+    cmd = robot_command()
+    cmd += _listener_arg(session_id)
+    cmd += ["-e", "not_ready", "-e", "in_dev", "-e", "blocked", "-e", "deprecated"]
+    cmd += ["-d", str(report_dir)]
+    cmd += ["-o", "output.xml", "-r", "report.html", "-l", "log.html"]
+    cmd += _environment_arg()
+    cmd += _actions_arg('appium')
+    cmd += ["-N", "Tests_Mobile_Appium"]
+    cmd += [str(paths.TEST_SUITES / 'appium'), str(paths.TEST_SUITES / 'multi_moteur')]
 
     return cmd

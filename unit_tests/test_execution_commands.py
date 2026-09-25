@@ -40,12 +40,37 @@ def _excluded_tags(command: list[str]) -> list[str]:
     return [command[index + 1] for index, arg in enumerate(command) if arg == "-e"]
 
 
+def test_standard_runs_exclude_the_appium_suites() -> None:
+    """Sans appareil connecté, ces suites échoueraient sans rien apprendre à personne."""
+    command = commands.get_tag_filtered_cmd("run", ["smoke"], [])
+
+    assert "appium" in _excluded_tags(command)
+
+
 def test_standard_runs_inject_the_playwright_adapter() -> None:
     """Les suites multi-moteur partent avec les autres, jouées par Playwright."""
     command = commands.get_tag_filtered_cmd("run", ["smoke"], [])
 
     actions = next(arg for arg in command if arg.startswith("ACTIONS:"))
     assert actions.endswith("actions_playwright.resource")
+
+
+def test_appium_run_targets_both_folders_with_its_own_adapter() -> None:
+    """Le run mobile joue le spécifiquement mobile ET les tests portables, via Appium."""
+    command = commands.get_appium_cmd("run")
+
+    actions = next(arg for arg in command if arg.startswith("ACTIONS:"))
+    assert actions.endswith("actions_appium.resource")
+    suites = [arg for arg in command if "test_suites" in arg]
+    assert any(arg.endswith("appium") for arg in suites)
+    assert any(arg.endswith("multi_moteur") for arg in suites)
+
+
+def test_appium_run_does_not_exclude_the_tag_it_is_meant_to_play() -> None:
+    """Reprendre les exclusions par défaut ici viderait le run de son contenu."""
+    command = commands.get_appium_cmd("run")
+
+    assert "appium" not in _excluded_tags(command)
 
 
 def test_smoke_run_plays_the_suite_announced_by_the_api() -> None:
@@ -74,6 +99,14 @@ def test_the_setting_traces_every_browser_run(monkeypatch, browser_runs, run_nam
     assert _TRACING_VAR in browser_runs[run_name]()
 
 
+def test_the_appium_run_ignores_the_tracing_setting(monkeypatch) -> None:
+    """La trace est un artefact Playwright : promettre un fichier qu'Appium n'écrira pas
+    enverrait le diagnostic chercher une preuve inexistante."""
+    _set_tracing(monkeypatch, "on")
+
+    assert _TRACING_VAR not in commands.get_appium_cmd("run")
+
+
 @pytest.mark.parametrize("run_name", ["smoke", "filtre", "randomise", "campagne"])
 def test_every_run_uses_the_interpreter_of_this_project(browser_runs, run_name) -> None:
     """Appeler « robot » tout court laisse le PATH décider.
@@ -82,3 +115,8 @@ def test_every_run_uses_the_interpreter_of_this_project(browser_runs, run_name) 
     librairies et échouaient pour des raisons imaginaires.
     """
     assert browser_runs[run_name]()[:3] == [sys.executable, "-m", "robot"]
+
+
+def test_the_appium_run_uses_the_interpreter_too() -> None:
+    """Le run mobile n'échappe pas à la règle."""
+    assert commands.get_appium_cmd("run")[:3] == [sys.executable, "-m", "robot"]

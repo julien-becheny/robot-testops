@@ -1,4 +1,6 @@
-import { FiPlay, FiZap } from 'react-icons/fi';
+import { useEffect, useState } from 'react';
+import { FiAlertTriangle, FiCheckCircle, FiPlay, FiSmartphone, FiZap } from 'react-icons/fi';
+import { API_BASE_URL } from '../config/api';
 import { BROWSERS, DEVICES } from '../components/Header';
 import ActionButton from '../components/ActionButton';
 import '../css/LaunchPage.css';
@@ -41,8 +43,93 @@ const smokeDescriptor = (selectedBrowsers, selectedDevices) => {
   };
 };
 
-const LaunchPage = ({ selectedBrowsers = [], selectedDevices = [], onLaunch }) => {
-  const descriptor = smokeDescriptor(selectedBrowsers, selectedDevices);
+const appiumDescriptor = () => ({
+  icon: FiSmartphone,
+  title: 'Tests sur mobile physique',
+  subtitle:
+    "Joue les tests sur l'appareil Android connecté, via Appium. Les tests multi-moteur partent aussi dans les runs habituels, avec Playwright : ils sont écrits une seule fois.",
+  cards: [
+    {
+      label: 'Ce qui va tourner',
+      value: 'appium/ + multi_moteur/',
+      hint: 'Spécifiquement mobile, et tests portables',
+    },
+    {
+      label: 'Moteur',
+      value: 'Appium',
+      hint: 'Chrome sur appareil réel ou émulateur',
+    },
+    {
+      label: 'Avant le run',
+      value: 'Appium démarré',
+      hint: "Lancé automatiquement, run annulé s'il ne répond pas",
+    },
+  ],
+  steps: [
+    "Démarre le serveur Appium s'il ne tourne pas déjà, et attend qu'il réponde.",
+    "Joue les suites mobile sur l'appareil connecté.",
+    'Bascule sur « Exécution » : logs en direct, puis rapport.',
+  ],
+  actionLabel: 'Lancer sur mobile',
+});
+
+// Etat reel de la chaine mobile plutot qu'un avertissement permanent : affiche en
+// continu, il ne se distinguerait plus du bruit le jour ou l'appareil manque vraiment.
+const MobileStatus = () => {
+  const [state, setState] = useState(null);
+
+  useEffect(() => {
+    let alive = true;
+    fetch(`${API_BASE_URL}/mobile-preflight`)
+      .then((res) => res.json())
+      .then((data) => alive && setState(data))
+      .catch(() => alive && setState({ unreachable: true }));
+    return () => {
+      alive = false;
+    };
+  }, []);
+
+  if (!state) return null;
+
+  if (state.unreachable) {
+    return (
+      <p className="launch-warning">
+        <FiAlertTriangle size={15} />
+        <span>Etat mobile indisponible : le backend n’a pas répondu.</span>
+      </p>
+    );
+  }
+
+  if (state.ok) {
+    const device = state.checks?.find((check) => check.name === 'Appareil Android')?.detail;
+    const server = state.appium_online ? 'Appium en ligne' : 'Appium sera démarré au lancement';
+    return (
+      <p className="launch-status-ok">
+        <FiCheckCircle size={15} />
+        <span>{device ? `Appareil ${device} détecté · ${server}` : server}</span>
+      </p>
+    );
+  }
+
+  const missing = (state.checks || []).filter((check) => check.ok === false);
+  return (
+    <div className="launch-warning launch-warning-list">
+      <FiAlertTriangle size={15} />
+      <ul>
+        {missing.map((check) => (
+          <li key={check.name}>
+            {check.name} : {check.detail}
+            {check.hint ? ` - ${check.hint}` : ''}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+};
+
+const LaunchPage = ({ kind, selectedBrowsers = [], selectedDevices = [], onLaunch }) => {
+  const descriptor =
+    kind === 'smoke' ? smokeDescriptor(selectedBrowsers, selectedDevices) : appiumDescriptor();
   const Icon = descriptor.icon;
 
   return (
@@ -78,6 +165,15 @@ const LaunchPage = ({ selectedBrowsers = [], selectedDevices = [], onLaunch }) =
           ))}
         </ol>
       </section>
+
+      {descriptor.warning && (
+        <p className="launch-warning">
+          <FiAlertTriangle size={15} />
+          <span>{descriptor.warning}</span>
+        </p>
+      )}
+
+      {kind === 'appium' && <MobileStatus />}
 
       <div className="launch-action">
         <ActionButton icon={FiPlay} onClick={onLaunch}>

@@ -27,9 +27,9 @@ ${CREATED_EMPLOYEE_ID}  ${EMPTY}
 PIM - Create Employee
   [Documentation]  Crée un employé et vérifie qu'il est bien enregistré côté serveur.
   [Tags]  feat:orangehrm.pim.creation_employe
+  Open OrangeHRM Session
   ${Employee_Id}=  New Employee Id
-  VAR  ${CREATED_EMPLOYEE_ID}  ${Employee_Id}  scope=TEST
-  Open And Login As  ADMIN
+  VAR  ${CREATED_EMPLOYEE_ID}=  ${Employee_Id}  scope=TEST
   Open Employee List
   Open Add Employee Form
   Create Employee

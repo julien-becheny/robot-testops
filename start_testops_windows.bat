@@ -16,12 +16,11 @@ echo ===========================================================================
 set FLASK_HOST=0.0.0.0
 set BROWSER=none
 
-:: Activer le virtualenv s'il existe
-if exist "%ROOT%\env\Scripts\activate.bat" (
-    call "%ROOT%\env\Scripts\activate.bat"
-    echo [OK] Virtualenv active
-) else (
-    echo [!!] Pas de virtualenv trouve, utilisation du Python systeme
+where uv >nul 2>&1
+if errorlevel 1 (
+    echo [!!] uv est introuvable dans le PATH - voir la section Demarrage du README.
+    pause
+    exit /b 1
 )
 
 :: Tuer les processus existants sur les ports 3000 et 5001
@@ -34,7 +33,9 @@ for /f "tokens=5" %%P in ('netstat -ano ^| findstr ":5001" ^| findstr "LISTENING
 
 :: Demarrer le serveur Flask minimise
 echo [..] Demarrage du serveur Flask sur %FLASK_HOST%:5001...
-start /MIN "TestOps - Flask Server" cmd /k "cd /d "%ROOT%" && python api\app.py"
+:: L'activation ne sert pas au lancement (uv s'en charge) mais a la RELANCE manuelle :
+:: apres un Ctrl+C, `python api\app.py` vise alors le bon interpreteur, et le prompt le montre.
+start /MIN "TestOps - Flask Server" cmd /k "cd /d "%ROOT%" && call .venv\Scripts\activate.bat & uv run python api\app.py"
 
 :: Demarrer l'application React minimisee
 echo [..] Demarrage de l'interface React...

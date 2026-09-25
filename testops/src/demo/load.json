@@ -1,0 +1,6365 @@
+{
+  "targets": {
+    "targets": [
+      {
+        "base_url": "https://quickpizza.grafana.com",
+        "description": "Cible d'entrainement publique fournie par Grafana.",
+        "id": "quickpizza",
+        "label": "QuickPizza - cible de demo publique"
+      }
+    ]
+  },
+  "profiles": {
+    "models": [
+      {
+        "engine": "locust",
+        "hint": "Tu fixes un NOMBRE d'utilisateurs. Chacun attend sa réponse avant de repartir : si l'appli ralentit, la charge produite baisse d'elle-même. C'est le comportement d'agents devant leur écran.",
+        "id": "closed",
+        "label": "Des utilisateurs qui travaillent"
+      },
+      {
+        "engine": "k6",
+        "hint": "Tu fixes un DÉBIT (requêtes par seconde), tenu quoi qu'il arrive. C'est le comportement d'une synchronisation planifiée, d'un pic de connexion ou d'un autre système qui appelle. Seul ce modèle montre l'engorgement.",
+        "id": "open",
+        "label": "Un flux qui arrive"
+      }
+    ],
+    "types": [
+      {
+        "advanced": [],
+        "description": "Vérifie que l'appli répond (1 utilisateur, très court). À lancer en premier.",
+        "engine": "locust",
+        "fields": [
+          {
+            "default": "10s",
+            "label": "Durée",
+            "name": "duration",
+            "type": "duration"
+          }
+        ],
+        "goal": "Vérifier que l'appli répond correctement avant tout test de charge.",
+        "id": "smoke",
+        "label": "Smoke - vérification rapide",
+        "model": "closed",
+        "watch": "La réussite des requêtes : aucune erreur attendue (réponse binaire OK/KO)."
+      },
+      {
+        "advanced": [
+          {
+            "default": 1.0,
+            "label": "Think time (s)",
+            "max": 60,
+            "min": 0,
+            "name": "think_time",
+            "type": "float"
+          },
+          {
+            "default": 800,
+            "label": "Seuil p95 (ms)",
+            "max": 120000,
+            "min": 1,
+            "name": "p95_ms",
+            "type": "int"
+          },
+          {
+            "default": 1600,
+            "label": "Seuil p99 (ms)",
+            "max": 120000,
+            "min": 1,
+            "name": "p99_ms",
+            "type": "int"
+          },
+          {
+            "default": 1,
+            "label": "Seuil erreurs (%)",
+            "max": 100,
+            "min": 0,
+            "name": "error_pct",
+            "type": "float"
+          },
+          {
+            "default": 1,
+            "label": "Processus d'injection",
+            "max": 64,
+            "min": 1,
+            "name": "processes",
+            "type": "int"
+          }
+        ],
+        "description": "Reproduit la charge normale attendue : montée, palier, descente. Le test de référence.",
+        "engine": "locust",
+        "fields": [
+          {
+            "default": 200,
+            "label": "VUs cibles",
+            "max": 2000,
+            "min": 1,
+            "name": "vus",
+            "type": "int"
+          },
+          {
+            "default": "1m30s",
+            "label": "Montée",
+            "name": "ramp_up",
+            "type": "duration"
+          },
+          {
+            "default": "1m30s",
+            "label": "Palier",
+            "name": "steady",
+            "type": "duration"
+          },
+          {
+            "default": "30s",
+            "label": "Descente",
+            "name": "ramp_down",
+            "type": "duration"
+          }
+        ],
+        "goal": "Valider que le système tient la charge nominale attendue en production.",
+        "id": "load",
+        "label": "Load - charge nominale",
+        "model": "closed",
+        "watch": "Le p95 doit rester sous le seuil et le taux d'erreur proche de zéro. Surveille aussi le débit produit : s'il décroche, la charge s'est auto-limitée et le p95 affiché est optimiste."
+      },
+      {
+        "advanced": [
+          {
+            "default": 1.0,
+            "label": "Think time (s)",
+            "max": 60,
+            "min": 0,
+            "name": "think_time",
+            "type": "float"
+          },
+          {
+            "default": 1500,
+            "label": "Seuil p95 (ms)",
+            "max": 120000,
+            "min": 1,
+            "name": "p95_ms",
+            "type": "int"
+          },
+          {
+            "default": 3000,
+            "label": "Seuil p99 (ms)",
+            "max": 120000,
+            "min": 1,
+            "name": "p99_ms",
+            "type": "int"
+          },
+          {
+            "default": 5,
+            "label": "Seuil erreurs (%)",
+            "max": 100,
+            "min": 0,
+            "name": "error_pct",
+            "type": "float"
+          },
+          {
+            "default": 1,
+            "label": "Processus d'injection",
+            "max": 64,
+            "min": 1,
+            "name": "processes",
+            "type": "int"
+          }
+        ],
+        "description": "Pousse au-delà du nominal pour trouver le point de rupture du système.",
+        "engine": "locust",
+        "fields": [
+          {
+            "default": 200,
+            "label": "VUs au pic",
+            "max": 5000,
+            "min": 1,
+            "name": "vus",
+            "type": "int"
+          },
+          {
+            "default": "1m",
+            "label": "Montée vers le pic",
+            "name": "ramp_up",
+            "type": "duration"
+          },
+          {
+            "default": "30s",
+            "label": "Maintien au pic",
+            "name": "peak_hold",
+            "type": "duration"
+          },
+          {
+            "default": "20s",
+            "label": "Descente",
+            "name": "ramp_down",
+            "type": "duration"
+          }
+        ],
+        "goal": "Trouver le point de rupture en poussant au-delà de la charge nominale.",
+        "id": "stress",
+        "label": "Stress - point de rupture",
+        "model": "closed",
+        "watch": "À quel palier le p95 explose et les erreurs montent, puis si le système récupère à la descente. Le débit plafonne avant : c'est le premier signe."
+      },
+      {
+        "advanced": [
+          {
+            "default": 1.0,
+            "label": "Think time (s)",
+            "max": 60,
+            "min": 0,
+            "name": "think_time",
+            "type": "float"
+          },
+          {
+            "default": 800,
+            "label": "Seuil p95 (ms)",
+            "max": 120000,
+            "min": 1,
+            "name": "p95_ms",
+            "type": "int"
+          },
+          {
+            "default": 1600,
+            "label": "Seuil p99 (ms)",
+            "max": 120000,
+            "min": 1,
+            "name": "p99_ms",
+            "type": "int"
+          },
+          {
+            "default": 1,
+            "label": "Seuil erreurs (%)",
+            "max": 100,
+            "min": 0,
+            "name": "error_pct",
+            "type": "float"
+          },
+          {
+            "default": 1,
+            "label": "Processus d'injection",
+            "max": 64,
+            "min": 1,
+            "name": "processes",
+            "type": "int"
+          }
+        ],
+        "description": "Charge modérée mais longue : révèle les fuites mémoire et la dégradation dans le temps.",
+        "engine": "locust",
+        "fields": [
+          {
+            "default": 30,
+            "label": "VUs",
+            "max": 2000,
+            "min": 1,
+            "name": "vus",
+            "type": "int"
+          },
+          {
+            "default": "30m",
+            "label": "Durée",
+            "name": "duration",
+            "type": "duration"
+          }
+        ],
+        "goal": "Détecter les fuites mémoire et la dégradation lente sur une longue durée.",
+        "id": "endurance",
+        "label": "Endurance - tenue dans le temps (fuites mémoire)",
+        "model": "closed",
+        "watch": "La dérive progressive du p95 et de la mémoire serveur (pas un pic ponctuel). Un débit qui s'effrite sans erreur trahit le même ralentissement."
+      },
+      {
+        "advanced": [
+          {
+            "default": 1.0,
+            "label": "Think time (s)",
+            "max": 60,
+            "min": 0,
+            "name": "think_time",
+            "type": "float"
+          },
+          {
+            "default": 800,
+            "label": "Seuil p95 (ms)",
+            "max": 120000,
+            "min": 1,
+            "name": "p95_ms",
+            "type": "int"
+          },
+          {
+            "default": 1600,
+            "label": "Seuil p99 (ms)",
+            "max": 120000,
+            "min": 1,
+            "name": "p99_ms",
+            "type": "int"
+          },
+          {
+            "default": 1,
+            "label": "Seuil erreurs (%)",
+            "max": 100,
+            "min": 0,
+            "name": "error_pct",
+            "type": "float"
+          },
+          {
+            "default": 1,
+            "label": "Processus d'injection",
+            "max": 64,
+            "min": 1,
+            "name": "processes",
+            "type": "int"
+          }
+        ],
+        "description": "Monte par paliers successifs jusqu'à trouver le nombre de VUs où le p95 décroche.",
+        "engine": "locust",
+        "fields": [
+          {
+            "default": 100,
+            "label": "VUs de départ",
+            "max": 5000,
+            "min": 1,
+            "name": "vus_start",
+            "type": "int"
+          },
+          {
+            "default": 600,
+            "label": "VUs max",
+            "max": 10000,
+            "min": 1,
+            "name": "vus_max",
+            "type": "int"
+          },
+          {
+            "default": 100,
+            "label": "Pas (incrément)",
+            "max": 5000,
+            "min": 1,
+            "name": "vus_step",
+            "type": "int"
+          },
+          {
+            "default": "30s",
+            "label": "Montée entre paliers",
+            "name": "ramp",
+            "type": "duration"
+          },
+          {
+            "default": "2m",
+            "label": "Durée d'un palier",
+            "name": "steady",
+            "type": "duration"
+          }
+        ],
+        "goal": "Mesurer la capacité maximale : à partir de combien de VUs le système se dégrade.",
+        "id": "capacity",
+        "label": "Capacité - paliers (staircase)",
+        "model": "closed",
+        "watch": "Le palier où le p95 franchit le seuil (le test s'arrête là) et où le débit plafonne : au-delà, les VUs supplémentaires n'ajoutent plus de charge."
+      },
+      {
+        "advanced": [
+          {
+            "default": 0,
+            "label": "Think time (s)",
+            "max": 60,
+            "min": 0,
+            "name": "think_time",
+            "type": "float"
+          },
+          {
+            "default": 85,
+            "label": "Seuil CPU injecteur (%)",
+            "max": 100,
+            "min": 10,
+            "name": "cpu_max_pct",
+            "type": "int"
+          },
+          {
+            "default": 1,
+            "label": "Processus d'injection",
+            "max": 64,
+            "min": 1,
+            "name": "processes",
+            "type": "int"
+          }
+        ],
+        "description": "Mesure ce que CETTE machine sait produire avant de saturer. À lancer avant toute campagne : un injecteur saturé fausse toutes les mesures.",
+        "engine": "locust",
+        "fields": [
+          {
+            "default": 50,
+            "label": "VUs de départ",
+            "max": 5000,
+            "min": 1,
+            "name": "vus_start",
+            "type": "int"
+          },
+          {
+            "default": 500,
+            "label": "VUs max",
+            "max": 10000,
+            "min": 1,
+            "name": "vus_max",
+            "type": "int"
+          },
+          {
+            "default": 50,
+            "label": "Pas (incrément)",
+            "max": 5000,
+            "min": 1,
+            "name": "vus_step",
+            "type": "int"
+          },
+          {
+            "default": "10s",
+            "label": "Montée entre paliers",
+            "name": "ramp",
+            "type": "duration"
+          },
+          {
+            "default": "20s",
+            "label": "Durée d'un palier",
+            "name": "steady",
+            "type": "duration"
+          }
+        ],
+        "goal": "Connaître le débit maximal que l'injecteur peut générer sur ce scénario.",
+        "id": "calibration",
+        "label": "Calibrage - capacité de l'injecteur",
+        "model": "closed",
+        "watch": "Le débit atteint quand le CPU franchit le seuil. Prévois un facteur 3 de marge entre ce débit et celui de tes tests. Attention : si la cible cède avant l'injecteur, le chiffre mesure la cible, pas la machine."
+      },
+      {
+        "advanced": [
+          {
+            "default": 800,
+            "label": "Seuil p95 (ms)",
+            "max": 120000,
+            "min": 1,
+            "name": "p95_ms",
+            "type": "int"
+          },
+          {
+            "default": 1600,
+            "label": "Seuil p99 (ms)",
+            "max": 120000,
+            "min": 1,
+            "name": "p99_ms",
+            "type": "int"
+          },
+          {
+            "default": 1,
+            "label": "Seuil erreurs (%)",
+            "max": 100,
+            "min": 0,
+            "name": "error_pct",
+            "type": "float"
+          },
+          {
+            "default": 400,
+            "label": "VUs max autorisés",
+            "max": 20000,
+            "min": 1,
+            "name": "max_vus",
+            "type": "int"
+          }
+        ],
+        "description": "Envoie un débit constant de requêtes, tenu même si le système ralentit. À utiliser quand la charge ne vient pas d'utilisateurs devant leur écran : synchronisation, pic de connexion, autre système qui appelle.",
+        "engine": "k6",
+        "fields": [
+          {
+            "default": 100,
+            "label": "Débit cible (req/s)",
+            "max": 100000,
+            "min": 1,
+            "name": "rate",
+            "type": "int"
+          },
+          {
+            "default": "30s",
+            "label": "Montée",
+            "name": "ramp_up",
+            "type": "duration"
+          },
+          {
+            "default": "1m30s",
+            "label": "Palier",
+            "name": "steady",
+            "type": "duration"
+          },
+          {
+            "default": "20s",
+            "label": "Descente",
+            "name": "ramp_down",
+            "type": "duration"
+          }
+        ],
+        "goal": "Vérifier que le système absorbe un débit d'arrivée donné sans s'engorger.",
+        "id": "open_load",
+        "label": "Débit nominal - flux imposé",
+        "model": "open",
+        "watch": "Le p95, et surtout les requêtes que k6 n'a PAS pu lancer : dès que le débit demandé n'est plus tenu, la file s'allonge - premier signe d'engorgement."
+      },
+      {
+        "advanced": [
+          {
+            "default": 1500,
+            "label": "Seuil p95 (ms)",
+            "max": 120000,
+            "min": 1,
+            "name": "p95_ms",
+            "type": "int"
+          },
+          {
+            "default": 3000,
+            "label": "Seuil p99 (ms)",
+            "max": 120000,
+            "min": 1,
+            "name": "p99_ms",
+            "type": "int"
+          },
+          {
+            "default": 5,
+            "label": "Seuil erreurs (%)",
+            "max": 100,
+            "min": 0,
+            "name": "error_pct",
+            "type": "float"
+          },
+          {
+            "default": 400,
+            "label": "VUs max autorisés",
+            "max": 20000,
+            "min": 1,
+            "name": "max_vus",
+            "type": "int"
+          }
+        ],
+        "description": "Pousse le débit d'arrivée bien au-delà du nominal : montre à partir de quel rythme le système accumule du retard, et s'il s'en remet ensuite.",
+        "engine": "k6",
+        "fields": [
+          {
+            "default": 300,
+            "label": "Débit au pic (req/s)",
+            "max": 100000,
+            "min": 1,
+            "name": "rate",
+            "type": "int"
+          },
+          {
+            "default": "1m",
+            "label": "Montée vers le pic",
+            "name": "ramp_up",
+            "type": "duration"
+          },
+          {
+            "default": "30s",
+            "label": "Maintien au pic",
+            "name": "peak_hold",
+            "type": "duration"
+          },
+          {
+            "default": "20s",
+            "label": "Descente",
+            "name": "ramp_down",
+            "type": "duration"
+          }
+        ],
+        "goal": "Voir ce qui se passe quand il arrive plus de requêtes que le système n'en traite : engorgement progressif ou effondrement.",
+        "id": "open_stress",
+        "label": "Stress à débit - au-delà du nominal",
+        "model": "open",
+        "watch": "Le moment où les requêtes cessent de partir, la vitesse à laquelle le p95 s'envole, et si le système se rétablit pendant la descente."
+      },
+      {
+        "advanced": [
+          {
+            "default": 800,
+            "label": "Seuil p95 (ms)",
+            "max": 120000,
+            "min": 1,
+            "name": "p95_ms",
+            "type": "int"
+          },
+          {
+            "default": 1600,
+            "label": "Seuil p99 (ms)",
+            "max": 120000,
+            "min": 1,
+            "name": "p99_ms",
+            "type": "int"
+          },
+          {
+            "default": 1,
+            "label": "Seuil erreurs (%)",
+            "max": 100,
+            "min": 0,
+            "name": "error_pct",
+            "type": "float"
+          },
+          {
+            "default": 400,
+            "label": "VUs max autorisés",
+            "max": 20000,
+            "min": 1,
+            "name": "max_vus",
+            "type": "int"
+          }
+        ],
+        "description": "Maintient un débit modéré très longtemps : révèle les fuites mémoire et la dégradation lente, sans jamais lever le pied si le système ralentit.",
+        "engine": "k6",
+        "fields": [
+          {
+            "default": 50,
+            "label": "Débit (req/s)",
+            "max": 100000,
+            "min": 1,
+            "name": "rate",
+            "type": "int"
+          },
+          {
+            "default": "30m",
+            "label": "Durée",
+            "name": "duration",
+            "type": "duration"
+          }
+        ],
+        "goal": "Détecter une dérive lente sous un flux d'arrivée constant et réaliste.",
+        "id": "open_endurance",
+        "label": "Endurance à débit - tenue dans le temps",
+        "model": "open",
+        "watch": "La dérive du p95 entre le début et la fin, et l'apparition tardive de requêtes non parties : le signe que le retard s'accumule."
+      },
+      {
+        "advanced": [
+          {
+            "default": 800,
+            "label": "Seuil p95 (ms)",
+            "max": 120000,
+            "min": 1,
+            "name": "p95_ms",
+            "type": "int"
+          },
+          {
+            "default": 1600,
+            "label": "Seuil p99 (ms)",
+            "max": 120000,
+            "min": 1,
+            "name": "p99_ms",
+            "type": "int"
+          },
+          {
+            "default": 1,
+            "label": "Seuil erreurs (%)",
+            "max": 100,
+            "min": 0,
+            "name": "error_pct",
+            "type": "float"
+          },
+          {
+            "default": 400,
+            "label": "VUs max autorisés",
+            "max": 20000,
+            "min": 1,
+            "name": "max_vus",
+            "type": "int"
+          }
+        ],
+        "description": "Monte le débit par paliers jusqu'à ce que le système décroche. Le test s'arrête au décrochage et annonce le débit réellement absorbé.",
+        "engine": "k6",
+        "fields": [
+          {
+            "default": 50,
+            "label": "Débit de départ (req/s)",
+            "max": 100000,
+            "min": 1,
+            "name": "rate_start",
+            "type": "int"
+          },
+          {
+            "default": 500,
+            "label": "Débit max (req/s)",
+            "max": 100000,
+            "min": 1,
+            "name": "rate_max",
+            "type": "int"
+          },
+          {
+            "default": 50,
+            "label": "Pas (incrément)",
+            "max": 100000,
+            "min": 1,
+            "name": "rate_step",
+            "type": "int"
+          },
+          {
+            "default": "10s",
+            "label": "Montée entre paliers",
+            "name": "ramp",
+            "type": "duration"
+          },
+          {
+            "default": "30s",
+            "label": "Durée d'un palier",
+            "name": "steady",
+            "type": "duration"
+          }
+        ],
+        "goal": "Mesurer combien de requêtes par seconde le système absorbe réellement.",
+        "id": "open_capacity",
+        "label": "Capacité en débit - paliers",
+        "model": "open",
+        "watch": "Le palier où les requêtes commencent à ne plus partir : c'est la capacité d'absorption, exprimée en débit et non en nombre d'utilisateurs."
+      }
+    ]
+  },
+  "history": [
+    {
+      "id": "dba53e8dbdcf",
+      "params": {
+        "duration": "10s"
+      },
+      "result": {
+        "analysis": [
+          {
+            "detail": "Le p95 se lit sur les 5 % les plus lentes, soit 1 requête ici. Une seule valeur isolée - pic système, cache froid, résolution de nom - suffit alors à le fixer, et p95, p99 et max se confondent. Ce n'est pas un défaut du run : un smoke vérifie que le service répond, il ne mesure pas sa tenue. Les percentiles ne deviennent exploitables qu'au-delà de 100 requêtes ; juge ici sur le plancher et la médiane.",
+            "level": "info",
+            "title": "Percentiles peu fiables : 9 requêtes seulement"
+          },
+          {
+            "detail": "L'appli répond correctement. Tu peux enchaîner sur un test de charge (load).",
+            "level": "good",
+            "title": "Smoke OK"
+          }
+        ],
+        "avg_ms": 146.2,
+        "breach": null,
+        "checks_rate": 1.0,
+        "data_received": 25623,
+        "data_received_rate": 2528.8,
+        "data_sent": 0,
+        "data_sent_rate": 0.0,
+        "duration_s": 10.1,
+        "engine": "locust",
+        "error_rate": 0.0,
+        "exit_code": null,
+        "injector_capacity_rps": null,
+        "injector_cores": 16,
+        "injector_cpu_max": null,
+        "injector_cpu_warning": false,
+        "injector_processes": null,
+        "link_speed_mbps": 1000,
+        "max_ms": 378.9,
+        "min_ms": 116.2,
+        "network_usage_pct": 0.0,
+        "p50_ms": 120,
+        "p95_ms": 380,
+        "p99_ms": 380,
+        "reqs_per_sec": 1.0,
+        "reqs_total": 9,
+        "seuil_p95_ms": 800.0,
+        "seuil_p99_ms": null,
+        "status": "ok",
+        "stopped": false,
+        "summary_report_url": "/load-report/rapport_ab47c436.html",
+        "target_is_local": false,
+        "test_type": "smoke",
+        "thresholds_ok": true,
+        "throughput_actual_rps": null,
+        "throughput_nominal_rps": null,
+        "throughput_shortfall_pct": null,
+        "throughput_users": null,
+        "timeline": [
+          {
+            "error_rate": 0.0,
+            "p95_ms": 380,
+            "rps": 0.0,
+            "t": 2.0,
+            "users": 1
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 380,
+            "rps": 0.5,
+            "t": 4.0,
+            "users": 1
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 380,
+            "rps": 0.8,
+            "t": 6.1,
+            "users": 1
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 380,
+            "rps": 0.8,
+            "t": 8.1,
+            "users": 1
+          }
+        ],
+        "ttfb_p95_ms": 378.4,
+        "vus_deficit_pct": 0.0,
+        "vus_max": 1,
+        "vus_target_max": 1
+      },
+      "target": "quickpizza",
+      "target_label": "QuickPizza - cible de demo publique",
+      "test_type": "smoke",
+      "ts": 1790332946.9562993
+    },
+    {
+      "id": "34fa80aca41e",
+      "params": {
+        "error_pct": 5.0,
+        "max_vus": 400,
+        "p95_ms": 1500,
+        "peak_hold": "30s",
+        "ramp_down": "20s",
+        "ramp_up": "1m",
+        "rate": 300
+      },
+      "result": {
+        "analysis": [
+          {
+            "detail": "La requête la plus rapide du run a déjà pris 106 ms, soit 89 % du p95 (119 ms) : la charge n'ajoute que 13 ms. Ce plancher est le trajet réseau plus le traitement au repos - il ne dit RIEN sur la tenue en charge. Sur une cible distante, c'est surtout de la distance : compare les runs entre eux, pas à un seuil absolu.",
+            "level": "info",
+            "title": "Temps dominé par le plancher incompressible (106 ms)"
+          },
+          {
+            "detail": "Toutes les requêtes prévues sont parties à l'heure dite, quelle que soit la vitesse du système. Les temps de réponse mesurés ici ne sont pas optimistes : ils décrivent le service sous la charge annoncée.",
+            "level": "good",
+            "title": "Débit tenu : 300 req/s réellement envoyées"
+          },
+          {
+            "detail": "Le système encaisse le débit demandé en tenant ses seuils. Monte le débit au-delà de 300 req/s pour trouver le point d'engorgement.",
+            "level": "good",
+            "title": "Flux absorbé sans engorgement"
+          }
+        ],
+        "avg_ms": 113.5,
+        "breach": null,
+        "checks_rate": 1,
+        "data_received": 70831679,
+        "data_received_rate": 643914.5,
+        "data_sent": 1384934,
+        "data_sent_rate": 12590.1,
+        "dropped_iterations": 0,
+        "dropped_pct": 0,
+        "duration_s": 110,
+        "engine": "k6",
+        "error_rate": 0,
+        "exit_code": 0,
+        "failed_thresholds": [],
+        "injector_cpu_max": 1.6,
+        "injector_cpu_warning": false,
+        "max_ms": 315.3,
+        "max_vus_allowed": 400,
+        "min_ms": 106.1,
+        "model": "open",
+        "p50_ms": 113.8,
+        "p95_ms": 119,
+        "p99_ms": 120.5,
+        "rate_target": 300,
+        "reqs_per_sec": 190.9,
+        "reqs_total": 20999,
+        "seuil_p95_ms": 1500,
+        "status": "ok",
+        "stopped": false,
+        "target_is_local": false,
+        "test_type": "open_stress",
+        "thresholds_ok": true,
+        "timeline": [
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 113,
+            "rps": 2.5,
+            "t": 2.0,
+            "users": 2
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 119,
+            "rps": 12.4,
+            "t": 4.0,
+            "users": 5
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 120,
+            "rps": 22.5,
+            "t": 6.0,
+            "users": 8
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 119,
+            "rps": 35.1,
+            "t": 8.1,
+            "users": 12
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 119,
+            "rps": 47.2,
+            "t": 10.1,
+            "users": 5
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 119,
+            "rps": 51.9,
+            "t": 12.1,
+            "users": 7
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 119,
+            "rps": 64.7,
+            "t": 14.1,
+            "users": 7
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 119,
+            "rps": 71.4,
+            "t": 16.2,
+            "users": 8
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 119,
+            "rps": 90.3,
+            "t": 18.2,
+            "users": 10
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 119,
+            "rps": 91.9,
+            "t": 20.2,
+            "users": 12
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 119,
+            "rps": 106.0,
+            "t": 22.2,
+            "users": 13
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 119,
+            "rps": 113.1,
+            "t": 24.2,
+            "users": 14
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 119,
+            "rps": 127.4,
+            "t": 26.3,
+            "users": 15
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 119,
+            "rps": 135.7,
+            "t": 28.3,
+            "users": 16
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 119,
+            "rps": 145.4,
+            "t": 30.3,
+            "users": 16
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 119,
+            "rps": 150.4,
+            "t": 32.4,
+            "users": 18
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 119,
+            "rps": 169.0,
+            "t": 34.4,
+            "users": 20
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 119,
+            "rps": 179.0,
+            "t": 36.4,
+            "users": 20
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 119,
+            "rps": 177.7,
+            "t": 38.4,
+            "users": 21
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 119,
+            "rps": 197.3,
+            "t": 40.4,
+            "users": 22
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 119,
+            "rps": 200.7,
+            "t": 42.5,
+            "users": 24
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 119,
+            "rps": 219.0,
+            "t": 44.5,
+            "users": 25
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 119,
+            "rps": 232.5,
+            "t": 46.5,
+            "users": 25
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 119,
+            "rps": 238.3,
+            "t": 48.5,
+            "users": 27
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 119,
+            "rps": 234.0,
+            "t": 50.5,
+            "users": 29
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 119,
+            "rps": 253.1,
+            "t": 52.6,
+            "users": 30
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 119,
+            "rps": 275.0,
+            "t": 54.6,
+            "users": 31
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 119,
+            "rps": 276.3,
+            "t": 56.6,
+            "users": 32
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 119,
+            "rps": 283.0,
+            "t": 58.6,
+            "users": 32
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 119,
+            "rps": 287.5,
+            "t": 60.7,
+            "users": 37
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 119,
+            "rps": 312.4,
+            "t": 62.7,
+            "users": 35
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 119,
+            "rps": 299.6,
+            "t": 64.7,
+            "users": 34
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 119,
+            "rps": 297.8,
+            "t": 66.7,
+            "users": 34
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 119,
+            "rps": 308.3,
+            "t": 68.7,
+            "users": 34
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 119,
+            "rps": 287.3,
+            "t": 70.8,
+            "users": 33
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 119,
+            "rps": 305.3,
+            "t": 72.8,
+            "users": 35
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 119,
+            "rps": 305.3,
+            "t": 74.8,
+            "users": 35
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 119,
+            "rps": 315.0,
+            "t": 76.8,
+            "users": 34
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 119,
+            "rps": 301.5,
+            "t": 78.8,
+            "users": 34
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 118,
+            "rps": 293.2,
+            "t": 80.8,
+            "users": 34
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 118,
+            "rps": 293.8,
+            "t": 82.9,
+            "users": 34
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 118,
+            "rps": 289.3,
+            "t": 84.9,
+            "users": 33
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 118,
+            "rps": 310.3,
+            "t": 86.9,
+            "users": 32
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 118,
+            "rps": 292.4,
+            "t": 89.0,
+            "users": 33
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 118,
+            "rps": 295.3,
+            "t": 91.0,
+            "users": 32
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 118,
+            "rps": 267.2,
+            "t": 93.0,
+            "users": 30
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 118,
+            "rps": 240.1,
+            "t": 95.1,
+            "users": 27
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 118,
+            "rps": 217.0,
+            "t": 97.1,
+            "users": 24
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 118,
+            "rps": 179.8,
+            "t": 99.1,
+            "users": 19
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 118,
+            "rps": 151.3,
+            "t": 101.2,
+            "users": 15
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 118,
+            "rps": 123.8,
+            "t": 103.2,
+            "users": 12
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 118,
+            "rps": 91.7,
+            "t": 105.2,
+            "users": 9
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 118,
+            "rps": 57.5,
+            "t": 107.2,
+            "users": 5
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 118,
+            "rps": 29.6,
+            "t": 109.3,
+            "users": 2
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 118,
+            "rps": 3.4,
+            "t": 111.4,
+            "users": 0
+          }
+        ],
+        "ttfb_p95_ms": 118.9,
+        "vus_max": 150,
+        "summary_report_url": "/load-report/rapport_34fa80aca41e.html"
+      },
+      "target": "quickpizza",
+      "target_label": "QuickPizza - cible de demo publique",
+      "test_type": "open_stress",
+      "ts": 1789115811.817399
+    },
+    {
+      "id": "dbe890ab91fb",
+      "params": {
+        "error_pct": 5.0,
+        "max_vus": 400,
+        "p95_ms": 1500,
+        "peak_hold": "30s",
+        "ramp_down": "20s",
+        "ramp_up": "1m",
+        "rate": 300
+      },
+      "result": {
+        "analysis": [
+          {
+            "detail": "La requête la plus rapide du run a déjà pris 107 ms, soit 90 % du p95 (119 ms) : la charge n'ajoute que 12 ms. Ce plancher est le trajet réseau plus le traitement au repos - il ne dit RIEN sur la tenue en charge. Sur une cible distante, c'est surtout de la distance : compare les runs entre eux, pas à un seuil absolu.",
+            "level": "info",
+            "title": "Temps dominé par le plancher incompressible (107 ms)"
+          },
+          {
+            "detail": "Toutes les requêtes prévues sont parties à l'heure dite, quelle que soit la vitesse du système. Les temps de réponse mesurés ici ne sont pas optimistes : ils décrivent le service sous la charge annoncée.",
+            "level": "good",
+            "title": "Débit tenu : 300 req/s réellement envoyées"
+          },
+          {
+            "detail": "Le système encaisse le débit demandé en tenant ses seuils. Monte le débit au-delà de 300 req/s pour trouver le point d'engorgement.",
+            "level": "good",
+            "title": "Flux absorbé sans engorgement"
+          }
+        ],
+        "avg_ms": 113.4,
+        "breach": null,
+        "checks_rate": 1,
+        "data_received": 3279689,
+        "data_received_rate": 181616.3,
+        "data_sent": 303912,
+        "data_sent_rate": 16829.5,
+        "dropped_iterations": 0,
+        "dropped_pct": 0,
+        "duration_s": 18.1,
+        "engine": "k6",
+        "error_rate": 0,
+        "exit_code": 103,
+        "failed_thresholds": [],
+        "injector_cpu_max": 0.9,
+        "injector_cpu_warning": false,
+        "max_ms": 124.7,
+        "max_vus_allowed": 400,
+        "min_ms": 107.4,
+        "model": "open",
+        "p50_ms": 113.5,
+        "p95_ms": 119.4,
+        "p99_ms": 121.2,
+        "rate_target": 300,
+        "reqs_per_sec": 44.5,
+        "reqs_total": 803,
+        "seuil_p95_ms": 1500,
+        "status": "ok",
+        "stopped": true,
+        "target_is_local": false,
+        "test_type": "open_stress",
+        "thresholds_ok": true,
+        "timeline": [
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 117,
+            "rps": 2.5,
+            "t": 2.0,
+            "users": 2
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 118,
+            "rps": 13.5,
+            "t": 4.0,
+            "users": 5
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 119,
+            "rps": 21.5,
+            "t": 6.0,
+            "users": 8
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 119,
+            "rps": 31.7,
+            "t": 8.0,
+            "users": 12
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 119,
+            "rps": 48.6,
+            "t": 10.1,
+            "users": 6
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 119,
+            "rps": 54.9,
+            "t": 12.1,
+            "users": 6
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 119,
+            "rps": 63.9,
+            "t": 14.1,
+            "users": 7
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 119,
+            "rps": 76.1,
+            "t": 16.1,
+            "users": 9
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 119,
+            "rps": 81.9,
+            "t": 18.1,
+            "users": 10
+          }
+        ],
+        "ttfb_p95_ms": 119.3,
+        "vus_max": 150
+      },
+      "target": "quickpizza",
+      "target_label": "QuickPizza - cible de demo publique",
+      "test_type": "open_stress",
+      "ts": 1789114462.1786351
+    },
+    {
+      "id": "e5aed76554ea",
+      "params": {
+        "error_pct": 1.0,
+        "max_vus": 400,
+        "p95_ms": 800,
+        "ramp_down": "20s",
+        "ramp_up": "30s",
+        "rate": 100,
+        "steady": "1m30s"
+      },
+      "result": {
+        "analysis": [
+          {
+            "detail": "La requête la plus rapide du run a déjà pris 104 ms, soit 86 % du p95 (120 ms) : la charge n'ajoute que 17 ms. Ce plancher est le trajet réseau plus le traitement au repos - il ne dit RIEN sur la tenue en charge. Sur une cible distante, c'est surtout de la distance : compare les runs entre eux, pas à un seuil absolu.",
+            "level": "info",
+            "title": "Temps dominé par le plancher incompressible (104 ms)"
+          },
+          {
+            "detail": "Toutes les requêtes prévues sont parties à l'heure dite, quelle que soit la vitesse du système. Les temps de réponse mesurés ici ne sont pas optimistes : ils décrivent le service sous la charge annoncée.",
+            "level": "good",
+            "title": "Débit tenu : 100 req/s réellement envoyées"
+          },
+          {
+            "detail": "Le système encaisse le débit demandé en tenant ses seuils. Monte le débit au-delà de 100 req/s pour trouver le point d'engorgement.",
+            "level": "good",
+            "title": "Flux absorbé sans engorgement"
+          }
+        ],
+        "avg_ms": 114.1,
+        "breach": null,
+        "checks_rate": 1,
+        "data_received": 38656133,
+        "data_received_rate": 276112.1,
+        "data_sent": 702429,
+        "data_sent_rate": 5017.3,
+        "dropped_iterations": 0,
+        "dropped_pct": 0,
+        "duration_s": 140,
+        "engine": "k6",
+        "error_rate": 0,
+        "exit_code": 0,
+        "failed_thresholds": [],
+        "injector_cpu_max": 0.8,
+        "injector_cpu_warning": false,
+        "max_ms": 129.2,
+        "max_vus_allowed": 400,
+        "min_ms": 103.7,
+        "model": "open",
+        "p50_ms": 114,
+        "p95_ms": 120.4,
+        "p99_ms": 122.7,
+        "rate_target": 100,
+        "reqs_per_sec": 82.1,
+        "reqs_total": 11499,
+        "seuil_p95_ms": 800,
+        "status": "ok",
+        "stopped": false,
+        "target_is_local": false,
+        "test_type": "open_load",
+        "thresholds_ok": true,
+        "timeline": [
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 118,
+            "rps": 1.5,
+            "t": 2.0,
+            "users": 1
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 121,
+            "rps": 8.5,
+            "t": 4.0,
+            "users": 3
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 120,
+            "rps": 16.9,
+            "t": 6.0,
+            "users": 6
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 120,
+            "rps": 22.4,
+            "t": 8.1,
+            "users": 3
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 120,
+            "rps": 29.9,
+            "t": 10.1,
+            "users": 3
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 120,
+            "rps": 36.6,
+            "t": 12.1,
+            "users": 4
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 120,
+            "rps": 44.1,
+            "t": 14.1,
+            "users": 5
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 120,
+            "rps": 49.1,
+            "t": 16.1,
+            "users": 6
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 120,
+            "rps": 55.9,
+            "t": 18.1,
+            "users": 7
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 120,
+            "rps": 60.1,
+            "t": 20.1,
+            "users": 7
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 120,
+            "rps": 68.3,
+            "t": 22.1,
+            "users": 8
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 120,
+            "rps": 74.5,
+            "t": 24.1,
+            "users": 9
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 120,
+            "rps": 85.5,
+            "t": 26.1,
+            "users": 9
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 120,
+            "rps": 87.2,
+            "t": 28.2,
+            "users": 11
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 120,
+            "rps": 96.0,
+            "t": 30.2,
+            "users": 11
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 120,
+            "rps": 103.9,
+            "t": 32.2,
+            "users": 11
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 120,
+            "rps": 103.2,
+            "t": 34.2,
+            "users": 12
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 120,
+            "rps": 96.3,
+            "t": 36.2,
+            "users": 11
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 120,
+            "rps": 102.0,
+            "t": 38.2,
+            "users": 11
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 120,
+            "rps": 97.6,
+            "t": 40.2,
+            "users": 11
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 120,
+            "rps": 98.1,
+            "t": 42.3,
+            "users": 11
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 120,
+            "rps": 98.7,
+            "t": 44.3,
+            "users": 11
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 120,
+            "rps": 100.5,
+            "t": 46.3,
+            "users": 12
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 120,
+            "rps": 104.7,
+            "t": 48.3,
+            "users": 12
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 120,
+            "rps": 98.4,
+            "t": 50.3,
+            "users": 12
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 120,
+            "rps": 97.5,
+            "t": 52.4,
+            "users": 11
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 120,
+            "rps": 101.6,
+            "t": 54.4,
+            "users": 12
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 120,
+            "rps": 103.1,
+            "t": 56.4,
+            "users": 11
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 120,
+            "rps": 101.7,
+            "t": 58.4,
+            "users": 12
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 120,
+            "rps": 98.9,
+            "t": 60.4,
+            "users": 11
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 120,
+            "rps": 100.2,
+            "t": 62.4,
+            "users": 12
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 120,
+            "rps": 96.9,
+            "t": 64.5,
+            "users": 11
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 120,
+            "rps": 99.8,
+            "t": 66.5,
+            "users": 12
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 120,
+            "rps": 102.5,
+            "t": 68.5,
+            "users": 12
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 120,
+            "rps": 99.1,
+            "t": 70.5,
+            "users": 11
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 120,
+            "rps": 100.2,
+            "t": 72.5,
+            "users": 11
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 120,
+            "rps": 96.8,
+            "t": 74.6,
+            "users": 11
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 120,
+            "rps": 100.0,
+            "t": 76.6,
+            "users": 11
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 120,
+            "rps": 102.1,
+            "t": 78.6,
+            "users": 11
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 120,
+            "rps": 99.2,
+            "t": 80.6,
+            "users": 11
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 120,
+            "rps": 97.7,
+            "t": 82.6,
+            "users": 11
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 120,
+            "rps": 96.7,
+            "t": 84.7,
+            "users": 11
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 120,
+            "rps": 105.9,
+            "t": 86.7,
+            "users": 11
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 120,
+            "rps": 96.3,
+            "t": 88.7,
+            "users": 11
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 120,
+            "rps": 101.8,
+            "t": 90.7,
+            "users": 12
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 120,
+            "rps": 99.3,
+            "t": 92.8,
+            "users": 12
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 120,
+            "rps": 100.7,
+            "t": 94.8,
+            "users": 11
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 120,
+            "rps": 98.3,
+            "t": 96.8,
+            "users": 12
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 120,
+            "rps": 101.9,
+            "t": 98.8,
+            "users": 12
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 120,
+            "rps": 100.9,
+            "t": 100.8,
+            "users": 12
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 120,
+            "rps": 95.6,
+            "t": 102.8,
+            "users": 11
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 120,
+            "rps": 102.6,
+            "t": 104.8,
+            "users": 12
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 120,
+            "rps": 94.8,
+            "t": 106.9,
+            "users": 12
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 120,
+            "rps": 101.9,
+            "t": 108.9,
+            "users": 11
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 120,
+            "rps": 102.7,
+            "t": 110.9,
+            "users": 11
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 120,
+            "rps": 101.5,
+            "t": 112.9,
+            "users": 11
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 120,
+            "rps": 98.9,
+            "t": 115.0,
+            "users": 11
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 120,
+            "rps": 99.4,
+            "t": 117.0,
+            "users": 11
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 120,
+            "rps": 103.1,
+            "t": 119.0,
+            "users": 12
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 120,
+            "rps": 101.9,
+            "t": 121.0,
+            "users": 12
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 120,
+            "rps": 87.6,
+            "t": 123.0,
+            "users": 10
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 120,
+            "rps": 82.3,
+            "t": 125.0,
+            "users": 9
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 120,
+            "rps": 70.7,
+            "t": 127.1,
+            "users": 8
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 120,
+            "rps": 62.2,
+            "t": 129.1,
+            "users": 7
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 120,
+            "rps": 50.4,
+            "t": 131.1,
+            "users": 6
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 120,
+            "rps": 42.1,
+            "t": 133.1,
+            "users": 5
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 120,
+            "rps": 31.4,
+            "t": 135.1,
+            "users": 3
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 120,
+            "rps": 20.2,
+            "t": 137.1,
+            "users": 2
+          },
+          {
+            "dropped": 0,
+            "error_rate": 0,
+            "p95_ms": 120,
+            "rps": 10.7,
+            "t": 139.2,
+            "users": 1
+          }
+        ],
+        "ttfb_p95_ms": 120.3,
+        "vus_max": 50,
+        "summary_report_url": "/load-report/rapport_e5aed76554ea.html"
+      },
+      "target": "quickpizza",
+      "target_label": "QuickPizza - cible de demo publique",
+      "test_type": "open_load",
+      "ts": 1789113332.7208545
+    },
+    {
+      "id": "dc92026c87fc",
+      "params": {
+        "cpu_max_pct": 85,
+        "processes": 1,
+        "ramp": "5s",
+        "steady": "20s",
+        "think_time": 0,
+        "vus_max": 200,
+        "vus_start": 50,
+        "vus_step": 50
+      },
+      "result": {
+        "analysis": [
+          {
+            "detail": "Le CPU a franchi le seuil à 91 % sous 100 utilisateurs. Au-delà, cette machine mesure sa propre attente. Garde un facteur 3 de marge : ne planifie pas de test au-delà de ~272 req/s sur ce scénario, ou répartis la charge sur plusieurs coeurs ou plusieurs machines.",
+            "level": "info",
+            "title": "Capacité de l'injecteur : ~817 req/s"
+          }
+        ],
+        "avg_ms": 118.6,
+        "breach": {
+          "cause": "cpu",
+          "cpu": 90.9,
+          "error_rate": 0.0,
+          "p95_ms": 130,
+          "rps": 817.4,
+          "t": 40.2,
+          "users": 100
+        },
+        "checks_rate": 1.0,
+        "data_received": 61389861,
+        "data_received_rate": 1513304.2,
+        "data_sent": 0,
+        "data_sent_rate": 0.0,
+        "duration_s": 40.6,
+        "engine": "locust",
+        "error_rate": 0.0,
+        "exit_code": null,
+        "injector_capacity_rps": 817.4,
+        "injector_cpu_max": 90.9,
+        "injector_cpu_warning": true,
+        "max_ms": 516.4,
+        "min_ms": 108.0,
+        "p50_ms": 120,
+        "p95_ms": 130,
+        "p99_ms": 190,
+        "reqs_per_sec": 532.1,
+        "reqs_total": 21563,
+        "seuil_p95_ms": 800.0,
+        "status": "ok",
+        "stopped": false,
+        "target_is_local": false,
+        "test_type": "calibration",
+        "thresholds_ok": false,
+        "throughput_actual_rps": null,
+        "throughput_nominal_rps": null,
+        "throughput_shortfall_pct": null,
+        "throughput_users": null,
+        "timeline": [
+          {
+            "error_rate": 0.0,
+            "p95_ms": 340,
+            "rps": 0.0,
+            "t": 2.0,
+            "users": 20
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 101.0,
+            "t": 4.0,
+            "users": 50
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 189.2,
+            "t": 6.0,
+            "users": 50
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 265.3,
+            "t": 8.0,
+            "users": 50
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 308.5,
+            "t": 10.1,
+            "users": 50
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 130,
+            "rps": 333.6,
+            "t": 12.1,
+            "users": 50
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 380.1,
+            "t": 14.1,
+            "users": 50
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 411.6,
+            "t": 16.1,
+            "users": 50
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 415.4,
+            "t": 18.1,
+            "users": 50
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 415.5,
+            "t": 20.1,
+            "users": 50
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 416.2,
+            "t": 22.1,
+            "users": 50
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 436.9,
+            "t": 24.1,
+            "users": 50
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 437.4,
+            "t": 26.1,
+            "users": 60
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 440.4,
+            "t": 28.1,
+            "users": 80
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 130,
+            "rps": 470.9,
+            "t": 30.1,
+            "users": 100
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 130,
+            "rps": 528.0,
+            "t": 32.1,
+            "users": 100
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 130,
+            "rps": 608.2,
+            "t": 34.2,
+            "users": 100
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 130,
+            "rps": 690.3,
+            "t": 36.2,
+            "users": 100
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 130,
+            "rps": 767.1,
+            "t": 38.2,
+            "users": 100
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 130,
+            "rps": 817.4,
+            "t": 40.2,
+            "users": 100
+          }
+        ],
+        "ttfb_p95_ms": 125.8,
+        "vus_deficit_pct": 0.0,
+        "vus_max": 100,
+        "vus_target_max": 200,
+        "summary_report_url": "/load-report/rapport_dc92026c87fc.html"
+      },
+      "target": "quickpizza",
+      "target_label": "QuickPizza - cible de demo publique",
+      "test_type": "calibration",
+      "ts": 1789113107.7556849
+    },
+    {
+      "id": "fcee90cf8872",
+      "params": {
+        "duration": "10s"
+      },
+      "result": {
+        "analysis": [
+          {
+            "detail": "L'essentiel du temps de reponse vient du TRAITEMENT serveur (TTFB), pas du reseau. Le goulot est cote backend : requetes, DB, CPU.",
+            "level": "info",
+            "title": "Temps domine par le serveur (TTFB ~ 100 % du p95)"
+          },
+          {
+            "detail": "L'appli repond correctement. Tu peux enchainer sur un test de charge (load).",
+            "level": "good",
+            "title": "Smoke OK"
+          }
+        ],
+        "avg_ms": 133.4,
+        "breach": null,
+        "checks_rate": 1.0,
+        "data_received": 25623,
+        "data_received_rate": 2515.0,
+        "data_sent": 0,
+        "data_sent_rate": 0.0,
+        "duration_s": 10.2,
+        "engine": "locust",
+        "error_rate": 0.0,
+        "exit_code": null,
+        "injector_cpu_max": null,
+        "injector_cpu_warning": false,
+        "max_ms": 349.5,
+        "min_ms": 105.8,
+        "p50_ms": 110,
+        "p95_ms": 350,
+        "p99_ms": 350,
+        "reqs_per_sec": 1.0,
+        "reqs_total": 9,
+        "seuil_p95_ms": 800.0,
+        "status": "ok",
+        "stopped": false,
+        "target_is_local": false,
+        "test_type": "smoke",
+        "thresholds_ok": true,
+        "timeline": [
+          {
+            "error_rate": 0.0,
+            "p95_ms": 110,
+            "rps": 0.0,
+            "t": 2.0,
+            "users": 1
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 110,
+            "rps": 1.0,
+            "t": 4.0,
+            "users": 1
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 110,
+            "rps": 1.0,
+            "t": 6.0,
+            "users": 1
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 110,
+            "rps": 1.0,
+            "t": 8.0,
+            "users": 1
+          }
+        ],
+        "ttfb_p95_ms": 348.9,
+        "vus_deficit_pct": 0.0,
+        "vus_max": 1,
+        "vus_target_max": 1
+      },
+      "target": "quickpizza",
+      "target_label": "QuickPizza - cible de demo publique",
+      "test_type": "smoke",
+      "ts": 1787139944.023445
+    },
+    {
+      "id": "9386430e0a01",
+      "params": {
+        "error_pct": 1.0,
+        "p95_ms": 800,
+        "ramp": "3s",
+        "steady": "10s",
+        "think_time": 1.0,
+        "vus_max": 400,
+        "vus_start": 100,
+        "vus_step": 100
+      },
+      "result": {
+        "analysis": [
+          {
+            "detail": "La requete la plus rapide du run a deja pris 102 ms, soit 85 % du p95 (120 ms) : la charge n'ajoute que 18 ms. Ce plancher est le trajet reseau plus le traitement au repos - il ne dit RIEN sur la tenue en charge. Sur une cible distante, c'est surtout de la distance : compare les runs entre eux, pas a un seuil absolu.",
+            "level": "info",
+            "title": "Temps domine par le plancher incompressible (102 ms)"
+          },
+          {
+            "detail": "Le systeme a tenu toute la montee sans que le p95 ne franchisse le seuil. Augmente « VUs max » pour trouver la vraie limite.",
+            "level": "good",
+            "title": "Capacite non atteinte (tenu jusqu'a 400 VUs)"
+          }
+        ],
+        "avg_ms": 119.1,
+        "breach": null,
+        "checks_rate": 1.0,
+        "data_received": 34101366,
+        "data_received_rate": 615826.0,
+        "data_sent": 0,
+        "data_sent_rate": 0.0,
+        "duration_s": 55.4,
+        "engine": "locust",
+        "error_rate": 0.0,
+        "exit_code": null,
+        "injector_cpu_max": 39.0,
+        "injector_cpu_warning": false,
+        "max_ms": 392.3,
+        "min_ms": 101.9,
+        "p50_ms": 110,
+        "p95_ms": 120,
+        "p99_ms": 360,
+        "reqs_per_sec": 217.0,
+        "reqs_total": 11978,
+        "seuil_p95_ms": 800.0,
+        "status": "ok",
+        "stopped": false,
+        "target_is_local": false,
+        "test_type": "capacity",
+        "thresholds_ok": true,
+        "timeline": [
+          {
+            "error_rate": 0.0,
+            "p95_ms": 380,
+            "rps": 0.0,
+            "t": 2.0,
+            "users": 99
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 370,
+            "rps": 22.0,
+            "t": 4.0,
+            "users": 100
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 360,
+            "rps": 49.8,
+            "t": 6.0,
+            "users": 100
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 360,
+            "rps": 66.3,
+            "t": 8.0,
+            "users": 100
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 350,
+            "rps": 74.8,
+            "t": 10.1,
+            "users": 100
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 79.5,
+            "t": 12.1,
+            "users": 100
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 88.7,
+            "t": 14.1,
+            "users": 133
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 340,
+            "rps": 89.9,
+            "t": 16.1,
+            "users": 200
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 340,
+            "rps": 99.9,
+            "t": 18.2,
+            "users": 200
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 330,
+            "rps": 119.8,
+            "t": 20.2,
+            "users": 200
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 330,
+            "rps": 138.1,
+            "t": 22.2,
+            "users": 200
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 158.5,
+            "t": 24.2,
+            "users": 200
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 173.7,
+            "t": 26.2,
+            "users": 233
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 179.9,
+            "t": 28.2,
+            "users": 299
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 130,
+            "rps": 183.2,
+            "t": 30.2,
+            "users": 300
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 199.8,
+            "t": 32.2,
+            "users": 300
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 219.6,
+            "t": 34.2,
+            "users": 300
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 239.3,
+            "t": 36.2,
+            "users": 300
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 256.1,
+            "t": 38.3,
+            "users": 300
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 266.6,
+            "t": 40.3,
+            "users": 366
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 269.2,
+            "t": 42.3,
+            "users": 400
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 278.6,
+            "t": 44.3,
+            "users": 400
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 298.9,
+            "t": 46.3,
+            "users": 400
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 318.2,
+            "t": 48.3,
+            "users": 400
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 337.5,
+            "t": 50.3,
+            "users": 400
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 348.7,
+            "t": 52.3,
+            "users": 300
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 359.1,
+            "t": 54.3,
+            "users": 100
+          }
+        ],
+        "ttfb_p95_ms": 119.3,
+        "vus_deficit_pct": 0.0,
+        "vus_max": 400,
+        "vus_target_max": 400,
+        "summary_report_url": "/load-report/rapport_9386430e0a01.html"
+      },
+      "target": "quickpizza",
+      "target_label": "QuickPizza - cible de demo publique",
+      "test_type": "capacity",
+      "ts": 1787059333.4361622
+    },
+    {
+      "id": "8153cc62d7b1",
+      "params": {
+        "error_pct": 1.0,
+        "p95_ms": 800,
+        "ramp": "3s",
+        "steady": "30s",
+        "think_time": 1.0,
+        "vus_max": 600,
+        "vus_start": 100,
+        "vus_step": 100
+      },
+      "result": {
+        "analysis": [
+          {
+            "detail": "L'essentiel du temps de reponse vient du TRAITEMENT serveur (TTFB), pas du reseau. Le goulot est cote backend : requetes, DB, CPU.",
+            "level": "info",
+            "title": "Temps domine par le serveur (TTFB ~ 100 % du p95)"
+          },
+          {
+            "detail": "Le systeme a tenu toute la montee sans que le p95 ne franchisse le seuil. Augmente « VUs max » pour trouver la vraie limite.",
+            "level": "good",
+            "title": "Capacite non atteinte (tenu jusqu'a 600 VUs)"
+          }
+        ],
+        "avg_ms": 114.5,
+        "breach": null,
+        "checks_rate": 1.0,
+        "data_received": 179409399,
+        "data_received_rate": 887616.1,
+        "data_sent": 0,
+        "data_sent_rate": 0.0,
+        "duration_s": 202.1,
+        "engine": "locust",
+        "error_rate": 0.0,
+        "exit_code": null,
+        "injector_cpu_max": 66.5,
+        "injector_cpu_warning": false,
+        "max_ms": 419.1,
+        "p50_ms": 110,
+        "p95_ms": 120,
+        "p99_ms": 160,
+        "reqs_per_sec": 311.8,
+        "reqs_total": 63017,
+        "seuil_p95_ms": 800.0,
+        "status": "ok",
+        "stopped": false,
+        "test_type": "capacity",
+        "thresholds_ok": true,
+        "timeline": [
+          {
+            "error_rate": 0.0,
+            "p95_ms": 360,
+            "rps": 0.0,
+            "t": 2.0,
+            "users": 99
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 380,
+            "rps": 47.5,
+            "t": 4.0,
+            "users": 100
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 360,
+            "rps": 54.8,
+            "t": 6.0,
+            "users": 100
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 360,
+            "rps": 66.3,
+            "t": 8.0,
+            "users": 100
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 350,
+            "rps": 74.8,
+            "t": 10.0,
+            "users": 100
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 79.8,
+            "t": 12.1,
+            "users": 100
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 88.3,
+            "t": 14.1,
+            "users": 100
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 88.4,
+            "t": 16.1,
+            "users": 100
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 90.0,
+            "t": 18.1,
+            "users": 100
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 90.0,
+            "t": 20.1,
+            "users": 100
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 90.0,
+            "t": 22.2,
+            "users": 100
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 89.6,
+            "t": 24.2,
+            "users": 100
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 89.6,
+            "t": 26.2,
+            "users": 100
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 90.0,
+            "t": 28.2,
+            "users": 100
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 90.0,
+            "t": 30.2,
+            "users": 100
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 90.0,
+            "t": 32.2,
+            "users": 100
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 88.5,
+            "t": 34.2,
+            "users": 166
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 340,
+            "rps": 90.0,
+            "t": 36.3,
+            "users": 200
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 340,
+            "rps": 99.9,
+            "t": 38.3,
+            "users": 200
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 330,
+            "rps": 119.8,
+            "t": 40.3,
+            "users": 200
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 330,
+            "rps": 139.7,
+            "t": 42.3,
+            "users": 200
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 158.1,
+            "t": 44.3,
+            "users": 200
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 175.5,
+            "t": 46.3,
+            "users": 200
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 180.0,
+            "t": 48.3,
+            "users": 200
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 180.0,
+            "t": 50.3,
+            "users": 200
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 179.7,
+            "t": 52.3,
+            "users": 200
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 179.6,
+            "t": 54.3,
+            "users": 200
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 177.9,
+            "t": 56.3,
+            "users": 200
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 179.9,
+            "t": 58.4,
+            "users": 200
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 180.0,
+            "t": 60.4,
+            "users": 200
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 179.3,
+            "t": 62.4,
+            "users": 200
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 178.6,
+            "t": 64.4,
+            "users": 200
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 179.1,
+            "t": 66.4,
+            "users": 233
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 180.0,
+            "t": 68.4,
+            "users": 299
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 140,
+            "rps": 183.3,
+            "t": 70.5,
+            "users": 300
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 198.4,
+            "t": 72.5,
+            "users": 300
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 217.6,
+            "t": 74.5,
+            "users": 300
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 238.8,
+            "t": 76.5,
+            "users": 300
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 254.9,
+            "t": 78.5,
+            "users": 300
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 266.2,
+            "t": 80.5,
+            "users": 300
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 269.0,
+            "t": 82.5,
+            "users": 300
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 268.4,
+            "t": 84.5,
+            "users": 300
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 269.8,
+            "t": 86.5,
+            "users": 300
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 269.3,
+            "t": 88.5,
+            "users": 300
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 269.6,
+            "t": 90.5,
+            "users": 300
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 268.8,
+            "t": 92.5,
+            "users": 300
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 267.3,
+            "t": 94.6,
+            "users": 300
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 268.3,
+            "t": 96.6,
+            "users": 300
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 269.2,
+            "t": 98.6,
+            "users": 300
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 269.4,
+            "t": 100.6,
+            "users": 366
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 271.8,
+            "t": 102.6,
+            "users": 400
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 289.9,
+            "t": 104.6,
+            "users": 400
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 307.0,
+            "t": 106.6,
+            "users": 400
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 325.7,
+            "t": 108.6,
+            "users": 400
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 339.2,
+            "t": 110.7,
+            "users": 400
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 355.0,
+            "t": 112.7,
+            "users": 400
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 359.3,
+            "t": 114.7,
+            "users": 400
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 360.4,
+            "t": 116.7,
+            "users": 400
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 358.4,
+            "t": 118.7,
+            "users": 400
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 359.8,
+            "t": 120.7,
+            "users": 400
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 356.4,
+            "t": 122.7,
+            "users": 400
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 360.1,
+            "t": 124.7,
+            "users": 400
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 359.1,
+            "t": 126.7,
+            "users": 400
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 356.8,
+            "t": 128.7,
+            "users": 400
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 357.8,
+            "t": 130.8,
+            "users": 400
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 359.0,
+            "t": 132.8,
+            "users": 433
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 359.3,
+            "t": 134.8,
+            "users": 499
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 368.9,
+            "t": 136.8,
+            "users": 500
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 389.0,
+            "t": 138.8,
+            "users": 500
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 403.9,
+            "t": 140.8,
+            "users": 500
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 419.6,
+            "t": 142.8,
+            "users": 500
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 436.8,
+            "t": 144.8,
+            "users": 500
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 447.2,
+            "t": 146.8,
+            "users": 500
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 449.1,
+            "t": 148.9,
+            "users": 500
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 444.7,
+            "t": 150.9,
+            "users": 500
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 449.1,
+            "t": 152.9,
+            "users": 500
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 449.5,
+            "t": 154.9,
+            "users": 500
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 448.2,
+            "t": 156.9,
+            "users": 500
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 446.2,
+            "t": 159.0,
+            "users": 500
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 447.4,
+            "t": 161.0,
+            "users": 500
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 449.6,
+            "t": 163.0,
+            "users": 500
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 130,
+            "rps": 448.6,
+            "t": 165.1,
+            "users": 500
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 130,
+            "rps": 445.9,
+            "t": 167.1,
+            "users": 566
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 140,
+            "rps": 445.4,
+            "t": 169.2,
+            "users": 600
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 140,
+            "rps": 467.4,
+            "t": 171.2,
+            "users": 600
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 140,
+            "rps": 481.6,
+            "t": 173.2,
+            "users": 600
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 130,
+            "rps": 496.0,
+            "t": 175.2,
+            "users": 600
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 513.4,
+            "t": 177.2,
+            "users": 600
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 534.1,
+            "t": 179.2,
+            "users": 600
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 537.3,
+            "t": 181.2,
+            "users": 600
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 539.3,
+            "t": 183.2,
+            "users": 600
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 538.5,
+            "t": 185.2,
+            "users": 600
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 537.8,
+            "t": 187.2,
+            "users": 600
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 538.6,
+            "t": 189.3,
+            "users": 600
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 539.1,
+            "t": 191.3,
+            "users": 600
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 538.9,
+            "t": 193.3,
+            "users": 600
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 534.8,
+            "t": 195.3,
+            "users": 600
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 539.3,
+            "t": 197.3,
+            "users": 600
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 538.3,
+            "t": 199.4,
+            "users": 500
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 539.2,
+            "t": 201.4,
+            "users": 300
+          }
+        ],
+        "ttfb_p95_ms": 119.9,
+        "vus_max": 600
+      },
+      "target": "quickpizza",
+      "target_label": "QuickPizza - cible de demo publique",
+      "test_type": "capacity",
+      "ts": 1787057515.231507
+    },
+    {
+      "id": "861c7fdce858",
+      "params": {
+        "error_pct": 1.0,
+        "p95_ms": 800,
+        "ramp": "30s",
+        "steady": "2m",
+        "think_time": 0.1,
+        "vus_max": 600,
+        "vus_start": 100,
+        "vus_step": 100
+      },
+      "result": {
+        "analysis": [
+          {
+            "detail": "L'essentiel du temps de reponse vient du TRAITEMENT serveur (TTFB), pas du reseau. Le goulot est cote backend : requetes, DB, CPU.",
+            "level": "info",
+            "title": "Temps domine par le serveur (TTFB ~ 102 % du p95)"
+          },
+          {
+            "detail": "Le systeme a tenu toute la montee sans que le p95 ne franchisse le seuil. Augmente « VUs max » pour trouver la vraie limite.",
+            "level": "good",
+            "title": "Capacite non atteinte (tenu jusqu'a 600 VUs)"
+          }
+        ],
+        "avg_ms": 218.7,
+        "breach": null,
+        "checks_rate": 1.0,
+        "data_received": 2332504395,
+        "data_received_rate": 2505162.7,
+        "data_sent": 0,
+        "data_sent_rate": 0.0,
+        "duration_s": 931.1,
+        "engine": "locust",
+        "error_rate": 0.0,
+        "exit_code": null,
+        "max_ms": 3916.2,
+        "p50_ms": 190,
+        "p95_ms": 390,
+        "p99_ms": 510,
+        "reqs_per_sec": 880.0,
+        "reqs_total": 819285,
+        "seuil_p95_ms": 800.0,
+        "status": "ok",
+        "stopped": false,
+        "test_type": "capacity",
+        "thresholds_ok": true,
+        "timeline": [
+          {
+            "error_rate": 0.0,
+            "p95_ms": 360,
+            "rps": 0.0,
+            "t": 2.0,
+            "users": 9
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 330,
+            "rps": 9.0,
+            "t": 4.0,
+            "users": 15
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 320,
+            "rps": 24.0,
+            "t": 6.0,
+            "users": 21
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 310,
+            "rps": 39.7,
+            "t": 8.1,
+            "users": 27
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 55.2,
+            "t": 10.1,
+            "users": 36
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 310,
+            "rps": 70.7,
+            "t": 12.1,
+            "users": 42
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 130,
+            "rps": 98.0,
+            "t": 14.1,
+            "users": 48
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 126.2,
+            "t": 16.1,
+            "users": 54
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 156.9,
+            "t": 18.1,
+            "users": 63
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 188.6,
+            "t": 20.1,
+            "users": 69
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 220.2,
+            "t": 22.1,
+            "users": 75
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 256.1,
+            "t": 24.1,
+            "users": 81
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 289.9,
+            "t": 26.2,
+            "users": 90
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 320.8,
+            "t": 28.2,
+            "users": 96
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 352.5,
+            "t": 30.2,
+            "users": 100
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 383.2,
+            "t": 32.2,
+            "users": 100
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 412.1,
+            "t": 34.2,
+            "users": 100
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 436.6,
+            "t": 36.2,
+            "users": 100
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 453.8,
+            "t": 38.2,
+            "users": 100
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 464.8,
+            "t": 40.2,
+            "users": 100
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 469.3,
+            "t": 42.3,
+            "users": 100
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 469.4,
+            "t": 44.3,
+            "users": 100
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 468.6,
+            "t": 46.3,
+            "users": 100
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 470.0,
+            "t": 48.3,
+            "users": 100
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 468.9,
+            "t": 50.3,
+            "users": 100
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 468.4,
+            "t": 52.4,
+            "users": 100
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 469.2,
+            "t": 54.4,
+            "users": 100
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 468.0,
+            "t": 56.4,
+            "users": 100
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 469.4,
+            "t": 58.4,
+            "users": 100
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 470.4,
+            "t": 60.4,
+            "users": 100
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 469.3,
+            "t": 62.4,
+            "users": 100
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 469.4,
+            "t": 64.4,
+            "users": 100
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 470.9,
+            "t": 66.4,
+            "users": 100
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 470.9,
+            "t": 68.4,
+            "users": 100
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 470.6,
+            "t": 70.4,
+            "users": 100
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 470.8,
+            "t": 72.5,
+            "users": 100
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 471.4,
+            "t": 74.5,
+            "users": 100
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 471.1,
+            "t": 76.5,
+            "users": 100
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 470.7,
+            "t": 78.5,
+            "users": 100
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 470.7,
+            "t": 80.5,
+            "users": 100
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 471.2,
+            "t": 82.5,
+            "users": 100
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 470.3,
+            "t": 84.5,
+            "users": 100
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 471.4,
+            "t": 86.5,
+            "users": 100
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 471.8,
+            "t": 88.5,
+            "users": 100
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 470.0,
+            "t": 90.5,
+            "users": 100
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 471.5,
+            "t": 92.6,
+            "users": 100
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 471.8,
+            "t": 94.6,
+            "users": 100
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 469.8,
+            "t": 96.6,
+            "users": 100
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 470.4,
+            "t": 98.6,
+            "users": 100
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 471.0,
+            "t": 100.6,
+            "users": 100
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 470.0,
+            "t": 102.6,
+            "users": 100
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 470.4,
+            "t": 104.6,
+            "users": 100
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 471.1,
+            "t": 106.6,
+            "users": 100
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 470.1,
+            "t": 108.6,
+            "users": 100
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 471.7,
+            "t": 110.6,
+            "users": 100
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 470.7,
+            "t": 112.6,
+            "users": 100
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 471.3,
+            "t": 114.6,
+            "users": 100
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 469.5,
+            "t": 116.6,
+            "users": 100
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 470.1,
+            "t": 118.7,
+            "users": 100
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 469.2,
+            "t": 120.7,
+            "users": 100
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 470.2,
+            "t": 122.7,
+            "users": 100
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 467.8,
+            "t": 124.7,
+            "users": 100
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 471.3,
+            "t": 126.7,
+            "users": 100
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 470.3,
+            "t": 128.7,
+            "users": 100
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 470.4,
+            "t": 130.7,
+            "users": 100
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 469.0,
+            "t": 132.7,
+            "users": 100
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 471.5,
+            "t": 134.7,
+            "users": 100
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 469.0,
+            "t": 136.7,
+            "users": 100
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 468.8,
+            "t": 138.8,
+            "users": 100
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 468.6,
+            "t": 140.8,
+            "users": 100
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 470.5,
+            "t": 142.8,
+            "users": 100
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 469.4,
+            "t": 144.8,
+            "users": 100
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 470.5,
+            "t": 146.8,
+            "users": 100
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 470.8,
+            "t": 148.8,
+            "users": 100
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 469.9,
+            "t": 150.8,
+            "users": 103
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 469.4,
+            "t": 152.8,
+            "users": 109
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 472.0,
+            "t": 154.8,
+            "users": 115
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 483.0,
+            "t": 156.8,
+            "users": 124
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 498.0,
+            "t": 158.8,
+            "users": 130
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 521.6,
+            "t": 160.9,
+            "users": 136
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 548.4,
+            "t": 162.9,
+            "users": 142
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 579.5,
+            "t": 164.9,
+            "users": 151
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 609.2,
+            "t": 166.9,
+            "users": 157
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 638.4,
+            "t": 168.9,
+            "users": 163
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 668.6,
+            "t": 170.9,
+            "users": 169
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 120,
+            "rps": 699.7,
+            "t": 173.0,
+            "users": 178
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 130,
+            "rps": 726.7,
+            "t": 175.0,
+            "users": 184
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 130,
+            "rps": 754.0,
+            "t": 177.0,
+            "users": 190
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 130,
+            "rps": 780.3,
+            "t": 179.0,
+            "users": 196
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 130,
+            "rps": 807.6,
+            "t": 181.0,
+            "users": 200
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 130,
+            "rps": 833.9,
+            "t": 183.0,
+            "users": 200
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 130,
+            "rps": 849.1,
+            "t": 185.1,
+            "users": 200
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 130,
+            "rps": 869.7,
+            "t": 187.1,
+            "users": 200
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 130,
+            "rps": 887.2,
+            "t": 189.1,
+            "users": 200
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 130,
+            "rps": 889.9,
+            "t": 191.2,
+            "users": 200
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 140,
+            "rps": 888.8,
+            "t": 193.2,
+            "users": 200
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 160,
+            "rps": 879.6,
+            "t": 195.2,
+            "users": 200
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 160,
+            "rps": 878.8,
+            "t": 197.3,
+            "users": 200
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 160,
+            "rps": 847.2,
+            "t": 199.3,
+            "users": 200
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 160,
+            "rps": 842.1,
+            "t": 201.4,
+            "users": 200
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 160,
+            "rps": 834.3,
+            "t": 203.4,
+            "users": 200
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 140,
+            "rps": 833.5,
+            "t": 205.4,
+            "users": 200
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 140,
+            "rps": 860.2,
+            "t": 207.5,
+            "users": 200
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 140,
+            "rps": 868.0,
+            "t": 209.5,
+            "users": 200
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 130,
+            "rps": 867.7,
+            "t": 211.5,
+            "users": 200
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 130,
+            "rps": 882.7,
+            "t": 213.5,
+            "users": 200
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 130,
+            "rps": 888.6,
+            "t": 215.5,
+            "users": 200
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 130,
+            "rps": 891.6,
+            "t": 217.6,
+            "users": 200
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 130,
+            "rps": 892.5,
+            "t": 219.6,
+            "users": 200
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 130,
+            "rps": 898.4,
+            "t": 221.7,
+            "users": 200
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 130,
+            "rps": 899.4,
+            "t": 223.7,
+            "users": 200
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 130,
+            "rps": 890.0,
+            "t": 225.7,
+            "users": 200
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 130,
+            "rps": 887.8,
+            "t": 227.7,
+            "users": 200
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 140,
+            "rps": 886.7,
+            "t": 229.8,
+            "users": 200
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 140,
+            "rps": 876.5,
+            "t": 231.8,
+            "users": 200
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 130,
+            "rps": 875.1,
+            "t": 233.9,
+            "users": 200
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 130,
+            "rps": 877.1,
+            "t": 235.9,
+            "users": 200
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 130,
+            "rps": 876.8,
+            "t": 237.9,
+            "users": 200
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 130,
+            "rps": 874.3,
+            "t": 239.9,
+            "users": 200
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 130,
+            "rps": 883.1,
+            "t": 242.0,
+            "users": 200
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 130,
+            "rps": 883.4,
+            "t": 244.0,
+            "users": 200
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 130,
+            "rps": 886.6,
+            "t": 246.0,
+            "users": 200
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 130,
+            "rps": 890.6,
+            "t": 248.1,
+            "users": 200
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 130,
+            "rps": 893.1,
+            "t": 250.2,
+            "users": 200
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 130,
+            "rps": 891.7,
+            "t": 252.2,
+            "users": 200
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 130,
+            "rps": 895.1,
+            "t": 254.3,
+            "users": 200
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 140,
+            "rps": 890.2,
+            "t": 256.3,
+            "users": 200
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 130,
+            "rps": 885.6,
+            "t": 258.4,
+            "users": 200
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 140,
+            "rps": 891.2,
+            "t": 260.4,
+            "users": 200
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 130,
+            "rps": 882.5,
+            "t": 262.4,
+            "users": 200
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 130,
+            "rps": 888.6,
+            "t": 264.4,
+            "users": 200
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 130,
+            "rps": 886.7,
+            "t": 266.4,
+            "users": 200
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 130,
+            "rps": 890.5,
+            "t": 268.5,
+            "users": 200
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 130,
+            "rps": 878.5,
+            "t": 270.5,
+            "users": 200
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 130,
+            "rps": 885.4,
+            "t": 272.5,
+            "users": 200
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 130,
+            "rps": 889.6,
+            "t": 274.6,
+            "users": 200
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 130,
+            "rps": 887.8,
+            "t": 276.7,
+            "users": 200
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 130,
+            "rps": 889.9,
+            "t": 278.7,
+            "users": 200
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 130,
+            "rps": 896.6,
+            "t": 280.7,
+            "users": 200
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 130,
+            "rps": 895.3,
+            "t": 282.7,
+            "users": 200
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 130,
+            "rps": 893.5,
+            "t": 284.7,
+            "users": 200
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 130,
+            "rps": 898.5,
+            "t": 286.8,
+            "users": 200
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 130,
+            "rps": 894.8,
+            "t": 288.8,
+            "users": 200
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 130,
+            "rps": 898.3,
+            "t": 290.8,
+            "users": 200
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 130,
+            "rps": 900.2,
+            "t": 292.9,
+            "users": 200
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 130,
+            "rps": 896.3,
+            "t": 295.0,
+            "users": 200
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 130,
+            "rps": 892.7,
+            "t": 297.0,
+            "users": 200
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 130,
+            "rps": 897.0,
+            "t": 299.0,
+            "users": 200
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 130,
+            "rps": 892.5,
+            "t": 301.0,
+            "users": 203
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 160,
+            "rps": 889.4,
+            "t": 303.1,
+            "users": 209
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 160,
+            "rps": 868.9,
+            "t": 305.2,
+            "users": 218
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 170,
+            "rps": 855.1,
+            "t": 307.2,
+            "users": 224
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 170,
+            "rps": 865.1,
+            "t": 309.2,
+            "users": 230
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 170,
+            "rps": 870.7,
+            "t": 311.2,
+            "users": 236
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 150,
+            "rps": 909.8,
+            "t": 313.3,
+            "users": 242
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 150,
+            "rps": 944.6,
+            "t": 315.4,
+            "users": 251
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 160,
+            "rps": 953.8,
+            "t": 317.4,
+            "users": 257
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 160,
+            "rps": 963.2,
+            "t": 319.5,
+            "users": 263
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 160,
+            "rps": 968.9,
+            "t": 321.5,
+            "users": 269
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 160,
+            "rps": 976.5,
+            "t": 323.6,
+            "users": 278
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 160,
+            "rps": 1008.6,
+            "t": 325.7,
+            "users": 284
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 170,
+            "rps": 1008.7,
+            "t": 327.8,
+            "users": 290
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 170,
+            "rps": 1025.0,
+            "t": 330.0,
+            "users": 296
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 170,
+            "rps": 1035.9,
+            "t": 332.1,
+            "users": 300
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 180,
+            "rps": 1039.1,
+            "t": 334.2,
+            "users": 300
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 180,
+            "rps": 1046.7,
+            "t": 336.4,
+            "users": 300
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 180,
+            "rps": 1042.9,
+            "t": 338.5,
+            "users": 300
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 180,
+            "rps": 1038.0,
+            "t": 340.6,
+            "users": 300
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 170,
+            "rps": 1048.7,
+            "t": 342.7,
+            "users": 300
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 180,
+            "rps": 1053.1,
+            "t": 344.8,
+            "users": 300
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 180,
+            "rps": 1037.1,
+            "t": 347.0,
+            "users": 300
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 180,
+            "rps": 1040.0,
+            "t": 349.1,
+            "users": 300
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 180,
+            "rps": 1035.3,
+            "t": 351.2,
+            "users": 300
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 180,
+            "rps": 1023.7,
+            "t": 353.4,
+            "users": 300
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 180,
+            "rps": 1025.6,
+            "t": 355.5,
+            "users": 300
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 170,
+            "rps": 1034.4,
+            "t": 357.6,
+            "users": 300
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 170,
+            "rps": 1031.3,
+            "t": 359.7,
+            "users": 300
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 170,
+            "rps": 1050.3,
+            "t": 361.8,
+            "users": 300
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 170,
+            "rps": 1046.1,
+            "t": 363.9,
+            "users": 300
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 170,
+            "rps": 1059.9,
+            "t": 366.2,
+            "users": 300
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 170,
+            "rps": 1058.6,
+            "t": 368.3,
+            "users": 300
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 170,
+            "rps": 1065.8,
+            "t": 370.4,
+            "users": 300
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 170,
+            "rps": 1076.3,
+            "t": 372.5,
+            "users": 300
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 170,
+            "rps": 1069.8,
+            "t": 374.7,
+            "users": 300
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 180,
+            "rps": 1066.4,
+            "t": 376.8,
+            "users": 300
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 180,
+            "rps": 1050.2,
+            "t": 378.9,
+            "users": 300
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 180,
+            "rps": 1049.5,
+            "t": 381.0,
+            "users": 300
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 180,
+            "rps": 1044.5,
+            "t": 383.1,
+            "users": 300
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 170,
+            "rps": 1048.1,
+            "t": 385.1,
+            "users": 300
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 170,
+            "rps": 1054.3,
+            "t": 387.2,
+            "users": 300
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 170,
+            "rps": 1066.7,
+            "t": 389.3,
+            "users": 300
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 180,
+            "rps": 1071.2,
+            "t": 391.4,
+            "users": 300
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 190,
+            "rps": 1075.5,
+            "t": 393.4,
+            "users": 300
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 200,
+            "rps": 1048.7,
+            "t": 395.6,
+            "users": 300
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 230,
+            "rps": 1018.0,
+            "t": 397.9,
+            "users": 300
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 240,
+            "rps": 959.4,
+            "t": 400.2,
+            "users": 300
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 270,
+            "rps": 906.1,
+            "t": 402.7,
+            "users": 300
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 270,
+            "rps": 835.4,
+            "t": 405.2,
+            "users": 300
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 260,
+            "rps": 824.0,
+            "t": 407.5,
+            "users": 300
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 260,
+            "rps": 851.2,
+            "t": 409.9,
+            "users": 300
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 250,
+            "rps": 806.5,
+            "t": 412.3,
+            "users": 300
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 240,
+            "rps": 815.4,
+            "t": 414.5,
+            "users": 300
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 240,
+            "rps": 825.5,
+            "t": 416.6,
+            "users": 300
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 230,
+            "rps": 835.7,
+            "t": 418.7,
+            "users": 300
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 220,
+            "rps": 895.7,
+            "t": 420.8,
+            "users": 300
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 180,
+            "rps": 947.1,
+            "t": 422.9,
+            "users": 300
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 170,
+            "rps": 1007.1,
+            "t": 425.0,
+            "users": 300
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 180,
+            "rps": 1039.1,
+            "t": 427.2,
+            "users": 300
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 180,
+            "rps": 1055.2,
+            "t": 429.4,
+            "users": 300
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 180,
+            "rps": 1048.8,
+            "t": 431.5,
+            "users": 300
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 190,
+            "rps": 1059.5,
+            "t": 433.8,
+            "users": 300
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 190,
+            "rps": 1029.2,
+            "t": 435.9,
+            "users": 300
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 180,
+            "rps": 1046.9,
+            "t": 438.1,
+            "users": 300
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 180,
+            "rps": 1026.1,
+            "t": 440.2,
+            "users": 300
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 180,
+            "rps": 1031.9,
+            "t": 442.3,
+            "users": 300
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 180,
+            "rps": 1041.3,
+            "t": 444.4,
+            "users": 300
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 180,
+            "rps": 1040.5,
+            "t": 446.4,
+            "users": 300
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 180,
+            "rps": 1044.0,
+            "t": 448.5,
+            "users": 300
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 180,
+            "rps": 1044.0,
+            "t": 450.6,
+            "users": 300
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 180,
+            "rps": 1043.4,
+            "t": 452.8,
+            "users": 306
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 180,
+            "rps": 1050.7,
+            "t": 455.0,
+            "users": 315
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 190,
+            "rps": 1054.5,
+            "t": 457.1,
+            "users": 321
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 190,
+            "rps": 1052.4,
+            "t": 459.2,
+            "users": 327
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 190,
+            "rps": 1040.5,
+            "t": 461.3,
+            "users": 336
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 200,
+            "rps": 1052.9,
+            "t": 463.5,
+            "users": 342
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 200,
+            "rps": 1044.4,
+            "t": 465.7,
+            "users": 348
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 230,
+            "rps": 1051.9,
+            "t": 468.2,
+            "users": 357
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 240,
+            "rps": 1038.5,
+            "t": 470.5,
+            "users": 363
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 240,
+            "rps": 1028.0,
+            "t": 472.8,
+            "users": 369
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 250,
+            "rps": 1024.1,
+            "t": 475.1,
+            "users": 378
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 260,
+            "rps": 1027.2,
+            "t": 477.3,
+            "users": 384
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 270,
+            "rps": 1035.1,
+            "t": 479.6,
+            "users": 393
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 260,
+            "rps": 1036.5,
+            "t": 482.0,
+            "users": 400
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 270,
+            "rps": 1033.8,
+            "t": 484.5,
+            "users": 400
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 260,
+            "rps": 1034.8,
+            "t": 486.8,
+            "users": 400
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 280,
+            "rps": 1052.0,
+            "t": 489.2,
+            "users": 400
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 280,
+            "rps": 1035.9,
+            "t": 491.5,
+            "users": 400
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 280,
+            "rps": 1041.9,
+            "t": 494.0,
+            "users": 400
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 280,
+            "rps": 1038.1,
+            "t": 496.4,
+            "users": 400
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 280,
+            "rps": 1033.8,
+            "t": 498.9,
+            "users": 400
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 280,
+            "rps": 1044.2,
+            "t": 501.2,
+            "users": 400
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 350,
+            "rps": 1046.0,
+            "t": 503.6,
+            "users": 400
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 380,
+            "rps": 1007.2,
+            "t": 506.1,
+            "users": 400
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 380,
+            "rps": 946.0,
+            "t": 508.7,
+            "users": 400
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 390,
+            "rps": 937.7,
+            "t": 511.1,
+            "users": 400
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 340,
+            "rps": 892.8,
+            "t": 513.5,
+            "users": 400
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 320,
+            "rps": 933.0,
+            "t": 515.9,
+            "users": 400
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 330,
+            "rps": 947.6,
+            "t": 518.4,
+            "users": 400
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 320,
+            "rps": 941.3,
+            "t": 520.6,
+            "users": 400
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 320,
+            "rps": 961.8,
+            "t": 523.1,
+            "users": 400
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 300,
+            "rps": 962.0,
+            "t": 525.5,
+            "users": 400
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 320,
+            "rps": 970.3,
+            "t": 528.0,
+            "users": 400
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 320,
+            "rps": 953.6,
+            "t": 530.6,
+            "users": 400
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 320,
+            "rps": 953.2,
+            "t": 533.2,
+            "users": 400
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 310,
+            "rps": 928.8,
+            "t": 535.5,
+            "users": 400
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 300,
+            "rps": 941.8,
+            "t": 538.1,
+            "users": 400
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 300,
+            "rps": 963.2,
+            "t": 540.4,
+            "users": 400
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 340,
+            "rps": 952.9,
+            "t": 542.9,
+            "users": 400
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 370,
+            "rps": 924.1,
+            "t": 545.5,
+            "users": 400
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 380,
+            "rps": 869.0,
+            "t": 548.2,
+            "users": 400
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 390,
+            "rps": 828.7,
+            "t": 550.8,
+            "users": 400
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 390,
+            "rps": 829.6,
+            "t": 553.2,
+            "users": 400
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 370,
+            "rps": 844.7,
+            "t": 555.8,
+            "users": 400
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 340,
+            "rps": 896.2,
+            "t": 558.2,
+            "users": 400
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 310,
+            "rps": 934.6,
+            "t": 560.8,
+            "users": 400
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 300,
+            "rps": 936.1,
+            "t": 563.0,
+            "users": 400
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 320,
+            "rps": 970.5,
+            "t": 565.4,
+            "users": 400
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 370,
+            "rps": 942.0,
+            "t": 568.2,
+            "users": 400
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 490,
+            "rps": 884.3,
+            "t": 571.3,
+            "users": 400
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 580,
+            "rps": 758.5,
+            "t": 574.2,
+            "users": 400
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 590,
+            "rps": 648.2,
+            "t": 577.3,
+            "users": 400
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 540,
+            "rps": 667.5,
+            "t": 579.6,
+            "users": 400
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 480,
+            "rps": 732.0,
+            "t": 581.8,
+            "users": 400
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 330,
+            "rps": 847.0,
+            "t": 584.3,
+            "users": 400
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 290,
+            "rps": 991.9,
+            "t": 586.6,
+            "users": 400
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 270,
+            "rps": 1045.0,
+            "t": 588.9,
+            "users": 400
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 270,
+            "rps": 1091.7,
+            "t": 591.2,
+            "users": 400
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 280,
+            "rps": 1075.2,
+            "t": 593.4,
+            "users": 400
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 280,
+            "rps": 1064.0,
+            "t": 595.8,
+            "users": 400
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 280,
+            "rps": 1055.2,
+            "t": 598.2,
+            "users": 400
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 270,
+            "rps": 1057.9,
+            "t": 600.7,
+            "users": 403
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 270,
+            "rps": 1077.2,
+            "t": 603.0,
+            "users": 409
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 260,
+            "rps": 1084.9,
+            "t": 605.3,
+            "users": 418
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 270,
+            "rps": 1104.9,
+            "t": 607.6,
+            "users": 424
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 280,
+            "rps": 1104.9,
+            "t": 609.9,
+            "users": 433
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 290,
+            "rps": 1093.2,
+            "t": 612.5,
+            "users": 439
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 340,
+            "rps": 1092.6,
+            "t": 615.0,
+            "users": 448
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 360,
+            "rps": 1045.8,
+            "t": 617.6,
+            "users": 454
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 550,
+            "rps": 971.5,
+            "t": 620.5,
+            "users": 463
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 570,
+            "rps": 898.7,
+            "t": 623.5,
+            "users": 472
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 860,
+            "rps": 694.4,
+            "t": 628.8,
+            "users": 484
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 860,
+            "rps": 701.3,
+            "t": 632.5,
+            "users": 500
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 630,
+            "rps": 726.1,
+            "t": 635.1,
+            "users": 500
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 530,
+            "rps": 869.0,
+            "t": 638.2,
+            "users": 500
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 520,
+            "rps": 935.6,
+            "t": 640.8,
+            "users": 500
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 520,
+            "rps": 959.4,
+            "t": 643.4,
+            "users": 500
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 450,
+            "rps": 959.1,
+            "t": 645.9,
+            "users": 500
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 400,
+            "rps": 1006.1,
+            "t": 648.8,
+            "users": 500
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 390,
+            "rps": 1021.8,
+            "t": 651.4,
+            "users": 500
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 390,
+            "rps": 1042.1,
+            "t": 654.1,
+            "users": 500
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 380,
+            "rps": 1035.8,
+            "t": 656.8,
+            "users": 500
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 400,
+            "rps": 1038.3,
+            "t": 659.4,
+            "users": 500
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 400,
+            "rps": 1022.5,
+            "t": 662.0,
+            "users": 500
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 400,
+            "rps": 1024.2,
+            "t": 664.7,
+            "users": 500
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 400,
+            "rps": 1019.7,
+            "t": 667.2,
+            "users": 500
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 400,
+            "rps": 1028.6,
+            "t": 670.0,
+            "users": 500
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 400,
+            "rps": 1035.8,
+            "t": 672.7,
+            "users": 500
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 420,
+            "rps": 1030.1,
+            "t": 675.5,
+            "users": 500
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 410,
+            "rps": 1007.3,
+            "t": 678.2,
+            "users": 500
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 430,
+            "rps": 1017.4,
+            "t": 681.1,
+            "users": 500
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 410,
+            "rps": 1000.3,
+            "t": 683.9,
+            "users": 500
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 410,
+            "rps": 1013.1,
+            "t": 686.7,
+            "users": 500
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 400,
+            "rps": 1025.7,
+            "t": 689.2,
+            "users": 500
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 390,
+            "rps": 1034.7,
+            "t": 691.7,
+            "users": 500
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 390,
+            "rps": 1049.9,
+            "t": 694.4,
+            "users": 500
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 380,
+            "rps": 1052.2,
+            "t": 697.1,
+            "users": 500
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 390,
+            "rps": 1057.7,
+            "t": 699.6,
+            "users": 500
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 390,
+            "rps": 1063.8,
+            "t": 702.2,
+            "users": 500
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 390,
+            "rps": 1039.1,
+            "t": 705.0,
+            "users": 500
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 390,
+            "rps": 1030.9,
+            "t": 707.6,
+            "users": 500
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 370,
+            "rps": 1035.2,
+            "t": 710.2,
+            "users": 500
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 380,
+            "rps": 1039.7,
+            "t": 712.7,
+            "users": 500
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 380,
+            "rps": 1057.2,
+            "t": 715.2,
+            "users": 500
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 380,
+            "rps": 1076.2,
+            "t": 717.8,
+            "users": 500
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 370,
+            "rps": 1077.8,
+            "t": 720.4,
+            "users": 500
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 370,
+            "rps": 1099.8,
+            "t": 723.0,
+            "users": 500
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 340,
+            "rps": 1106.4,
+            "t": 725.6,
+            "users": 500
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 350,
+            "rps": 1115.1,
+            "t": 728.2,
+            "users": 500
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 360,
+            "rps": 1089.1,
+            "t": 731.0,
+            "users": 500
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 390,
+            "rps": 1072.3,
+            "t": 733.6,
+            "users": 500
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 390,
+            "rps": 1041.9,
+            "t": 736.2,
+            "users": 500
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 390,
+            "rps": 1026.7,
+            "t": 738.8,
+            "users": 500
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 390,
+            "rps": 1035.7,
+            "t": 741.4,
+            "users": 500
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 380,
+            "rps": 1035.1,
+            "t": 743.9,
+            "users": 500
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 380,
+            "rps": 1053.8,
+            "t": 746.5,
+            "users": 500
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 390,
+            "rps": 1078.7,
+            "t": 749.2,
+            "users": 500
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 380,
+            "rps": 1088.6,
+            "t": 751.6,
+            "users": 506
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 380,
+            "rps": 1099.6,
+            "t": 754.2,
+            "users": 515
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 380,
+            "rps": 1087.0,
+            "t": 757.0,
+            "users": 521
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 410,
+            "rps": 1082.7,
+            "t": 759.6,
+            "users": 530
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 410,
+            "rps": 1064.1,
+            "t": 762.2,
+            "users": 539
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 410,
+            "rps": 1068.7,
+            "t": 765.0,
+            "users": 548
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 430,
+            "rps": 1067.2,
+            "t": 767.8,
+            "users": 554
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 480,
+            "rps": 1051.9,
+            "t": 771.3,
+            "users": 566
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 490,
+            "rps": 1060.4,
+            "t": 775.1,
+            "users": 578
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 380,
+            "rps": 1060.0,
+            "t": 778.8,
+            "users": 587
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 400,
+            "rps": 1094.6,
+            "t": 782.6,
+            "users": 600
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 400,
+            "rps": 1098.5,
+            "t": 786.4,
+            "users": 600
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 410,
+            "rps": 1101.5,
+            "t": 790.2,
+            "users": 600
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 440,
+            "rps": 1115.3,
+            "t": 794.1,
+            "users": 600
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 450,
+            "rps": 1078.5,
+            "t": 798.0,
+            "users": 600
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 470,
+            "rps": 1034.2,
+            "t": 802.0,
+            "users": 600
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 460,
+            "rps": 1047.1,
+            "t": 806.1,
+            "users": 600
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 450,
+            "rps": 1051.0,
+            "t": 810.1,
+            "users": 600
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 430,
+            "rps": 1030.1,
+            "t": 814.1,
+            "users": 600
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 470,
+            "rps": 1047.1,
+            "t": 818.0,
+            "users": 600
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 440,
+            "rps": 1056.3,
+            "t": 821.9,
+            "users": 600
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 460,
+            "rps": 1035.0,
+            "t": 825.9,
+            "users": 600
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 450,
+            "rps": 1060.0,
+            "t": 830.0,
+            "users": 600
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 400,
+            "rps": 1034.3,
+            "t": 833.9,
+            "users": 600
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 390,
+            "rps": 1085.4,
+            "t": 837.6,
+            "users": 600
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 390,
+            "rps": 1102.0,
+            "t": 841.3,
+            "users": 600
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 390,
+            "rps": 1127.5,
+            "t": 845.2,
+            "users": 600
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 420,
+            "rps": 1107.1,
+            "t": 849.0,
+            "users": 600
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 400,
+            "rps": 1109.6,
+            "t": 852.8,
+            "users": 600
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 410,
+            "rps": 1104.7,
+            "t": 856.8,
+            "users": 600
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 450,
+            "rps": 1072.8,
+            "t": 860.9,
+            "users": 600
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 450,
+            "rps": 1069.3,
+            "t": 864.6,
+            "users": 600
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 400,
+            "rps": 1082.8,
+            "t": 868.4,
+            "users": 600
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 400,
+            "rps": 1109.4,
+            "t": 872.1,
+            "users": 600
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 390,
+            "rps": 1125.2,
+            "t": 875.9,
+            "users": 600
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 420,
+            "rps": 1111.1,
+            "t": 879.7,
+            "users": 600
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 450,
+            "rps": 1084.9,
+            "t": 884.0,
+            "users": 600
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 590,
+            "rps": 982.9,
+            "t": 888.4,
+            "users": 600
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 810,
+            "rps": 794.1,
+            "t": 893.5,
+            "users": 600
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 800,
+            "rps": 809.4,
+            "t": 897.3,
+            "users": 600
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 640,
+            "rps": 908.1,
+            "t": 901.8,
+            "users": 560
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 670,
+            "rps": 964.2,
+            "t": 906.2,
+            "users": 480
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 530,
+            "rps": 864.1,
+            "t": 910.0,
+            "users": 420
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 530,
+            "rps": 911.5,
+            "t": 912.3,
+            "users": 380
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 390,
+            "rps": 930.2,
+            "t": 914.6,
+            "users": 340
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 300,
+            "rps": 995.4,
+            "t": 916.9,
+            "users": 280
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 250,
+            "rps": 1026.3,
+            "t": 918.9,
+            "users": 240
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 240,
+            "rps": 1047.0,
+            "t": 920.9,
+            "users": 200
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 200,
+            "rps": 980.3,
+            "t": 922.9,
+            "users": 160
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 190,
+            "rps": 925.3,
+            "t": 925.0,
+            "users": 120
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 190,
+            "rps": 842.9,
+            "t": 927.0,
+            "users": 80
+          },
+          {
+            "error_rate": 0.0,
+            "p95_ms": 170,
+            "rps": 750.1,
+            "t": 929.0,
+            "users": 40
+          }
+        ],
+        "ttfb_p95_ms": 396.5,
+        "vus_max": 600
+      },
+      "target": "quickpizza",
+      "target_label": "QuickPizza - cible de demo publique",
+      "test_type": "capacity",
+      "ts": 1787054229.7964375
+    },
+    {
+      "id": "c4241eec3ffc",
+      "params": {
+        "error_pct": 1.0,
+        "p95_ms": 800,
+        "ramp": "30s",
+        "steady": "2m",
+        "think_time": 0.1,
+        "vus_max": 800,
+        "vus_start": 100,
+        "vus_step": 200
+      },
+      "result": {
+        "analysis": [
+          {
+            "detail": "L'essentiel du temps de reponse vient du TRAITEMENT serveur (TTFB), pas du reseau. Le goulot est cote backend : requetes, DB, CPU.",
+            "level": "info",
+            "title": "Temps domine par le serveur (TTFB ~ 100 % du p95)"
+          },
+          {
+            "detail": "Le systeme a tenu tous les paliers sans franchir le seuil. Augmente « VUs max » pour trouver la vraie limite.",
+            "level": "good",
+            "title": "Capacite non atteinte (tenu jusqu'a 700 VUs)"
+          }
+        ],
+        "avg_ms": 103.3,
+        "checks_rate": 1,
+        "data_received": 3936563489,
+        "data_received_rate": 6247281.24002712,
+        "data_sent": 64215725,
+        "data_sent_rate": 101909.6212288323,
+        "error_rate": 0,
+        "exit_code": 0,
+        "failed_thresholds": [],
+        "max_ms": 2873.7,
+        "p50_ms": 101.7,
+        "p95_ms": 105.0,
+        "p99_ms": 108.1,
+        "reqs_per_sec": 1868.7,
+        "reqs_total": 1177540,
+        "status": "ok",
+        "steps": [],
+        "thresholds_ok": true,
+        "ttfb_p95_ms": 104.8,
+        "vus_max": 700
+      },
+      "target": "quickpizza",
+      "target_label": "QuickPizza - cible de demo officielle k6",
+      "test_type": "capacity",
+      "ts": 1783944996.2854557
+    },
+    {
+      "id": "8f216dd20558",
+      "params": {
+        "error_pct": 1.0,
+        "p95_ms": 800,
+        "ramp_down": "30s",
+        "ramp_up": "1m30s",
+        "steady": "1m30s",
+        "think_time": 0.1,
+        "vus": 200
+      },
+      "result": {
+        "analysis": [
+          {
+            "detail": "L'essentiel du temps de reponse vient du TRAITEMENT serveur (TTFB), pas du reseau. Le goulot est cote backend : requetes, DB, CPU.",
+            "level": "info",
+            "title": "Temps domine par le serveur (TTFB ~ 100 % du p95)"
+          },
+          {
+            "detail": "Beaucoup de reserve. Tu peux pousser plus fort (VUs plus eleves) ou lancer un stress pour trouver la limite.",
+            "level": "good",
+            "title": "Large marge sous le seuil p95 (106 / 800 ms)"
+          },
+          {
+            "detail": "Le systeme encaisse la charge cible. Prochaine etape : un stress (VUs plus eleves) pour situer le point de rupture.",
+            "level": "good",
+            "title": "Charge nominale tenue"
+          }
+        ],
+        "avg_ms": 103.4,
+        "checks_rate": 1,
+        "data_received": 491154566,
+        "data_received_rate": 2337237.955970495,
+        "data_sent": 8198259,
+        "data_sent_rate": 39012.733331031915,
+        "error_rate": 0,
+        "exit_code": 0,
+        "failed_thresholds": [],
+        "max_ms": 949.3,
+        "p50_ms": 102.1,
+        "p95_ms": 105.9,
+        "p99_ms": 118.0,
+        "reqs_per_sec": 698.3,
+        "reqs_total": 146739,
+        "status": "ok",
+        "steps": [],
+        "thresholds_ok": true,
+        "ttfb_p95_ms": 105.8,
+        "vus_max": 200
+      },
+      "target": "quickpizza",
+      "target_label": "QuickPizza - cible de demo officielle k6",
+      "test_type": "load",
+      "ts": 1783939467.2350886
+    },
+    {
+      "id": "76ed5e236e99",
+      "params": {
+        "duration": "10s"
+      },
+      "result": {
+        "analysis": [
+          {
+            "detail": "L'essentiel du temps de reponse vient du TRAITEMENT serveur (TTFB), pas du reseau. Le goulot est cote backend : requetes, DB, CPU.",
+            "level": "info",
+            "title": "Temps domine par le serveur (TTFB ~ 100 % du p95)"
+          },
+          {
+            "detail": "L'appli repond correctement. Tu peux enchainer sur un test de charge (load).",
+            "level": "good",
+            "title": "Smoke OK"
+          }
+        ],
+        "avg_ms": 101.4,
+        "checks_rate": 1,
+        "data_received": 164384,
+        "data_received_rate": 16403.605492210198,
+        "data_sent": 4313,
+        "data_sent_rate": 430.3870844358489,
+        "error_rate": 0,
+        "exit_code": 0,
+        "failed_thresholds": [],
+        "max_ms": 106.1,
+        "p50_ms": 101.4,
+        "p95_ms": 102.0,
+        "p99_ms": 104.4,
+        "reqs_per_sec": 4.8,
+        "reqs_total": 48,
+        "status": "ok",
+        "steps": [],
+        "thresholds_ok": true,
+        "ttfb_p95_ms": 101.8,
+        "vus_max": 1
+      },
+      "target": "quickpizza",
+      "target_label": "QuickPizza - cible de demo officielle k6",
+      "test_type": "smoke",
+      "ts": 1783939192.8875387
+    }
+  ],
+  "baselines": {},
+  "replays": {
+    "smoke": {
+      "run_id": "dba53e8dbdcf",
+      "start": [
+        "🚀 Locust sur « QuickPizza - cible de demo publique » - type smoke",
+        "🚀 Locust - « quickpizza » - type smoke (seuil p95 800 ms)"
+      ],
+      "verdict": "✅ Termine - charge tenue sous le seuil, aucune rupture."
+    },
+    "open_stress": {
+      "run_id": "34fa80aca41e",
+      "start": [
+        "🚀 k6 sur « QuickPizza - cible de demo publique » - open_stress - débit visé 300 req/s (modèle ouvert)"
+      ],
+      "verdict": "✅ Termine - charge tenue sous le seuil, aucune rupture."
+    },
+    "open_load": {
+      "run_id": "e5aed76554ea",
+      "start": [
+        "🚀 k6 sur « QuickPizza - cible de demo publique » - open_load - débit visé 100 req/s (modèle ouvert)"
+      ],
+      "verdict": "✅ Termine - charge tenue sous le seuil, aucune rupture."
+    },
+    "calibration": {
+      "run_id": "dc92026c87fc",
+      "start": [
+        "🚀 Locust sur « QuickPizza - cible de demo publique » - type calibration",
+        "🚀 Locust - « quickpizza » - type calibration (seuil p95 800 ms)"
+      ],
+      "verdict": "🎚️ Injecteur saturé à 91 % de CPU à 40 s - capacité ~817 req/s avec 100 utilisateurs."
+    },
+    "capacity": {
+      "run_id": "9386430e0a01",
+      "start": [
+        "🚀 Locust sur « QuickPizza - cible de demo publique » - type capacity",
+        "🚀 Locust - « quickpizza » - type capacity (seuil p95 800 ms)"
+      ],
+      "verdict": "✅ Termine - charge tenue sous le seuil, aucune rupture."
+    }
+  }
+}

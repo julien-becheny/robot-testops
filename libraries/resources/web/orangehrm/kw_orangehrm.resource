@@ -47,6 +47,27 @@ Open And Login As
   Login As  ${Profile}
   Wait For Screen  orangehrm.tableau_de_bord  ${TO_NAVIGATION}[LNK_MENU_PIM]
 
+Log In Once For The Suite
+  [Documentation]  `Suite Setup` : joue le formulaire de connexion UNE fois, garde la session.
+  ...  Les tests ouvrent ensuite un contexte déjà connecté (cf. `Open OrangeHRM Session`).
+  ...  C'est aussi le seul endroit du module où le chemin de connexion réel est exercé :
+  ...  s'il casse, la suite entière ne démarre pas, et le rapport le dit une fois au lieu
+  ...  d'afficher N échecs qui racontent tous le même incident.
+  [Arguments]  ${Profile}=ADMIN
+  Open And Login As  ${Profile}
+  Remember Login State
+  Close Browser
+
+Open OrangeHRM Session
+  [Documentation]  Ouvre le navigateur sur la session enregistrée par le `Suite Setup`.
+  ...  L'application redirige la page de connexion vers le tableau de bord tant que le
+  ...  cookie est valide : une session périmée échoue donc ici, et non trois écrans plus
+  ...  loin sur un bouton « introuvable ».
+  Should Not Be Empty  ${AUTH_STATE}
+  ...  msg=Aucune session enregistrée : lancer le DOSSIER test_suites/web/orangehrm (son __init__.robot fait la connexion), pas le fichier de test seul.
+  Open Module  orangehrm
+  Wait For Screen  orangehrm.tableau_de_bord  ${TO_NAVIGATION}[LNK_MENU_PIM]
+
 Open Employee List
   [Documentation]  Ouvre la liste des employés depuis le menu latéral.
   Click  ${TO_NAVIGATION}[LNK_MENU_PIM]
@@ -60,11 +81,18 @@ Open Add Employee Form
 Create Employee
   [Documentation]  Renseigne le formulaire de création et enregistre.
   ...  Le matricule proposé par l'application est écrasé par celui du test.
+  ...  La fiche s'affiche avant ses données : ses champs se remplissent à la réponse de
+  ...  `personal-details`. L'attente porte sur cette réponse, sans quoi la vérification
+  ...  suivante lit un formulaire encore vide.
   [Arguments]  ${First_Name}  ${Last_Name}  ${Employee_Id}
   Fill Text  ${TO_ADD_EMPLOYEE}[FLD_FIRST_NAME]  ${First_Name}
   Fill Text  ${TO_ADD_EMPLOYEE}[FLD_LAST_NAME]  ${Last_Name}
   Fill Text  ${TO_ADD_EMPLOYEE}[FLD_EMPLOYEE_ID]  ${Employee_Id}
+  ${Details}=  Promise To  Wait For Response
+  ...  matcher=**/api/v2/pim/employees/*/personal-details
+  ...  timeout=20s
   Click  ${TO_ADD_EMPLOYEE}[BTN_SAVE]
+  Wait For  ${Details}
   Wait For Screen  orangehrm.pim.details_employe  ${TO_PERSONAL_DETAILS}[LBL_TITLE]
 
 Employee Details Should Show
@@ -107,6 +135,8 @@ Employee Should Not Exist
 Delete Employee If Present
   [Documentation]  Supprime l'employé portant ce matricule, s'il existe, et vérifie qu'il a disparu.
   ...  Un test interrompu avant la création n'a rien laissé : le nettoyage doit alors se taire.
+  ...  La popup se ferme dès le clic, avant la réponse du serveur : la recherche de contrôle
+  ...  attend donc la fin de la suppression, sans quoi elle trouve encore l'employé.
   [Arguments]  ${Employee_Id}
   Open Employee List
   ${Found}=  Search Employee By Id  ${Employee_Id}
@@ -115,7 +145,11 @@ Delete Employee If Present
   ${Delete_Selector}=  Format String  ${TO_EMPLOYEE_LIST}[BTN_DELETE_BY_ID]  id=${Employee_Id}
   Click  ${Delete_Selector}
   Wait For Screen  orangehrm.popup_confirmation  ${TO_DIALOG}[LBL_QUESTION]
+  ${Deletion}=  Promise To  Wait For Response
+  ...  matcher=**/api/v2/pim/employees
+  ...  timeout=20s
   Click  ${TO_DIALOG}[BTN_CONFIRM_DELETE]
+  Wait For  ${Deletion}
   Wait For Elements State  ${TO_DIALOG}[CTN_DIALOG]  detached  timeout=15s
   Employee Should Not Exist  ${Employee_Id}
 

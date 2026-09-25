@@ -25,22 +25,24 @@ test('affiche les sections de navigation et le contenu de la page', () => {
 
   expect(screen.getByRole('navigation', { name: 'Navigation principale' })).toBeInTheDocument();
   expect(screen.getByText('Exécuter')).toBeInTheDocument();
-  expect(screen.getByRole('button', { name: 'Exécution par tags' })).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: 'Tests de charge' })).toBeInTheDocument();
   expect(screen.getByText('contenu')).toBeInTheDocument();
 });
 
 test("signale l'entrée courante et notifie la navigation au clic", () => {
   const onNavigate = vi.fn();
-  renderShell({ currentPage: 'tags', onNavigate });
+  renderShell({ currentPage: 'load', onNavigate });
 
-  expect(screen.getByRole('button', { name: 'Exécution par tags' })).toHaveAttribute(
+  expect(screen.getByRole('button', { name: 'Tests de charge' })).toHaveAttribute(
     'aria-current',
     'page'
   );
-  expect(screen.getByRole('button', { name: 'Configuration' })).not.toHaveAttribute('aria-current');
+  expect(screen.getByRole('button', { name: 'Campagnes de tests' })).not.toHaveAttribute(
+    'aria-current'
+  );
 
-  fireEvent.click(screen.getByRole('button', { name: 'Configuration' }));
-  expect(onNavigate).toHaveBeenCalledWith('config');
+  fireEvent.click(screen.getByRole('button', { name: 'Campagnes de tests' }));
+  expect(onNavigate).toHaveBeenCalledWith('campaign');
 });
 
 test('masque le raccourci exécution tant qu’aucune session n’existe', () => {

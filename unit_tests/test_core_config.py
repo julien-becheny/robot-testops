@@ -55,6 +55,56 @@ def test_malformed_json_uses_defaults_without_overwriting_source(tmp_path: Path)
     assert config_file.read_text(encoding="utf-8") == malformed_content
 
 
+def test_bom_prefixed_json_is_loaded(tmp_path: Path) -> None:
+    """Le Bloc-notes et `Set-Content -Encoding UTF8` écrivent un BOM : le fichier reste lisible."""
+    config_file = tmp_path / "variables_config.json"
+    config_file.write_text('\ufeff{"RF_BROWSER": "firefox"}', encoding="utf-8")
+    instance = _isolated_config(config_file)
+
+    instance._load_config()
+
+    assert instance.get_all() == {"RF_BROWSER": "firefox"}
+
+
+def test_utf16_json_written_by_powershell_5_is_loaded(tmp_path: Path) -> None:
+    """`>` et `Out-File` de PowerShell 5 écrivent en UTF-16 : le fichier reste lisible."""
+    config_file = tmp_path / "variables_config.json"
+    config_file.write_text('{"RF_BROWSER": "firefox"}', encoding="utf-16")
+    instance = _isolated_config(config_file)
+
+    instance._load_config()
+
+    assert instance.get_all() == {"RF_BROWSER": "firefox"}
+
+
+def test_an_ansi_file_is_kept_and_never_overwritten(tmp_path: Path) -> None:
+    """`Set-Content` sans `-Encoding` écrit en ANSI : le démarrage ne tombe pas, le fichier reste."""
+    config_file = tmp_path / "variables_config.json"
+    ansi_content = '{"RF_SLOW_MO": "déjà réglé"}'.encode("cp1252")
+    config_file.write_bytes(ansi_content)
+    instance = _isolated_config(config_file)
+
+    instance._load_config()
+
+    assert instance.get("RF_BROWSER") == "chromium"
+    assert instance.set("RF_SLOW_MO", "0:00:01") is False
+    assert config_file.read_bytes() == ansi_content
+
+
+def test_a_save_never_overwrites_a_file_that_could_not_be_read(tmp_path: Path) -> None:
+    """Un fichier illisible porte peut-être des secrets saisis à la main : jamais remplacé."""
+    config_file = tmp_path / "variables_config.json"
+    unreadable_content = '{"RF_SECRET_SAUCEDEMO": "saisi à la main",'  # pragma: allowlist secret
+    config_file.write_text(unreadable_content, encoding="utf-8")
+    instance = _isolated_config(config_file)
+    instance._load_config()
+
+    assert instance.set("RF_SLOW_MO", "0:00:01") is False
+
+    assert config_file.read_text(encoding="utf-8") == unreadable_content
+    assert instance.get("RF_SLOW_MO") is None
+
+
 def test_save_config_persists_valid_values(tmp_path: Path) -> None:
     """Une configuration sérialisable remplace correctement le fichier JSON."""
     config_file = tmp_path / "variables_config.json"

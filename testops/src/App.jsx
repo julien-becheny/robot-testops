@@ -6,6 +6,10 @@ import TestInProgress from './pages/ExecutionPage';
 import ConfigPage from './pages/ConfigPage';
 import LaunchPage from './pages/LaunchPage';
 import TagSelectorPage from './pages/TagSelectorPage';
+import LoadTestPage from './pages/LoadTestPage';
+import CampaignPage from './pages/CampaignPage';
+import CoveragePage from './pages/CoveragePage';
+import HealthPage from './pages/HealthPage';
 
 const VIEWPORT_MAP = {
   desktop: '1920x1080',
@@ -154,6 +158,42 @@ function App() {
     [selectedBrowsers, selectedDevices, environmentInfo.env, launchSession, startRun]
   );
 
+  const handleRunCampaign = useCallback(
+    async (campaignId, browser, device, count) => {
+      const env = environmentInfo.env;
+      const runFn = async () => {
+        const res = await fetch(`${API_BASE_URL}/campaigns/${campaignId}/run`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ browser, device, count }),
+        });
+        const data = await res.json();
+        if (data.session_id) {
+          addSession(data.session_id, `${browser}-${device}`, 'campaign', { env, browser, device });
+        }
+      };
+
+      await startRun(runFn);
+    },
+    [environmentInfo.env, startRun]
+  );
+
+  const handleRunAppium = useCallback(async () => {
+    const env = environmentInfo.env;
+    const runFn = async () => {
+      const res = await fetch(`${API_BASE_URL}/run-appium`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+      });
+      const data = await res.json();
+      if (data.session_id) {
+        addSession(data.session_id, 'appium', 'appium', { env, browser: 'appium' });
+      }
+    };
+
+    await startRun(runFn);
+  }, [environmentInfo.env, startRun]);
+
   const renderPage = () => {
     switch (currentPage) {
       case 'config':
@@ -161,11 +201,22 @@ function App() {
       case 'smoke':
         return (
           <LaunchPage
+            kind="smoke"
             selectedBrowsers={selectedBrowsers}
             selectedDevices={selectedDevices}
             onLaunch={() => handleRunTest('smoke')}
           />
         );
+      case 'appium':
+        return <LaunchPage kind="appium" onLaunch={handleRunAppium} />;
+      case 'load':
+        return <LoadTestPage />;
+      case 'campaign':
+        return <CampaignPage onRunCampaign={handleRunCampaign} />;
+      case 'coverage':
+        return <CoveragePage />;
+      case 'health':
+        return <HealthPage />;
       case 'tags':
         return (
           <TagSelectorPage

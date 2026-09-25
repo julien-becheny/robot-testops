@@ -5,9 +5,12 @@ absolu des suites jouées. Le rapport embarqué dans la démonstration portait d
 du compte Windows, six fois, prêt à partir en ligne.
 """
 
+import base64
+import contextlib
 import os
 import re
 import subprocess
+import zlib
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -16,6 +19,9 @@ TEXT_SUFFIXES = {
     ".py", ".js", ".jsx", ".json", ".md", ".yaml", ".yml", ".robot", ".resource",
     ".toml", ".html", ".css", ".sh", ".bat", ".txt", ".example",
 }
+
+# Une chaîne JSON qui n'est que du base64 : la forme des messages que log.html compresse.
+_COMPRESSED = re.compile(r'"([A-Za-z0-9+/]{16,}={0,2})"')
 
 
 def current_account() -> str:
@@ -32,6 +38,22 @@ def tracked_files() -> list[Path]:
     return [Path(line) for line in listing.stdout.splitlines() if line]
 
 
+def readable_content(path: Path) -> str:
+    """Le texte du fichier, plus ce que Robot Framework y a compressé (zlib + base64).
+
+    Une recherche en clair ne voit pas ces chaînes : le `tracesDir` du rapport de
+    démonstration y portait encore le dossier personnel après le premier nettoyage.
+    """
+    content = path.read_text(encoding="utf-8")
+    if path.suffix.lower() != ".html":
+        return content
+    decoded = []
+    for encoded in _COMPRESSED.findall(content):
+        with contextlib.suppress(ValueError, zlib.error):
+            decoded.append(zlib.decompress(base64.b64decode(encoded)).decode("utf-8"))
+    return "\n".join([content, *decoded])
+
+
 def files_matching(pattern: re.Pattern) -> list[str]:
     """Retourne les fichiers versionnés dont le contenu correspond au motif."""
     hits = []
@@ -39,7 +61,7 @@ def files_matching(pattern: re.Pattern) -> list[str]:
         if relative.suffix.lower() not in TEXT_SUFFIXES:
             continue
         try:
-            content = (REPO_ROOT / relative).read_text(encoding="utf-8")
+            content = readable_content(REPO_ROOT / relative)
         except (OSError, UnicodeDecodeError):
             continue
         if pattern.search(content):
@@ -82,3 +104,14 @@ def test_the_check_still_bites(tmp_path: Path) -> None:
     # Le nom cité hors chemin ne dit rien de la machine : « runner » est ici un métier.
     assert not home_directory_pattern("runner").search("from services.execution.runner")
     assert tracked_files(), "sans fichier suivi, le contrôle passerait toujours"
+
+
+def test_the_check_reads_what_the_report_compresses(tmp_path: Path) -> None:
+    """Un chemin caché dans une chaîne compressée de log.html reste un chemin publié."""
+    message = rb'{"tracesDir": "C:\\Users\\jdupont\\workspace\\temp"}'
+    encoded = base64.b64encode(zlib.compress(message, 9)).decode("ascii")
+    report = tmp_path / "log.html"
+    report.write_text(f'window.output["strings"] = ["*00 Smoke","{encoded}"];', encoding="utf-8")
+
+    assert not home_directory_pattern("jdupont").search(report.read_text(encoding="utf-8"))
+    assert home_directory_pattern("jdupont").search(readable_content(report))

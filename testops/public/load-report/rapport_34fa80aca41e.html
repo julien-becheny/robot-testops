@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Test de charge - QuickPizza - cible de demo publique</title>
+<style>
+  :root { --bg:#eceff4; --card:#fff; --txt:#1b2430; --dim:#5d6875; --line:#e3e8ef;
+          --ok:#12783c; --ok-bg:#e9f7ee; --warn:#8a6100; --warn-bg:#fff6e3;
+          --ko:#b3261e; --ko-bg:#fdecec; --info:#0b6ea9; --info-bg:#eef6fd; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--txt); font-size:15px; line-height:1.55;
+         font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; }
+  .page { max-width:920px; margin:32px auto; background:var(--card); border-radius:14px;
+          box-shadow:0 1px 3px rgba(20,30,45,.08),0 12px 32px rgba(20,30,45,.07);
+          padding:0 0 12px; overflow:hidden; }
+  .verdict { padding:26px 34px; border-left:6px solid var(--dim); background:#f6f8fb; }
+  .verdict.ok { border-left-color:var(--ok); background:var(--ok-bg); }
+  .verdict.warn { border-left-color:var(--warn); background:var(--warn-bg); }
+  .verdict.fail { border-left-color:var(--ko); background:var(--ko-bg); }
+  .kicker { font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--dim); }
+  .verdict h1 { font-size:27px; margin:7px 0 10px; }
+  .verdict.ok h1 { color:var(--ok); } .verdict.warn h1 { color:var(--warn); }
+  .verdict.fail h1 { color:var(--ko); }
+  .headline { font-size:18px; margin:0; }
+  .why { color:var(--dim); font-size:13.5px; margin:9px 0 0; }
+  .block { padding:24px 34px 26px; }
+  .block + .block { border-top:1px solid var(--line); }
+  .block.cond { background:var(--info-bg); }
+  .block.caveat { background:var(--warn-bg); }
+  h2 { display:flex; align-items:center; gap:10px; font-size:15px; margin:0 0 16px; }
+  .num { display:inline-flex; align-items:center; justify-content:center; width:24px; height:24px;
+         border-radius:50%; font-size:12.5px; font-weight:700; color:#fff; background:var(--dim); }
+  .cond .num { background:var(--info); } .figs .num { background:#067a8c; }
+  .read .num { background:#5a4ab5; } .caveat .num { background:var(--warn); }
+  table { width:100%; border-collapse:collapse; }
+  td { padding:8px 0; border-bottom:1px solid rgba(27,36,48,.08); vertical-align:top; }
+  tr:last-child td { border-bottom:none; }
+  td:first-child { color:var(--dim); width:40%; padding-right:18px; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(205px,1fr)); gap:11px; }
+  .fig { border:1px solid var(--line); border-left:3px solid #067a8c; border-radius:9px;
+         padding:13px 15px; background:var(--card); }
+  .fig .lbl { color:var(--dim); font-size:12px; }
+  .fig .val { font-size:24px; font-weight:600; margin:3px 0 3px; color:#0a5f6e; }
+  .fig .hint { color:var(--dim); font-size:12px; line-height:1.4; }
+  .find { border-radius:9px; padding:13px 16px; margin-bottom:9px; border-left:4px solid var(--dim);
+          background:#f6f8fb; }
+  .find.crit { border-left-color:var(--ko); background:var(--ko-bg); }
+  .find.warn { border-left-color:var(--warn); background:var(--warn-bg); }
+  .find.info { border-left-color:var(--info); background:var(--info-bg); }
+  .find .lvl { font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--dim); }
+  .find.crit .lvl { color:var(--ko); } .find.warn .lvl { color:var(--warn); }
+  .find.info .lvl { color:var(--info); }
+  .find .ttl { font-weight:600; margin:3px 0 5px; }
+  .find .dtl { color:#3f4a58; font-size:14px; }
+  ul.limits { padding-left:19px; margin:0; }
+  ul.limits li { margin-bottom:10px; font-size:14px; color:#4a4330; }
+  ul.limits li:last-child { margin-bottom:0; }
+  footer { padding:18px 34px 6px; color:var(--dim); font-size:12px; border-top:1px solid var(--line); }
+  @media print {
+    body { background:#fff; }
+    .page { box-shadow:none; margin:0; max-width:none; border-radius:0; }
+    .block, .verdict, footer { padding-left:0; padding-right:0; }
+    .block, .find, section { break-inside:avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="verdict neutre">
+    <div class="kicker">Test de charge - QuickPizza - cible de demo publique</div>
+    <h1>Comportement en surcharge</h1>
+    <p class="headline">Sous un débit imposé jusqu&#x27;à 300 req/s, 95 % des requêtes répondent en 119 ms et le système en absorbe 191 req/s, aucune erreur.</p>
+    <p class="why">Un stress pousse le système au-delà de sa capacité : il ne se juge pas en objectifs tenus, mais à la façon dont le service cède - ralentissement ou rejet - et à sa capacité à revenir quand la charge retombe.</p>
+  </div>
+<section class="block cond"><h2><span class="num">1</span>Conditions de la mesure</h2><table><tr><td>Application testée</td><td>QuickPizza - cible de demo publique - https://quickpizza.grafana.com</td></tr><tr><td>Type de test</td><td>Stress à débit - au-delà du nominal</td></tr><tr><td>Date de la mesure</td><td>25/09/2026 à 13:35</td></tr><tr><td>Durée du run</td><td>1 min 50 s</td></tr><tr><td>Outil d&#x27;injection</td><td>k6</td></tr><tr><td>Seuil fixé avant le test</td><td>95 % des requêtes sous 1 500 ms</td></tr></table></section><section class="block figs"><h2><span class="num">2</span>Chiffres relevés</h2><div class="grid"><div class="fig"><div class="lbl">Temps de réponse médian</div><div class="val">114 ms</div><div class="hint">la moitié des requêtes est plus rapide</div></div><div class="fig"><div class="lbl">95ᵉ centile</div><div class="val">119 ms</div><div class="hint">l&#x27;expérience des 5 % les moins bien servis</div></div><div class="fig"><div class="lbl">99ᵉ centile</div><div class="val">120 ms</div><div class="hint">le pire ressenti régulier</div></div><div class="fig"><div class="lbl">Plancher</div><div class="val">106 ms</div><div class="hint">la requête la plus rapide, hors charge</div></div><div class="fig"><div class="lbl">Débit soutenu</div><div class="val">191 req/s</div><div class="hint">requêtes absorbées par seconde</div></div><div class="fig"><div class="lbl">Requêtes émises</div><div class="val">20 999</div><div class="hint">volume total de la mesure</div></div><div class="fig"><div class="lbl">Taux d&#x27;erreur</div><div class="val">0,00 %</div><div class="hint">requêtes sans réponse valide</div></div><div class="fig"><div class="lbl">Réponses conformes</div><div class="val">100,0 %</div><div class="hint">le contenu reçu est celui attendu</div></div><div class="fig"><div class="lbl">Attente serveur (p95)</div><div class="val">119 ms</div><div class="hint">temps de réflexion du serveur seul, hors transfert</div></div></div></section><section class="block read"><h2><span class="num">3</span>Lecture du résultat</h2><div class="find info"><div class="lvl">Remarque</div><div class="ttl">Temps dominé par le plancher incompressible (106 ms)</div><div class="dtl">La requête la plus rapide du run a déjà pris 106 ms, soit 89 % du p95 (119 ms) : la charge n&#x27;ajoute que 13 ms. Ce plancher est le trajet réseau plus le traitement au repos - il ne dit RIEN sur la tenue en charge. Sur une cible distante, c&#x27;est surtout de la distance : compare les runs entre eux, pas à un seuil absolu.</div></div><div class="find good"><div class="lvl">Remarque</div><div class="ttl">Débit tenu : 300 req/s réellement envoyées</div><div class="dtl">Toutes les requêtes prévues sont parties à l&#x27;heure dite, quelle que soit la vitesse du système. Les temps de réponse mesurés ici ne sont pas optimistes : ils décrivent le service sous la charge annoncée.</div></div><div class="find good"><div class="lvl">Remarque</div><div class="ttl">Flux absorbé sans engorgement</div><div class="dtl">Le système encaisse le débit demandé en tenant ses seuils. Monte le débit au-delà de 300 req/s pour trouver le point d&#x27;engorgement.</div></div></section><section class="block caveat"><h2><span class="num">4</span>Ce que cette mesure ne dit pas</h2><ul class="limits"><li>La mesure est prise du point de vue du client. Elle ne contient aucune métrique du système testé - processeur, base de données, files d&#x27;attente : elle constate un symptôme, elle ne désigne pas une cause.</li><li>Le trafic est synthétique et répète un même geste. Il ne reproduit ni la répartition réelle des usages, ni le volume de données réel en base, qui pèsent tous deux sur les temps observés.</li><li>Le run a duré 1 min 50 s. Les défauts qui se révèlent avec le temps - fuite mémoire, connexions jamais rendues, cache qui expire - ne peuvent pas y apparaître : ils demandent un test d&#x27;endurance.</li></ul></section>
+  <footer>
+    Rapport produit automatiquement par TestOps à partir du run du 25/09/2026 à 13:35.
+    Les chiffres proviennent du résumé complet de l'outil d'injection, pas d'un échantillon.
+  </footer>
+</div>
+</body>
+</html>

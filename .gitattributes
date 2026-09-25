@@ -8,3 +8,8 @@ tools/hooks/* text eol=lf
 # Sans ce marqueur, leur volume classe le dépôt en « HTML » plutôt qu'en Python.
 testops/public/demo/*.html      linguist-generated
 testops/public/logs/**/*.html   linguist-generated
+testops/public/campaigns/**     linguist-generated
+testops/public/coverage/**      linguist-generated
+testops/public/health-dashboard/**  linguist-generated
+testops/public/load-report/**   linguist-generated
+testops/src/demo/*.json         linguist-generated

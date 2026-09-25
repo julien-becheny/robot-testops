@@ -75,6 +75,8 @@ const Header = ({
   const [slowMo, setSlowMo] = useState('0:00:00');
   const [tracing, setTracing] = useState('off');
   const [panelOpen, setPanelOpen] = useState(false);
+  const [mobileStatus, setMobileStatus] = useState(null);
+  const [appiumBusy, setAppiumBusy] = useState(false);
   const headerRef = useRef(null);
 
   const fetchGitBranch = useCallback(async () => {
@@ -142,6 +144,14 @@ const Header = ({
     return () => document.removeEventListener('mousedown', onClickOutside);
   }, [panelOpen]);
 
+  useEffect(() => {
+    if (!panelOpen) return;
+    fetch(`${API_BASE_URL}/mobile-preflight`)
+      .then((r) => r.json())
+      .then(setMobileStatus)
+      .catch(() => setMobileStatus(null));
+  }, [panelOpen]);
+
   const handleSlowMoChange = (value) => {
     setSlowMo(value);
     setConfigVar('RF_SLOW_MO', value);
@@ -155,6 +165,36 @@ const Header = ({
   const handleEnvironmentChange = (id) => {
     setEnvironment(id);
     setConfigVar('RF_ENVIRONMENT', id);
+  };
+
+  const pollMobileUntil = (predicate, tries = 8) => {
+    let n = 0;
+    const tick = () => {
+      fetch(`${API_BASE_URL}/mobile-preflight`)
+        .then((r) => r.json())
+        .then((d) => {
+          setMobileStatus(d);
+          n += 1;
+          if (!predicate(d) && n < tries) setTimeout(tick, 1500);
+          else setAppiumBusy(false);
+        })
+        .catch(() => setAppiumBusy(false));
+    };
+    setTimeout(tick, 1500);
+  };
+
+  const startAppium = () => {
+    setAppiumBusy(true);
+    fetch(`${API_BASE_URL}/mobile/appium/start`, { method: 'POST' })
+      .then(() => pollMobileUntil((d) => d.appium_online))
+      .catch(() => setAppiumBusy(false));
+  };
+
+  const stopAppium = () => {
+    setAppiumBusy(true);
+    fetch(`${API_BASE_URL}/mobile/appium/stop`, { method: 'POST' })
+      .then(() => pollMobileUntil((d) => !d.appium_online, 4))
+      .catch(() => setAppiumBusy(false));
   };
 
   const activeEnv = envList.find((env) => env.id === environment);
@@ -324,6 +364,47 @@ const Header = ({
               value={tracing}
               onChange={handleTracingChange}
             />
+
+            <div className="ctx-option ctx-mobile">
+              <span className="ctx-label">
+                Mobile (Appium)
+                {mobileStatus && (
+                  <span className={`ctx-badge ${mobileStatus.ok ? 'ok' : 'ko'}`}>
+                    {mobileStatus.ok ? 'Prêt' : 'Incomplet'}
+                  </span>
+                )}
+              </span>
+              {mobileStatus ? (
+                <>
+                  <div className="ctx-checks">
+                    {(mobileStatus.checks || []).map((check, i) => (
+                      <span key={i} className="ctx-check" title={check.hint || ''}>
+                        <span
+                          className={`ctx-dot ${
+                            check.ok === true ? 'ok' : check.ok === false ? 'ko' : 'na'
+                          }`}
+                        />
+                        {check.name}
+                      </span>
+                    ))}
+                  </div>
+                  <button
+                    type="button"
+                    className="ctx-appium"
+                    disabled={appiumBusy}
+                    onClick={mobileStatus.appium_online ? stopAppium : startAppium}
+                  >
+                    {appiumBusy
+                      ? 'Patientez…'
+                      : mobileStatus.appium_online
+                        ? '■ Arrêter Appium'
+                        : '▶ Démarrer Appium'}
+                  </button>
+                </>
+              ) : (
+                <span className="ctx-hint">Vérification…</span>
+              )}
+            </div>
           </div>
 
           <div className="ctx-foot">

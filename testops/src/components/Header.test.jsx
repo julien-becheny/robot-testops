@@ -10,6 +10,8 @@ const installFetch = (environments, configVars = {}) => {
     if (path === '/git-info') return response({ branch: 'main' });
     if (path === '/config-vars') return response({ RF_SLOW_MO: '0:00:00', ...configVars });
     if (path === '/environments') return response(environments);
+    if (path === '/mobile-preflight')
+      return response({ ok: true, appium_online: false, checks: [] });
     return response({});
   });
 };

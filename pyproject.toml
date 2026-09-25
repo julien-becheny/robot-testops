@@ -1,8 +1,59 @@
-# Configuration des outils qualité (garde-fou / audit).
+# Déclaration des dépendances + configuration des outils qualité.
 #
-# Ce fichier ne déclare NI [project] NI [build-system] : le dépôt n'est PAS un
-# package Python. Il ne sert qu'à configurer les outils de qualité (ruff...).
+# Le dépôt n'est PAS un package Python (`[tool.uv] package = false`, pas de
+# [build-system]) : `[project]` ne sert qu'à déclarer ce dont l'environnement a
+# besoin, pour qu'uv en dérive un verrou (`uv.lock`) reproductible.
 # Ajouter ici une nouvelle config d'outil plutôt que de multiplier les fichiers.
+
+[project]
+name = "testops"
+version = "0"
+description = "Orchestration de tests automatisés (Robot Framework, Playwright, Appium, charge)"
+requires-python = ">=3.14"
+
+# Nécessaires à l'exécution de TestOps et des tests. Versions exactes (`==`).
+dependencies = [
+    # Backend API
+    "flask==3.1.3",
+    "flask-cors==6.0.5",
+    "flask-socketio==5.6.1",
+    # Robot Framework
+    "robotframework==7.5",
+    "robotframework-browser==20.1.0",
+    # Mobile (Appium - Android + iOS)
+    "robotframework-appiumlibrary==3.2.1",
+    "Appium-Python-Client==5.3.1",
+    # Tests de charge (moteurs Locust et k6 ; k6 est un binaire externe)
+    "locust==2.46.5",
+    # Charge CPU de l'injecteur : Locust la mesure seule, k6 non (mesurée côté runner)
+    "psutil==7.2.2",
+    # Utilitaires
+    "PyYAML==6.0.3",
+    "requests==2.34.2",
+    "robotframework-dashboard==2.1.0",
+]
+
+# Outils qualité et de développement - NON requis à l'exécution de TestOps.
+# `uv sync` les installe par défaut ; `uv sync --no-dev` ne prend que le runtime.
+[dependency-groups]
+dev = [
+    # Python : lint + format (remplace flake8 + isort + black)
+    "ruff==0.16.0",
+    # Robot Framework : lint + format (Robocop v6 intègre l'ancien Robotidy)
+    "robotframework-robocop==9.0.0",
+    # Robot Framework : découverte, analyse statique, exécution et débogage CLI
+    "robotcode[runner,analyze,repl]==2.7.0",
+    # Secrets : détection de credentials accidentellement committés
+    "detect-secrets==1.5.0",
+    # Tests unitaires du backend et des services
+    "pytest==9.1.1",
+]
+
+[tool.uv]
+# Le dépôt s'exécute, il ne s'installe pas : uv ne cherche donc pas à le construire.
+package = false
+# `uv add` écrit un pin exact plutôt qu'une borne basse.
+add-bounds = "exact"
 
 [tool.ruff]
 line-length = 120
@@ -32,3 +83,10 @@ space-count = 2
 indent = 2
 continuation-indent = 2
 select = ["NormalizeSeparators", "IndentNestedKeywords", "NormalizeNewLines"]
+
+# --- Pytest ----------------------------------------------------------------
+[tool.pytest.ini_options]
+# Sans la racine dans `sys.path`, `pytest unit_tests/` casse au chargement du conftest
+# (`import services`) là où `python -m pytest` passe : le Test Explorer de l'éditeur, qui
+# lance l'exécutable, ne découvrait alors aucun test.
+pythonpath = ["."]

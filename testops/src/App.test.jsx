@@ -415,3 +415,61 @@ test('arrête uniquement la session demandée', async () => {
   expect(options.method).toBe('POST');
   expect(JSON.parse(options.body)).toEqual({ session_id: 'session-stop' });
 });
+
+test('lance un lot de campagne sur sa cible et ouvre sa session', async () => {
+  const target = { platform: 'web', browser: 'firefox', device: 'desktop' };
+  const campaign = {
+    id: 'campaign-1',
+    name: 'Campagne de contrôle',
+    status: 'active',
+    targets: [target],
+    progress: {
+      total: 1,
+      played: 0,
+      passed: 0,
+      failed: 0,
+      pct_played: 0,
+      pct_passed: 0,
+    },
+  };
+
+  installFetch((path, options) => {
+    const method = options.method || 'GET';
+    if (path === '/campaigns' && method === 'GET') {
+      return response({ campaigns: [campaign] });
+    }
+    if (path === '/available-tags') return response({ tags: [] });
+    if (path === '/matching-tests') return response({ count: 1 });
+    if (path === '/campaigns/campaign-1') return response({ campaign });
+    if (path === '/campaigns/campaign-1/cells') {
+      return response({
+        cells: [
+          {
+            ...target,
+            test_name: 'Test checkout',
+            status: 'todo',
+          },
+        ],
+      });
+    }
+    if (path === '/campaigns/campaign-1/run') {
+      return response({ session_id: 'session-campaign' });
+    }
+    return null;
+  });
+
+  render(<App />);
+  fireEvent.click(await screen.findByRole('button', { name: 'Campagnes de tests' }));
+  fireEvent.click(await screen.findByText('Campagne de contrôle'));
+  fireEvent.click(await screen.findByRole('button', { name: 'Jouer' }));
+
+  await screen.findByText('session-campaign');
+  const [, options] = findRequest('/campaigns/campaign-1/run');
+  expect(options.method).toBe('POST');
+  expect(JSON.parse(options.body)).toEqual({
+    browser: 'firefox',
+    device: 'desktop',
+    count: 10,
+  });
+  expect(socket.emit).toHaveBeenCalledWith('join_session', { session_id: 'session-campaign' });
+});

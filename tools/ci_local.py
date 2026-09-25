@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 """Contrôles qualité du dépôt - source de vérité unique, locale et CI.
 
-    python tools/ci_local.py           # les contrôles
-    python tools/ci_local.py --full    # + `npm ci` (réinstalle node_modules)
-    python tools/ci_local.py --verbose # + la sortie des contrôles qui passent
+    uv run tools/ci_local.py           # les contrôles
+    uv run tools/ci_local.py --full    # + `npm ci` (réinstalle node_modules)
+    uv run tools/ci_local.py --verbose # + la sortie des contrôles qui passent
 
 Le workflow GitHub appelle ce même script : ce qui tourne en CI est ce qui tourne en
 local **par construction**, et non par discipline. Le YAML ne garde que la préparation
@@ -21,6 +21,7 @@ from __future__ import annotations
 import argparse
 import contextlib
 import os
+import shutil
 import subprocess
 import sys
 from dataclasses import dataclass
@@ -64,7 +65,10 @@ def _npm(*args: str) -> list[str]:
 
 def build_steps(full: bool = False) -> list[Step]:
     """Les contrôles, dans l'ordre : Python d'abord (rapide), frontend ensuite."""
-    steps = [Step("Cohérence des dépendances Python", [sys.executable, "-m", "pip", "check"])]
+    # `--locked` refuse un verrou périmé par rapport à pyproject.toml, `--check` un
+    # environnement qui a dérivé du verrou. Aucun des deux ne modifie quoi que ce soit.
+    steps = [Step("Environnement Python conforme au verrou",
+                  ["uv", "sync", "--locked", "--check"])]
 
     if full:
         steps.append(Step("Dépendances frontend (lockfile)", _npm("ci"), cwd=TESTOPS_DIR))
@@ -73,6 +77,8 @@ def build_steps(full: bool = False) -> list[Step]:
         Step("Tests unitaires Python", [sys.executable, "-m", "pytest", "unit_tests", "-q"]),
         Step("Analyse statique Robot Framework",
              [sys.executable, "-m", "robotcode.cli", "analyze", "code"]),
+        Step("Références de couverture fonctionnelle",
+             [sys.executable, str(REPO_ROOT / "tools" / "coverage.py"), "--check"]),
         Step("ESLint", _npm("run", "lint"), cwd=TESTOPS_DIR),
         Step("Tests frontend", _npm("run", "test:ci"), cwd=TESTOPS_DIR),
         Step("Format frontend", _npm("run", "format:check"), cwd=TESTOPS_DIR),
@@ -128,6 +134,10 @@ def main() -> int:
     parser.add_argument("--verbose", action="store_true",
                         help="affiche aussi la sortie des contrôles qui passent")
     args = parser.parse_args()
+
+    if shutil.which("uv") is None:
+        print("uv est introuvable dans le PATH - voir la section Démarrage du README.")
+        return 1
 
     steps = build_steps(args.full)
     results = [(step.name, run_step(step, i, len(steps), args.verbose))

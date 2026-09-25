@@ -1,5 +1,6 @@
 import os
 import sys
+import threading
 from pathlib import Path
 
 # Ajouter le répertoire racine au PYTHONPATH AVANT tous les imports
@@ -11,8 +12,13 @@ from flask import jsonify
 from flask_socketio import join_room, leave_room
 from werkzeug.exceptions import HTTPException
 
+from api.routes.campaign_routes import campaign_bp
 from api.routes.config_routes import config_bp
+from api.routes.coverage_routes import coverage_bp
 from api.routes.execution_routes import execution_bp
+from api.routes.history_routes import history_bp
+from api.routes.load_routes import load_bp
+from api.routes.mobile_routes import mobile_bp
 from api.routes.status_routes import status_bp
 from api.routes.tags_routes import tags_bp
 from api.socketio_instance import app, socketio
@@ -38,8 +44,13 @@ def handle_unexpected_http_error(error: Exception):
 # Enregistrer les Blueprints
 app.register_blueprint(config_bp)
 app.register_blueprint(execution_bp)
+app.register_blueprint(load_bp)
 app.register_blueprint(status_bp)
 app.register_blueprint(tags_bp)
+app.register_blueprint(campaign_bp)
+app.register_blueprint(mobile_bp)
+app.register_blueprint(coverage_bp)
+app.register_blueprint(history_bp)
 
 
 @app.route('/')
@@ -165,12 +176,36 @@ def _silence_gevent_keyboardinterrupt():
         logger.debug("Configuration du hub gevent indisponible", exc_info=True)
 
 
+def _log_mobile_preflight():
+    """Écrit l'état de la chaîne mobile dans le log, sans jamais l'imposer au reste."""
+    try:
+        from services.mobile.preflight import check_mobile_env, summary_lines
+        for line in summary_lines(check_mobile_env()):
+            logger.info("%s", line)
+    except Exception:  # noqa: BLE001 - le mobile optionnel ne doit pas bloquer le web
+        logger.debug("Préflight mobile indisponible au démarrage", exc_info=True)
+
+
+def _start_mobile_preflight():
+    """Lance le préflight mobile en fond.
+
+    Il interroge le serveur Appium et le CLI Node : à froid, cela prend des dizaines
+    de secondes. Le faire avant `socketio.run` retardait d'autant l'ouverture du port,
+    alors que le web, la charge et la couverture n'ont aucun besoin du mobile.
+    """
+    thread = threading.Thread(target=_log_mobile_preflight, name="mobile-preflight",
+                              daemon=True)
+    thread.start()
+    return thread
+
+
 if __name__ == '__main__':
     api_port = _api_port()
     _free_port(api_port)
     _silence_gevent_keyboardinterrupt()
 
     logger.info("Démarrage de TestOps sur http://%s:%s", _api_host(), api_port)
+    _start_mobile_preflight()
 
     try:
         socketio.run(app, host=_api_host(), port=api_port, debug=False)

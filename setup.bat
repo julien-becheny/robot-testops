@@ -6,27 +6,21 @@ ECHO        ROBOT-TESTOPS - INSTALLATION DE L'ENVIRONNEMENT
 ECHO ================================================================================
 ECHO.
 ECHO Ce script :
-ECHO   1. Cree un environnement virtuel Python
-ECHO   2. Installe les packages Python (pip_requirements.txt)
-ECHO   3. Initialise Playwright (navigateurs Chromium, Firefox, WebKit)
-ECHO   4. Installe les dependances React (testops)
-ECHO   5. Build le frontend TestOps
+ECHO   1. Cree l'environnement Python a l'identique du verrou (uv.lock)
+ECHO   2. Initialise Playwright (navigateurs Chromium, Firefox, WebKit)
+ECHO   3. Installe les dependances React (testops)
+ECHO   4. Build le frontend TestOps
 ECHO.
 PAUSE
 
 REM ── Verification des prerequis ──
-WHERE python >nul 2>&1
+WHERE uv >nul 2>&1
 IF %ERRORLEVEL% NEQ 0 (
-    ECHO ❌ Python n'est pas installe ou pas dans le PATH.
-    ECHO    Installez Python 3.12+ depuis https://www.python.org/downloads/
-    PAUSE
-    EXIT /B 1
-)
-
-python -c "import sys; raise SystemExit(0 if sys.version_info >= (3, 12) else 1)"
-IF %ERRORLEVEL% NEQ 0 (
-    ECHO ❌ Python 3.12+ est requis par les locks du projet.
-    python --version
+    ECHO ❌ uv n'est pas installe : c'est lui qui gere Python et les dependances du projet.
+    ECHO    Installez-le, puis rouvrez un terminal :
+    ECHO        winget install --id=astral-sh.uv -e
+    ECHO    Si winget est absent ou desactive :
+    ECHO        powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 ^| iex"
     PAUSE
     EXIT /B 1
 )
@@ -56,93 +50,47 @@ IF "!NODE_VERSION_OK!" == "0" (
 REM ── Affichage des versions ──
 ECHO.
 ECHO 🔍 Versions detectees :
-python --version
+uv --version
 node --version
 npm --version
 ECHO.
 
-REM ── 1. Environnement virtuel Python ──
+REM ── 1. Environnement Python ──
 ECHO ────────────────────────────────────────────────────────────────
-ECHO  ETAPE 1/5 : Environnement virtuel Python
+ECHO  ETAPE 1/4 : Environnement Python (uv sync)
 ECHO ────────────────────────────────────────────────────────────────
+ECHO  uv telecharge au besoin la version de Python indiquee par .python-version.
 
-IF EXIST "env" (
-    ECHO ⚠️  Un environnement virtuel existe deja.
-    SET /P CONFIRM="Voulez-vous le recreer ? (O/N) : "
-    IF /I "!CONFIRM!" == "O" (
-        ECHO 🧹 Suppression de l'ancien environnement...
-        CALL "env\Scripts\deactivate.bat" 2>nul
-        rmdir /s /q env 2>nul
-        IF EXIST "env" (
-            ECHO ❌ Impossible de supprimer le dossier env.
-            ECHO    Fermez tous les terminaux utilisant le venv et reessayez.
-            PAUSE
-            EXIT /B 1
-        )
-    ) ELSE (
-        ECHO ✅ Conservation de l'environnement existant.
-        GOTO ACTIVATE
-    )
-)
-
-python -m venv env
-IF NOT EXIST "env\Scripts\python.exe" (
-    ECHO ❌ Echec de la creation du venv.
+uv sync --locked
+IF %ERRORLEVEL% NEQ 0 (
+    ECHO ❌ Echec de la creation de l'environnement Python.
     PAUSE
     EXIT /B 1
 )
-ECHO ✅ Environnement virtuel cree.
+ECHO ✅ Environnement Python conforme au verrou (outils qualite inclus).
 
-:ACTIVATE
-REM ── 2. Activation + Installation pip ──
+CALL ".venv\Scripts\activate.bat"
+
+REM ── 2. Initialisation Playwright (RF Browser) ──
 ECHO.
 ECHO ────────────────────────────────────────────────────────────────
-ECHO  ETAPE 2/5 : Installation des packages Python
-ECHO ────────────────────────────────────────────────────────────────
-
-CALL "env\Scripts\activate.bat"
-python -m pip install --upgrade pip --quiet
-
-IF NOT EXIST "pip_requirements.txt" (
-    ECHO ❌ pip_requirements.txt introuvable.
-    PAUSE
-    EXIT /B 1
-)
-
-python -m pip install -r pip_requirements.txt
-IF %ERRORLEVEL% NEQ 0 (
-    ECHO ❌ Echec de l'installation des packages Python.
-    PAUSE
-    EXIT /B 1
-)
-python -m pip check
-IF %ERRORLEVEL% NEQ 0 (
-    ECHO ❌ L'environnement Python contient des dependances incompatibles.
-    PAUSE
-    EXIT /B 1
-)
-ECHO ✅ Packages Python installes et verifies.
-
-REM ── 3. Initialisation Playwright (RF Browser) ──
-ECHO.
-ECHO ────────────────────────────────────────────────────────────────
-ECHO  ETAPE 3/5 : Initialisation de Playwright (navigateurs)
+ECHO  ETAPE 2/4 : Initialisation de Playwright (navigateurs)
 ECHO ────────────────────────────────────────────────────────────────
 
 python -m Browser.entry init
 IF %ERRORLEVEL% NEQ 0 (
     ECHO ❌ Echec de l'initialisation de Playwright.
-    ECHO    La version Python est verrouillee : verifiez l'acces au registre npm,
-    ECHO    puis relancez setup.bat sans mettre robotframework-browser a niveau.
+    ECHO    La version de robotframework-browser est verrouillee : verifiez l'acces
+    ECHO    au registre npm, puis relancez setup.bat sans modifier cette version.
     PAUSE
     EXIT /B 1
 )
 ECHO ✅ Playwright initialise (Chromium, Firefox, WebKit).
 
-REM ── 4. Installation des dependances frontend ──
+REM ── 3. Installation des dependances frontend ──
 ECHO.
 ECHO ────────────────────────────────────────────────────────────────
-ECHO  ETAPE 4/5 : Installation des dependances React/Vite (testops)
+ECHO  ETAPE 3/4 : Installation des dependances React/Vite (testops)
 ECHO ────────────────────────────────────────────────────────────────
 
 IF NOT EXIST "testops\package.json" (
@@ -160,10 +108,10 @@ IF %ERRORLEVEL% NEQ 0 (
 )
 ECHO ✅ Dependances React/Vite installees.
 
-REM ── 5. Build du frontend ──
+REM ── 4. Build du frontend ──
 ECHO.
-ECHO ────────────────────────────────────────────────────────────────
-ECHO  ETAPE 5/5 : Build du frontend TestOps
+ECHO ─────────────────────────────────────────────────────────────
+ECHO  ETAPE 4/4 : Build du frontend TestOps
 ECHO ────────────────────────────────────────────────────────────────
 
 CALL npm run build
@@ -185,32 +133,66 @@ ECHO ═════════════════════════
 
 python -c "import robot; print(f'  ✅ Robot Framework: {robot.__version__}')"
 python -c "import Browser; print(f'  ✅ RF Browser:      {Browser.__version__}')"
+python -c "import importlib.metadata as m; print('  ✅ AppiumLibrary:   ' + m.version('robotframework-appiumlibrary'))"
 python -c "import flask; print(f'  ✅ Flask:            {flask.__version__}')"
 python -c "import requests; print(f'  ✅ Requests:         {requests.__version__}')"
+
+REM ── Verification mobile (Appium) - optionnel ──
+ECHO.
+ECHO ──────────────────────────────────────────────────────────
+ECHO  MOBILE (APPIUM) - installation des drivers
+ECHO ───────────────────────────────────────────────────────────
+
+WHERE appium >nul 2>&1
+IF %ERRORLEVEL% NEQ 0 (
+    ECHO  Installation du serveur Appium ^(npm -g^)...
+    CALL npm install -g appium
+) ELSE (
+    ECHO  Serveur Appium deja present.
+)
+
+CALL appium driver list --installed 2>nul | findstr /C:"uiautomator2" >nul
+IF %ERRORLEVEL% NEQ 0 (
+    ECHO  Installation du driver Android uiautomator2...
+    CALL appium driver install uiautomator2
+) ELSE (
+    ECHO  Driver uiautomator2 deja installe.
+)
+
+ECHO.
+ECHO  A installer manuellement ^(hors npm^) :
+ECHO      - Android SDK ^(Android Studio^) + ANDROID_HOME + platform-tools au PATH
+ECHO      - iOS : un Mac ^(Xcode + driver xcuitest^)
+ECHO.
+python -m services.mobile.preflight
+
+REM ── Tests de charge : Locust vient du verrou, k6 est un binaire externe ──
+ECHO.
+ECHO ────────────────────────────────────────────────────
+ECHO  TESTS DE CHARGE - moteurs d'injection
+ECHO ────────────────────────────────────────────────────
+ECHO  Locust ^(modele ferme^) : installe par uv, rien a faire.
+WHERE k6 >nul 2>&1
+IF %ERRORLEVEL% NEQ 0 (
+    ECHO  k6 absent : les tests a DEBIT IMPOSE ne pourront pas demarrer.
+    ECHO      Les autres types - smoke, load, stress, endurance, capacite, calibrage -
+    ECHO      tournent avec Locust et ne le reclament pas.
+    ECHO      Installation : winget install k6 --source winget
+) ELSE (
+    ECHO  k6 ^(modele ouvert^) deja present.
+)
 
 REM ── Outils qualite ──
 ECHO.
 ECHO ────────────────────────────────────────────
 ECHO  OUTILS QUALITE ^(lint, analyse statique, tests^)
 ECHO ────────────────────────────────────────────
-python -m pip install -r pip_requirements-dev.txt --quiet
-IF %ERRORLEVEL% NEQ 0 (
-    ECHO ❌ Echec de l'installation des outils qualite.
-    PAUSE
-    EXIT /B 1
-)
-python -m pip check
-IF %ERRORLEVEL% NEQ 0 (
-    ECHO ❌ Les outils qualite ont introduit des dependances incompatibles.
-    PAUSE
-    EXIT /B 1
-)
-ECHO  Controles disponibles : python tools\ci_local.py
+ECHO  Installes par uv sync. Controles disponibles : uv run tools\ci_local.py
 
 REM ── Creation des dossiers de sortie ──
 IF NOT EXIST "%USERPROFILE%\rf_output\report" mkdir "%USERPROFILE%\rf_output\report"
 
-CALL "env\Scripts\deactivate.bat"
+CALL ".venv\Scripts\deactivate.bat"
 
 ECHO.
 ECHO ════════════════════════════════════════════════════════════════
@@ -218,8 +200,7 @@ ECHO                    INSTALLATION TERMINEE
 ECHO ════════════════════════════════════════════════════════════════
 ECHO.
 ECHO 🚀 Pour demarrer :
-ECHO    1. env\Scripts\activate
-ECHO    2. python -m api.app
-ECHO    3. Ouvrir http://localhost:5000 dans le navigateur
+ECHO    start_testops_windows.bat
+ECHO    Interface TestOps : http://localhost:3000  -  API : http://localhost:5001
 ECHO.
 PAUSE

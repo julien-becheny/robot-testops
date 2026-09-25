@@ -8,11 +8,13 @@ et l'intégrer ici.
 
 import datetime
 import random
+import time
 
 from core.logging_config import get_logger
 from core.paths import paths
 from services.execution import run_meta
 from services.execution.commands import (
+    get_appium_cmd,
     get_randomized_cmd,
     get_smoke_cmd,
     get_tag_filtered_cmd,
@@ -118,3 +120,51 @@ def run_workflow(workflow: str, include_tags: list = None, exclude_tags: list = 
     
     log_completion = logger.info if exit_code == 0 else logger.warning
     log_completion("[%s] Workflow terminé (code de sortie : %s)", sid, exit_code)
+
+
+def run_appium_suite(session_id: str = None):
+    """Lance les tests joués sur un appareil réel, via Appium.
+
+    Appium est démarré à la demande et son état vérifié avant le lancement : sans
+    serveur joignable, le run est annulé plutôt que de produire un échec trompeur.
+
+    Args:
+        session_id: Identifiant optionnel utilisé pour isoler les événements UI.
+
+    Returns:
+        Aucun résultat. Le suivi d'exécution est publié via la session.
+    """
+    from core.session_registry import registry
+    from services.mobile import appium_server
+
+    base_stamp = datetime.datetime.now().strftime("%Y_%m_%d-%H%M%S")
+    dt_stamp = f"{base_stamp}_appium_{session_id}" if session_id else base_stamp
+    sid = session_id or 'default'
+
+    if session_id:
+        registry.update(session_id, dt_stamp=dt_stamp)
+
+    run_meta.write(dt_stamp, workflow='appium', engine='appium')
+
+    logger.info("[%s] Démarrage d'Appium à la demande", sid)
+    appium_server.start()
+    online = False
+    for _ in range(25):
+        if appium_server.is_running():
+            online = True
+            break
+        time.sleep(1)
+    if not online:
+        logger.error("[%s] Appium injoignable, run mobile annulé", sid)
+        _notify_execution_complete(session_id)
+        if session_id:
+            registry.update(session_id, status='completed')
+        return
+
+    commands = [get_appium_cmd(dt_stamp, session_id=session_id)]
+    exit_code = execute_rf_commands(commands, session_id=session_id, notify_complete=True)
+
+    if session_id:
+        registry.update(session_id, status='completed')
+    log_completion = logger.info if exit_code == 0 else logger.warning
+    log_completion("[%s] Run mobile Appium terminé (code de sortie : %s)", sid, exit_code)

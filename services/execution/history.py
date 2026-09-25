@@ -37,15 +37,22 @@ def _result_of(run_dir: Path) -> tuple[Path, str] | None:
     return None
 
 
+def run_dirs() -> list[Path]:
+    """Retourne les dossiers de run du dossier de rapports, dans un ordre quelconque.
+
+    Le rapport agrégé d'une campagne en est exclu : il fusionne des runs déjà présents,
+    et, généré après eux, passerait pour le plus récent.
+    """
+    if not paths.REPORTS.is_dir():
+        return []
+    return [entry for entry in paths.REPORTS.iterdir()
+            if entry.is_dir() and not paths.is_campaign_report_folder(entry)]
+
+
 def _latest_run() -> tuple[Path, Path, str] | None:
     """Retourne (dossier du run, résultat, log relatif) du run le plus récent."""
-    if not paths.REPORTS.is_dir():
-        return None
-
     runs = []
-    for run_dir in paths.REPORTS.iterdir():
-        if not run_dir.is_dir():
-            continue
+    for run_dir in run_dirs():
         found = _result_of(run_dir)
         if found:
             runs.append((run_dir, *found))

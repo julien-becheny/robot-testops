@@ -1,0 +1,744 @@
+{
+  "coverage": {
+    "findings": [
+      {
+        "code": "APPEL_DYNAMIQUE",
+        "level": "warning",
+        "location": "libraries/resources/common/actions_appium.resource:83",
+        "message": "'Should Show Text' fait un appel dynamique : les écrans atteints par ce chemin échappent à l'analyse"
+      }
+    ],
+    "report": {
+      "genere_le": "2026-09-25T13:35:18",
+      "modules": [
+        {
+          "ecrans": [
+            {
+              "atteint_par": [],
+              "id": "orangehrm.connexion",
+              "label": "Page de connexion",
+              "statut": "non_couvert",
+              "type": "page"
+            },
+            {
+              "atteint_par": ["PIM - Create Employee"],
+              "id": "orangehrm.tableau_de_bord",
+              "label": "Tableau de bord",
+              "statut": "couvert",
+              "type": "page"
+            },
+            {
+              "atteint_par": ["PIM - Create Employee"],
+              "id": "orangehrm.pim.liste_employes",
+              "label": "PIM - Liste des employés",
+              "statut": "couvert",
+              "type": "page"
+            },
+            {
+              "atteint_par": ["PIM - Create Employee"],
+              "id": "orangehrm.pim.creation_employe",
+              "label": "PIM - Formulaire de création d'un employé",
+              "statut": "couvert",
+              "type": "page"
+            },
+            {
+              "atteint_par": ["PIM - Create Employee"],
+              "id": "orangehrm.pim.details_employe",
+              "label": "PIM - Fiche employé, informations personnelles",
+              "statut": "couvert",
+              "type": "page"
+            },
+            {
+              "atteint_par": [],
+              "id": "orangehrm.popup_confirmation",
+              "label": "Popup de confirmation de suppression",
+              "statut": "non_couvert",
+              "type": "popup"
+            }
+          ],
+          "fonctionnalites": [
+            {
+              "criticite": "critique",
+              "id": "orangehrm.connexion.identifiants_valides",
+              "label": "Se connecter avec des identifiants valides",
+              "statut": "non_couvert",
+              "verifiee_par": []
+            },
+            {
+              "criticite": "critique",
+              "id": "orangehrm.pim.creation_employe",
+              "label": "Créer un employé",
+              "statut": "couvert",
+              "verifiee_par": ["PIM - Create Employee"]
+            },
+            {
+              "criticite": "majeure",
+              "id": "orangehrm.pim.recherche_par_matricule",
+              "label": "Rechercher un employé par son matricule",
+              "statut": "non_couvert",
+              "verifiee_par": []
+            },
+            {
+              "criticite": "majeure",
+              "id": "orangehrm.pim.suppression_employe",
+              "label": "Supprimer un employé",
+              "statut": "non_couvert",
+              "verifiee_par": []
+            }
+          ],
+          "id": "orangehrm",
+          "label": "OrangeHRM (banc d'essai)",
+          "plateformes": ["web"]
+        },
+        {
+          "ecrans": [
+            {
+              "atteint_par": [
+                "Cart - Add Multiple Items",
+                "Cart - Add Single Item",
+                "Cart - Remove Item",
+                "Cart - View Cart Page",
+                "Checkout - Complete Purchase",
+                "Checkout - Missing Information Error",
+                "Checkout - Verify Order Summary",
+                "Navigation - Access Product Detail",
+                "Navigation - Login And Access Inventory",
+                "Navigation - Sidebar Menu",
+                "Smoke - Login Page Elements Visible",
+                "Smoke - Open Browser And Verify Title"
+              ],
+              "id": "saucedemo.connexion",
+              "label": "Page de connexion",
+              "statut": "couvert",
+              "type": "page"
+            },
+            {
+              "atteint_par": [
+                "Cart - Add Multiple Items",
+                "Cart - Add Single Item",
+                "Cart - Remove Item",
+                "Cart - View Cart Page",
+                "Checkout - Complete Purchase",
+                "Checkout - Missing Information Error",
+                "Checkout - Verify Order Summary",
+                "Navigation - Access Product Detail",
+                "Navigation - Login And Access Inventory",
+                "Navigation - Sidebar Menu"
+              ],
+              "id": "saucedemo.inventaire",
+              "label": "Liste des produits",
+              "statut": "couvert",
+              "type": "page"
+            },
+            {
+              "atteint_par": ["Navigation - Access Product Detail"],
+              "id": "saucedemo.produit.detail",
+              "label": "Détail d'un produit",
+              "statut": "couvert",
+              "type": "page"
+            },
+            {
+              "atteint_par": ["Navigation - Sidebar Menu"],
+              "id": "saucedemo.menu_lateral",
+              "label": "Menu latéral",
+              "statut": "couvert",
+              "type": "popup"
+            },
+            {
+              "atteint_par": [
+                "Cart - View Cart Page",
+                "Checkout - Complete Purchase",
+                "Checkout - Missing Information Error",
+                "Checkout - Verify Order Summary"
+              ],
+              "id": "saucedemo.panier",
+              "label": "Panier",
+              "statut": "couvert",
+              "type": "page"
+            },
+            {
+              "atteint_par": [
+                "Checkout - Complete Purchase",
+                "Checkout - Missing Information Error",
+                "Checkout - Verify Order Summary"
+              ],
+              "id": "saucedemo.checkout.informations",
+              "label": "Commande - informations client",
+              "statut": "couvert",
+              "type": "page"
+            },
+            {
+              "atteint_par": ["Checkout - Complete Purchase", "Checkout - Verify Order Summary"],
+              "id": "saucedemo.checkout.resume",
+              "label": "Commande - résumé avant validation",
+              "statut": "couvert",
+              "type": "page"
+            },
+            {
+              "atteint_par": ["Checkout - Complete Purchase"],
+              "id": "saucedemo.checkout.confirmation",
+              "label": "Commande - confirmation",
+              "statut": "couvert",
+              "type": "page"
+            },
+            {
+              "atteint_par": [],
+              "id": "saucedemo.a_propos",
+              "label": "Page « À propos »",
+              "statut": "non_couvert",
+              "type": "page"
+            }
+          ],
+          "fonctionnalites": [
+            {
+              "criticite": "mineure",
+              "id": "saucedemo.connexion.formulaire",
+              "label": "Afficher le formulaire de connexion",
+              "statut": "couvert",
+              "verifiee_par": [
+                "Smoke - Login Page Elements Visible",
+                "Smoke - Open Browser And Verify Title"
+              ]
+            },
+            {
+              "criticite": "critique",
+              "id": "saucedemo.connexion.identifiants_valides",
+              "label": "Se connecter avec des identifiants valides",
+              "statut": "couvert",
+              "verifiee_par": ["Navigation - Login And Access Inventory"]
+            },
+            {
+              "criticite": "majeure",
+              "id": "saucedemo.connexion.compte_bloque",
+              "label": "Refuser la connexion d'un compte bloqué",
+              "statut": "non_couvert",
+              "verifiee_par": []
+            },
+            {
+              "criticite": "majeure",
+              "id": "saucedemo.catalogue.consultation_produit",
+              "label": "Consulter la fiche d'un produit",
+              "statut": "couvert",
+              "verifiee_par": ["Navigation - Access Product Detail"]
+            },
+            {
+              "criticite": "mineure",
+              "id": "saucedemo.catalogue.tri",
+              "label": "Trier les produits du catalogue",
+              "statut": "non_couvert",
+              "verifiee_par": []
+            },
+            {
+              "criticite": "mineure",
+              "id": "saucedemo.navigation.menu_lateral",
+              "label": "Ouvrir le menu latéral",
+              "statut": "couvert",
+              "verifiee_par": ["Navigation - Sidebar Menu"]
+            },
+            {
+              "criticite": "majeure",
+              "id": "saucedemo.session.deconnexion",
+              "label": "Se déconnecter",
+              "statut": "non_couvert",
+              "verifiee_par": []
+            },
+            {
+              "criticite": "critique",
+              "id": "saucedemo.panier.ajout_article",
+              "label": "Ajouter un article au panier",
+              "statut": "couvert",
+              "verifiee_par": [
+                "Achat - Deux Articles Jusqu'à La Confirmation",
+                "Cart - Add Multiple Items",
+                "Cart - Add Single Item"
+              ]
+            },
+            {
+              "criticite": "majeure",
+              "id": "saucedemo.panier.retrait_article",
+              "label": "Retirer un article du panier",
+              "statut": "couvert",
+              "verifiee_par": ["Cart - Remove Item"]
+            },
+            {
+              "criticite": "majeure",
+              "id": "saucedemo.panier.consultation",
+              "label": "Consulter le contenu du panier",
+              "statut": "couvert",
+              "verifiee_par": ["Cart - View Cart Page"]
+            },
+            {
+              "criticite": "majeure",
+              "id": "saucedemo.commande.controle_saisie",
+              "label": "Bloquer la commande si les informations client sont incomplètes",
+              "statut": "couvert",
+              "verifiee_par": ["Checkout - Missing Information Error"]
+            },
+            {
+              "criticite": "majeure",
+              "id": "saucedemo.commande.resume",
+              "label": "Vérifier le résumé de commande avant validation",
+              "statut": "couvert",
+              "verifiee_par": ["Checkout - Verify Order Summary"]
+            },
+            {
+              "criticite": "critique",
+              "id": "saucedemo.commande.finalisation",
+              "label": "Finaliser une commande jusqu'à la confirmation",
+              "statut": "couvert",
+              "verifiee_par": [
+                "Achat - Deux Articles Jusqu'à La Confirmation",
+                "Checkout - Complete Purchase"
+              ]
+            }
+          ],
+          "id": "saucedemo",
+          "label": "SauceDemo (banc d'essai)",
+          "plateformes": ["web"]
+        }
+      ],
+      "perimetre": {
+        "ecrans": 15,
+        "fonctionnalites": 17,
+        "modules": 2
+      }
+    }
+  },
+  "coverageExport": {
+    "url": "/coverage/report"
+  },
+  "suiteHealth": {
+    "counts": {
+      "cassé": 0,
+      "instable": 2,
+      "neuf": 1,
+      "stable": 12
+    },
+    "quarantined": 0,
+    "runs": 13,
+    "tests": [
+      {
+        "failed": 2,
+        "flips": 1,
+        "last_message": "Property value '' (str) should be 'Testops' (str)",
+        "last_status": "PASS",
+        "median_ms": 17730,
+        "name": "PIM - Create Employee",
+        "pass_rate": 0.6,
+        "passed": 3,
+        "quarantined": false,
+        "runs": 5,
+        "runs_since": 0,
+        "skipped": 0,
+        "source": "test_suites/web/orangehrm/01_pim_employes.robot",
+        "statuses": ["FAIL", "FAIL", "PASS", "PASS", "PASS"],
+        "tags": [
+          "feat:orangehrm.pim.creation_employe",
+          "module:orangehrm",
+          "orangehrm",
+          "pim",
+          "regression",
+          "web"
+        ],
+        "test": "test_suites/web/orangehrm/01_pim_employes.robot::PIM - Create Employee",
+        "verdict": "instable"
+      },
+      {
+        "failed": 1,
+        "flips": 2,
+        "last_message": "WebDriverException: Message: Could not find a driver for automationName 'UiAutomator2' and platformName 'Android'. Have you installed a driver that supports those capabilities? Run 'appium driver list --installed' to see. (Lower-level error: Could not find installed driver to support given caps)\nSta",
+        "last_status": "PASS",
+        "median_ms": 3506,
+        "name": "Achat - Deux Articles Jusqu'à La Confirmation",
+        "pass_rate": 0.8571428571428571,
+        "passed": 6,
+        "quarantined": false,
+        "runs": 7,
+        "runs_since": 1,
+        "skipped": 0,
+        "source": "test_suites/multi_moteur/achat_saucedemo.robot",
+        "statuses": ["PASS", "PASS", "PASS", "PASS", "FAIL", "PASS", "PASS"],
+        "tags": [
+          "achat",
+          "feat:saucedemo.commande.finalisation",
+          "feat:saucedemo.panier.ajout_article",
+          "multi_moteur",
+          "saucedemo"
+        ],
+        "test": "test_suites/multi_moteur/achat_saucedemo.robot::Achat - Deux Articles Jusqu'à La Confirmation",
+        "verdict": "instable"
+      },
+      {
+        "failed": 1,
+        "flips": 0,
+        "last_message": "WebDriverException: Message: Could not find a driver for automationName 'UiAutomator2' and platformName 'Android'. Have you installed a driver that supports those capabilities? Run 'appium driver list --installed' to see. (Lower-level error: Could not find installed driver to support given caps)\nSta",
+        "last_status": "FAIL",
+        "median_ms": 370,
+        "name": "Smoke - Ouvrir Les Réglages Android",
+        "pass_rate": 0.0,
+        "passed": 0,
+        "quarantined": false,
+        "runs": 1,
+        "runs_since": 5,
+        "skipped": 0,
+        "source": "test_suites/appium/00_smoke_appium.robot",
+        "statuses": ["FAIL"],
+        "tags": ["android", "appium"],
+        "test": "test_suites/appium/00_smoke_appium.robot::Smoke - Ouvrir Les Réglages Android",
+        "verdict": "neuf"
+      },
+      {
+        "failed": 0,
+        "flips": 0,
+        "last_message": null,
+        "last_status": "PASS",
+        "median_ms": 1817,
+        "name": "Smoke - Login Page Elements Visible",
+        "pass_rate": 1.0,
+        "passed": 6,
+        "quarantined": false,
+        "runs": 6,
+        "runs_since": 1,
+        "skipped": 0,
+        "source": "test_suites/web/saucedemo/00_smoke.robot",
+        "statuses": ["PASS", "PASS", "PASS", "PASS", "PASS", "PASS"],
+        "tags": [
+          "feat:saucedemo.connexion.formulaire",
+          "module:saucedemo",
+          "sanity",
+          "saucedemo",
+          "smoke",
+          "web"
+        ],
+        "test": "test_suites/web/saucedemo/00_smoke.robot::Smoke - Login Page Elements Visible",
+        "verdict": "stable"
+      },
+      {
+        "failed": 0,
+        "flips": 0,
+        "last_message": null,
+        "last_status": "PASS",
+        "median_ms": 1592,
+        "name": "Smoke - Open Browser And Verify Title",
+        "pass_rate": 1.0,
+        "passed": 6,
+        "quarantined": false,
+        "runs": 6,
+        "runs_since": 1,
+        "skipped": 0,
+        "source": "test_suites/web/saucedemo/00_smoke.robot",
+        "statuses": ["PASS", "PASS", "PASS", "PASS", "PASS", "PASS"],
+        "tags": [
+          "feat:saucedemo.connexion.formulaire",
+          "module:saucedemo",
+          "sanity",
+          "saucedemo",
+          "smoke",
+          "web"
+        ],
+        "test": "test_suites/web/saucedemo/00_smoke.robot::Smoke - Open Browser And Verify Title",
+        "verdict": "stable"
+      },
+      {
+        "failed": 0,
+        "flips": 0,
+        "last_message": null,
+        "last_status": "PASS",
+        "median_ms": 2210,
+        "name": "Navigation - Access Product Detail",
+        "pass_rate": 1.0,
+        "passed": 5,
+        "quarantined": false,
+        "runs": 5,
+        "runs_since": 1,
+        "skipped": 0,
+        "source": "test_suites/web/saucedemo/01_navigation.robot",
+        "statuses": ["PASS", "PASS", "PASS", "PASS", "PASS"],
+        "tags": [
+          "feat:saucedemo.catalogue.consultation_produit",
+          "module:saucedemo",
+          "navigation",
+          "product",
+          "regression",
+          "saucedemo",
+          "web"
+        ],
+        "test": "test_suites/web/saucedemo/01_navigation.robot::Navigation - Access Product Detail",
+        "verdict": "stable"
+      },
+      {
+        "failed": 0,
+        "flips": 0,
+        "last_message": null,
+        "last_status": "PASS",
+        "median_ms": 1898,
+        "name": "Navigation - Login And Access Inventory",
+        "pass_rate": 1.0,
+        "passed": 5,
+        "quarantined": false,
+        "runs": 5,
+        "runs_since": 1,
+        "skipped": 0,
+        "source": "test_suites/web/saucedemo/01_navigation.robot",
+        "statuses": ["PASS", "PASS", "PASS", "PASS", "PASS"],
+        "tags": [
+          "feat:saucedemo.connexion.identifiants_valides",
+          "login",
+          "module:saucedemo",
+          "navigation",
+          "regression",
+          "saucedemo",
+          "web"
+        ],
+        "test": "test_suites/web/saucedemo/01_navigation.robot::Navigation - Login And Access Inventory",
+        "verdict": "stable"
+      },
+      {
+        "failed": 0,
+        "flips": 0,
+        "last_message": null,
+        "last_status": "PASS",
+        "median_ms": 2708,
+        "name": "Navigation - Sidebar Menu",
+        "pass_rate": 1.0,
+        "passed": 5,
+        "quarantined": false,
+        "runs": 5,
+        "runs_since": 1,
+        "skipped": 0,
+        "source": "test_suites/web/saucedemo/01_navigation.robot",
+        "statuses": ["PASS", "PASS", "PASS", "PASS", "PASS"],
+        "tags": [
+          "feat:saucedemo.navigation.menu_lateral",
+          "menu",
+          "module:saucedemo",
+          "navigation",
+          "regression",
+          "saucedemo",
+          "web"
+        ],
+        "test": "test_suites/web/saucedemo/01_navigation.robot::Navigation - Sidebar Menu",
+        "verdict": "stable"
+      },
+      {
+        "failed": 0,
+        "flips": 0,
+        "last_message": null,
+        "last_status": "PASS",
+        "median_ms": 2216,
+        "name": "Cart - Add Multiple Items",
+        "pass_rate": 1.0,
+        "passed": 6,
+        "quarantined": false,
+        "runs": 6,
+        "runs_since": 1,
+        "skipped": 0,
+        "source": "test_suites/web/saucedemo/02_cart.robot",
+        "statuses": ["PASS", "PASS", "PASS", "PASS", "PASS", "PASS"],
+        "tags": [
+          "add",
+          "cart",
+          "feat:saucedemo.panier.ajout_article",
+          "module:saucedemo",
+          "regression",
+          "saucedemo",
+          "web"
+        ],
+        "test": "test_suites/web/saucedemo/02_cart.robot::Cart - Add Multiple Items",
+        "verdict": "stable"
+      },
+      {
+        "failed": 0,
+        "flips": 0,
+        "last_message": null,
+        "last_status": "PASS",
+        "median_ms": 2023,
+        "name": "Cart - Add Single Item",
+        "pass_rate": 1.0,
+        "passed": 6,
+        "quarantined": false,
+        "runs": 6,
+        "runs_since": 1,
+        "skipped": 0,
+        "source": "test_suites/web/saucedemo/02_cart.robot",
+        "statuses": ["PASS", "PASS", "PASS", "PASS", "PASS", "PASS"],
+        "tags": [
+          "add",
+          "cart",
+          "feat:saucedemo.panier.ajout_article",
+          "module:saucedemo",
+          "regression",
+          "saucedemo",
+          "web"
+        ],
+        "test": "test_suites/web/saucedemo/02_cart.robot::Cart - Add Single Item",
+        "verdict": "stable"
+      },
+      {
+        "failed": 0,
+        "flips": 0,
+        "last_message": null,
+        "last_status": "PASS",
+        "median_ms": 2374,
+        "name": "Cart - Remove Item",
+        "pass_rate": 1.0,
+        "passed": 6,
+        "quarantined": false,
+        "runs": 6,
+        "runs_since": 1,
+        "skipped": 0,
+        "source": "test_suites/web/saucedemo/02_cart.robot",
+        "statuses": ["PASS", "PASS", "PASS", "PASS", "PASS", "PASS"],
+        "tags": [
+          "cart",
+          "feat:saucedemo.panier.retrait_article",
+          "module:saucedemo",
+          "regression",
+          "remove",
+          "saucedemo",
+          "web"
+        ],
+        "test": "test_suites/web/saucedemo/02_cart.robot::Cart - Remove Item",
+        "verdict": "stable"
+      },
+      {
+        "failed": 0,
+        "flips": 0,
+        "last_message": null,
+        "last_status": "PASS",
+        "median_ms": 2237,
+        "name": "Cart - View Cart Page",
+        "pass_rate": 1.0,
+        "passed": 6,
+        "quarantined": false,
+        "runs": 6,
+        "runs_since": 1,
+        "skipped": 0,
+        "source": "test_suites/web/saucedemo/02_cart.robot",
+        "statuses": ["PASS", "PASS", "PASS", "PASS", "PASS", "PASS"],
+        "tags": [
+          "cart",
+          "feat:saucedemo.panier.consultation",
+          "module:saucedemo",
+          "regression",
+          "saucedemo",
+          "view",
+          "web"
+        ],
+        "test": "test_suites/web/saucedemo/02_cart.robot::Cart - View Cart Page",
+        "verdict": "stable"
+      },
+      {
+        "failed": 0,
+        "flips": 0,
+        "last_message": null,
+        "last_status": "PASS",
+        "median_ms": 2523,
+        "name": "Checkout - Complete Purchase",
+        "pass_rate": 1.0,
+        "passed": 5,
+        "quarantined": false,
+        "runs": 5,
+        "runs_since": 1,
+        "skipped": 0,
+        "source": "test_suites/web/saucedemo/03_checkout.robot",
+        "statuses": ["PASS", "PASS", "PASS", "PASS", "PASS"],
+        "tags": [
+          "checkout",
+          "e2e",
+          "feat:saucedemo.commande.finalisation",
+          "module:saucedemo",
+          "regression",
+          "saucedemo",
+          "web"
+        ],
+        "test": "test_suites/web/saucedemo/03_checkout.robot::Checkout - Complete Purchase",
+        "verdict": "stable"
+      },
+      {
+        "failed": 0,
+        "flips": 0,
+        "last_message": null,
+        "last_status": "PASS",
+        "median_ms": 2410,
+        "name": "Checkout - Missing Information Error",
+        "pass_rate": 1.0,
+        "passed": 5,
+        "quarantined": false,
+        "runs": 5,
+        "runs_since": 1,
+        "skipped": 0,
+        "source": "test_suites/web/saucedemo/03_checkout.robot",
+        "statuses": ["PASS", "PASS", "PASS", "PASS", "PASS"],
+        "tags": [
+          "checkout",
+          "error",
+          "feat:saucedemo.commande.controle_saisie",
+          "module:saucedemo",
+          "regression",
+          "saucedemo",
+          "web"
+        ],
+        "test": "test_suites/web/saucedemo/03_checkout.robot::Checkout - Missing Information Error",
+        "verdict": "stable"
+      },
+      {
+        "failed": 0,
+        "flips": 0,
+        "last_message": null,
+        "last_status": "PASS",
+        "median_ms": 2608,
+        "name": "Checkout - Verify Order Summary",
+        "pass_rate": 1.0,
+        "passed": 5,
+        "quarantined": false,
+        "runs": 5,
+        "runs_since": 1,
+        "skipped": 0,
+        "source": "test_suites/web/saucedemo/03_checkout.robot",
+        "statuses": ["PASS", "PASS", "PASS", "PASS", "PASS"],
+        "tags": [
+          "checkout",
+          "feat:saucedemo.commande.resume",
+          "module:saucedemo",
+          "regression",
+          "saucedemo",
+          "summary",
+          "web"
+        ],
+        "test": "test_suites/web/saucedemo/03_checkout.robot::Checkout - Verify Order Summary",
+        "verdict": "stable"
+      }
+    ],
+    "window": 30
+  },
+  "runDiff": {
+    "baseline": {
+      "browser": "chromium",
+      "commit": "b4be59f",
+      "device": "desktop",
+      "environment": "orangehrm",
+      "id": "2026_09_25-124401_chromium_desktop_deb543ba",
+      "ts": 1790333064.7780063,
+      "workflow": "tag_filtered"
+    },
+    "changes": [],
+    "counts": {
+      "fixed": 0,
+      "known_failure": 0,
+      "new": 0,
+      "out_of_scope": 0,
+      "regression": 0
+    },
+    "run": {
+      "browser": "chromium",
+      "commit": "b4be59f",
+      "device": "desktop",
+      "environment": "orangehrm",
+      "id": "2026_09_25-125059_chromium_desktop_8f65dab7",
+      "ts": 1790333480.0586605,
+      "workflow": "tag_filtered"
+    },
+    "same_commit": true
+  }
+}

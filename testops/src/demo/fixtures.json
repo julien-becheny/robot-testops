@@ -5,14 +5,14 @@
       {
         "base": "https://www.saucedemo.com",
         "id": "saucedemo",
-        "label": "SauceDemo — démo publique",
+        "label": "SauceDemo - démo publique",
         "modules": ["saucedemo"],
         "tier": "demo"
       },
       {
         "base": "https://opensource-demo.orangehrmlive.com",
         "id": "orangehrm",
-        "label": "OrangeHRM — démo publique",
+        "label": "OrangeHRM - démo publique",
         "modules": ["orangehrm"],
         "tier": "demo"
       }
@@ -23,16 +23,10 @@
     "API_HOST": "127.0.0.1",
     "API_PORT": "5001",
     "LOG_LEVEL": "INFO",
-    "RF_ANDROID_ACTIVITY": null,
-    "RF_ANDROID_APP": null,
-    "RF_ANDROID_PACKAGE": null,
-    "RF_APPIUM_URL": "http://127.0.0.1:4723",
     "RF_BROWSER": "chromium",
     "RF_ENVIRONMENT": "saucedemo",
     "RF_EXECUTION_MODE": "standard",
-    "RF_IOS_BUNDLE_ID": null,
-    "RF_IOS_UDID": null,
-    "RF_MOBILE_PLATFORM": "Android",
+    "RF_SECRET_ORANGEHRM": "********",
     "RF_SECRET_SAUCEDEMO": "********"
   },
   "gitInfo": {
@@ -40,154 +34,273 @@
   },
   "smokeSuite": {
     "file": "00_smoke.robot",
-    "tests": ["Smoke — Open Browser And Verify Title", "Smoke — Login Page Elements Visible"]
+    "tests": ["Smoke - Open Browser And Verify Title", "Smoke - Login Page Elements Visible"]
   },
   "catalogue": {
     "tags": [
       {
+        "count": 13,
         "name": "saucedemo",
-        "count": 13
+        "tests": [
+          "Achat - Deux Articles Jusqu'à La Confirmation",
+          "Smoke - Open Browser And Verify Title",
+          "Smoke - Login Page Elements Visible",
+          "Navigation - Login And Access Inventory",
+          "Navigation - Access Product Detail",
+          "Navigation - Sidebar Menu",
+          "Cart - Add Single Item",
+          "Cart - Add Multiple Items",
+          "Cart - Remove Item",
+          "Cart - View Cart Page",
+          "Checkout - Complete Purchase",
+          "Checkout - Missing Information Error",
+          "Checkout - Verify Order Summary"
+        ]
       },
       {
+        "count": 13,
         "name": "web",
-        "count": 13
+        "tests": [
+          "PIM - Create Employee",
+          "Smoke - Open Browser And Verify Title",
+          "Smoke - Login Page Elements Visible",
+          "Navigation - Login And Access Inventory",
+          "Navigation - Access Product Detail",
+          "Navigation - Sidebar Menu",
+          "Cart - Add Single Item",
+          "Cart - Add Multiple Items",
+          "Cart - Remove Item",
+          "Cart - View Cart Page",
+          "Checkout - Complete Purchase",
+          "Checkout - Missing Information Error",
+          "Checkout - Verify Order Summary"
+        ]
       },
       {
+        "count": 12,
         "name": "module:saucedemo",
-        "count": 12
+        "tests": [
+          "Smoke - Open Browser And Verify Title",
+          "Smoke - Login Page Elements Visible",
+          "Navigation - Login And Access Inventory",
+          "Navigation - Access Product Detail",
+          "Navigation - Sidebar Menu",
+          "Cart - Add Single Item",
+          "Cart - Add Multiple Items",
+          "Cart - Remove Item",
+          "Cart - View Cart Page",
+          "Checkout - Complete Purchase",
+          "Checkout - Missing Information Error",
+          "Checkout - Verify Order Summary"
+        ]
       },
       {
+        "count": 11,
         "name": "regression",
-        "count": 11
+        "tests": [
+          "PIM - Create Employee",
+          "Navigation - Login And Access Inventory",
+          "Navigation - Access Product Detail",
+          "Navigation - Sidebar Menu",
+          "Cart - Add Single Item",
+          "Cart - Add Multiple Items",
+          "Cart - Remove Item",
+          "Cart - View Cart Page",
+          "Checkout - Complete Purchase",
+          "Checkout - Missing Information Error",
+          "Checkout - Verify Order Summary"
+        ]
       },
       {
+        "count": 4,
         "name": "cart",
-        "count": 4
+        "tests": [
+          "Cart - Add Single Item",
+          "Cart - Add Multiple Items",
+          "Cart - Remove Item",
+          "Cart - View Cart Page"
+        ]
       },
       {
+        "count": 3,
         "name": "checkout",
-        "count": 3
+        "tests": [
+          "Checkout - Complete Purchase",
+          "Checkout - Missing Information Error",
+          "Checkout - Verify Order Summary"
+        ]
       },
       {
+        "count": 3,
         "name": "feat:saucedemo.panier.ajout_article",
-        "count": 3
+        "tests": [
+          "Achat - Deux Articles Jusqu'à La Confirmation",
+          "Cart - Add Single Item",
+          "Cart - Add Multiple Items"
+        ]
       },
       {
+        "count": 3,
         "name": "navigation",
-        "count": 3
+        "tests": [
+          "Navigation - Login And Access Inventory",
+          "Navigation - Access Product Detail",
+          "Navigation - Sidebar Menu"
+        ]
       },
       {
+        "count": 2,
         "name": "add",
-        "count": 2
+        "tests": ["Cart - Add Single Item", "Cart - Add Multiple Items"]
       },
       {
+        "count": 2,
         "name": "feat:saucedemo.commande.finalisation",
-        "count": 2
+        "tests": ["Achat - Deux Articles Jusqu'à La Confirmation", "Checkout - Complete Purchase"]
       },
       {
+        "count": 2,
         "name": "feat:saucedemo.connexion.formulaire",
-        "count": 2
+        "tests": ["Smoke - Open Browser And Verify Title", "Smoke - Login Page Elements Visible"]
       },
       {
+        "count": 2,
         "name": "sanity",
-        "count": 2
+        "tests": ["Smoke - Open Browser And Verify Title", "Smoke - Login Page Elements Visible"]
       },
       {
+        "count": 2,
         "name": "smoke",
-        "count": 2
+        "tests": ["Smoke - Open Browser And Verify Title", "Smoke - Login Page Elements Visible"]
       },
       {
+        "count": 1,
         "name": "achat",
-        "count": 1
+        "tests": ["Achat - Deux Articles Jusqu'à La Confirmation"]
       },
       {
+        "count": 1,
+        "name": "android",
+        "tests": ["Smoke - Ouvrir Les Réglages Android"]
+      },
+      {
+        "count": 1,
+        "name": "appium",
+        "tests": ["Smoke - Ouvrir Les Réglages Android"]
+      },
+      {
+        "count": 1,
         "name": "e2e",
-        "count": 1
+        "tests": ["Checkout - Complete Purchase"]
       },
       {
+        "count": 1,
         "name": "error",
-        "count": 1
+        "tests": ["Checkout - Missing Information Error"]
       },
       {
+        "count": 1,
         "name": "feat:orangehrm.pim.creation_employe",
-        "count": 1
+        "tests": ["PIM - Create Employee"]
       },
       {
+        "count": 1,
         "name": "feat:saucedemo.catalogue.consultation_produit",
-        "count": 1
+        "tests": ["Navigation - Access Product Detail"]
       },
       {
+        "count": 1,
         "name": "feat:saucedemo.commande.controle_saisie",
-        "count": 1
+        "tests": ["Checkout - Missing Information Error"]
       },
       {
+        "count": 1,
         "name": "feat:saucedemo.commande.resume",
-        "count": 1
+        "tests": ["Checkout - Verify Order Summary"]
       },
       {
+        "count": 1,
         "name": "feat:saucedemo.connexion.identifiants_valides",
-        "count": 1
+        "tests": ["Navigation - Login And Access Inventory"]
       },
       {
+        "count": 1,
         "name": "feat:saucedemo.navigation.menu_lateral",
-        "count": 1
+        "tests": ["Navigation - Sidebar Menu"]
       },
       {
+        "count": 1,
         "name": "feat:saucedemo.panier.consultation",
-        "count": 1
+        "tests": ["Cart - View Cart Page"]
       },
       {
+        "count": 1,
         "name": "feat:saucedemo.panier.retrait_article",
-        "count": 1
+        "tests": ["Cart - Remove Item"]
       },
       {
+        "count": 1,
         "name": "login",
-        "count": 1
+        "tests": ["Navigation - Login And Access Inventory"]
       },
       {
+        "count": 1,
         "name": "menu",
-        "count": 1
+        "tests": ["Navigation - Sidebar Menu"]
       },
       {
+        "count": 1,
         "name": "module:orangehrm",
-        "count": 1
+        "tests": ["PIM - Create Employee"]
       },
       {
+        "count": 1,
         "name": "multi_moteur",
-        "count": 1
+        "tests": ["Achat - Deux Articles Jusqu'à La Confirmation"]
       },
       {
+        "count": 1,
         "name": "orangehrm",
-        "count": 1
+        "tests": ["PIM - Create Employee"]
       },
       {
+        "count": 1,
         "name": "pim",
-        "count": 1
+        "tests": ["PIM - Create Employee"]
       },
       {
+        "count": 1,
         "name": "product",
-        "count": 1
+        "tests": ["Navigation - Access Product Detail"]
       },
       {
+        "count": 1,
         "name": "remove",
-        "count": 1
+        "tests": ["Cart - Remove Item"]
       },
       {
+        "count": 1,
         "name": "summary",
-        "count": 1
+        "tests": ["Checkout - Verify Order Summary"]
       },
       {
+        "count": 1,
         "name": "view",
-        "count": 1
+        "tests": ["Cart - View Cart Page"]
       }
     ],
-    "total_tags": 34,
-    "total_tests": 14
+    "total_tags": 36,
+    "total_tests": 15
   },
   "tests": [
     {
+      "file": "test_suites\\appium\\00_smoke_appium.robot",
+      "name": "Smoke - Ouvrir Les Réglages Android",
+      "tags": ["android", "appium"]
+    },
+    {
       "file": "test_suites\\multi_moteur\\achat_saucedemo.robot",
-      "name": "Achat — Deux Articles Jusqu'à La Confirmation",
+      "name": "Achat - Deux Articles Jusqu'à La Confirmation",
       "tags": [
         "achat",
         "feat:saucedemo.commande.finalisation",
@@ -198,7 +311,7 @@
     },
     {
       "file": "test_suites\\web\\orangehrm\\01_pim_employes.robot",
-      "name": "PIM — Create Employee",
+      "name": "PIM - Create Employee",
       "tags": [
         "feat:orangehrm.pim.creation_employe",
         "module:orangehrm",
@@ -210,7 +323,7 @@
     },
     {
       "file": "test_suites\\web\\saucedemo\\00_smoke.robot",
-      "name": "Smoke — Open Browser And Verify Title",
+      "name": "Smoke - Open Browser And Verify Title",
       "tags": [
         "feat:saucedemo.connexion.formulaire",
         "module:saucedemo",
@@ -222,7 +335,7 @@
     },
     {
       "file": "test_suites\\web\\saucedemo\\00_smoke.robot",
-      "name": "Smoke — Login Page Elements Visible",
+      "name": "Smoke - Login Page Elements Visible",
       "tags": [
         "feat:saucedemo.connexion.formulaire",
         "module:saucedemo",
@@ -234,7 +347,7 @@
     },
     {
       "file": "test_suites\\web\\saucedemo\\01_navigation.robot",
-      "name": "Navigation — Login And Access Inventory",
+      "name": "Navigation - Login And Access Inventory",
       "tags": [
         "feat:saucedemo.connexion.identifiants_valides",
         "login",
@@ -247,7 +360,7 @@
     },
     {
       "file": "test_suites\\web\\saucedemo\\01_navigation.robot",
-      "name": "Navigation — Access Product Detail",
+      "name": "Navigation - Access Product Detail",
       "tags": [
         "feat:saucedemo.catalogue.consultation_produit",
         "module:saucedemo",
@@ -260,7 +373,7 @@
     },
     {
       "file": "test_suites\\web\\saucedemo\\01_navigation.robot",
-      "name": "Navigation — Sidebar Menu",
+      "name": "Navigation - Sidebar Menu",
       "tags": [
         "feat:saucedemo.navigation.menu_lateral",
         "menu",
@@ -273,7 +386,7 @@
     },
     {
       "file": "test_suites\\web\\saucedemo\\02_cart.robot",
-      "name": "Cart — Add Single Item",
+      "name": "Cart - Add Single Item",
       "tags": [
         "add",
         "cart",
@@ -286,7 +399,7 @@
     },
     {
       "file": "test_suites\\web\\saucedemo\\02_cart.robot",
-      "name": "Cart — Add Multiple Items",
+      "name": "Cart - Add Multiple Items",
       "tags": [
         "add",
         "cart",
@@ -299,7 +412,7 @@
     },
     {
       "file": "test_suites\\web\\saucedemo\\02_cart.robot",
-      "name": "Cart — Remove Item",
+      "name": "Cart - Remove Item",
       "tags": [
         "cart",
         "feat:saucedemo.panier.retrait_article",
@@ -312,7 +425,7 @@
     },
     {
       "file": "test_suites\\web\\saucedemo\\02_cart.robot",
-      "name": "Cart — View Cart Page",
+      "name": "Cart - View Cart Page",
       "tags": [
         "cart",
         "feat:saucedemo.panier.consultation",
@@ -325,7 +438,7 @@
     },
     {
       "file": "test_suites\\web\\saucedemo\\03_checkout.robot",
-      "name": "Checkout — Complete Purchase",
+      "name": "Checkout - Complete Purchase",
       "tags": [
         "checkout",
         "e2e",
@@ -338,7 +451,7 @@
     },
     {
       "file": "test_suites\\web\\saucedemo\\03_checkout.robot",
-      "name": "Checkout — Missing Information Error",
+      "name": "Checkout - Missing Information Error",
       "tags": [
         "checkout",
         "error",
@@ -351,7 +464,7 @@
     },
     {
       "file": "test_suites\\web\\saucedemo\\03_checkout.robot",
-      "name": "Checkout — Verify Order Summary",
+      "name": "Checkout - Verify Order Summary",
       "tags": [
         "checkout",
         "feat:saucedemo.commande.resume",
@@ -367,9 +480,7 @@
     "suite": "00 Smoke",
     "tests": [
       {
-        "name": "Smoke — Open Browser And Verify Title",
-        "status": "PASS",
-        "elapsed": 9336,
+        "name": "Smoke - Open Browser And Verify Title",
         "steps": [
           {
             "name": "Open SauceDemo",
@@ -383,12 +494,14 @@
             "name": "Close Browser",
             "failed": false
           }
-        ]
+        ],
+        "longname": "Smoke - Open Browser And Verify Title",
+        "status": "PASS",
+        "elapsed": 9770,
+        "message": ""
       },
       {
-        "name": "Smoke — Login Page Elements Visible",
-        "status": "PASS",
-        "elapsed": 1753,
+        "name": "Smoke - Login Page Elements Visible",
         "steps": [
           {
             "name": "Open SauceDemo",
@@ -410,7 +523,940 @@
             "name": "Close Browser",
             "failed": false
           }
-        ]
+        ],
+        "longname": "Smoke - Login Page Elements Visible",
+        "status": "PASS",
+        "elapsed": 1945,
+        "message": ""
+      }
+    ]
+  },
+  "results": {
+    "chromium-desktop": [
+      {
+        "name": "Achat - Deux Articles Jusqu'à La Confirmation",
+        "steps": [
+          {
+            "name": "Ouvrir La Boutique",
+            "failed": false
+          },
+          {
+            "name": "Se Connecter",
+            "failed": false
+          },
+          {
+            "name": "Ajouter Deux Articles Au Panier",
+            "failed": false
+          },
+          {
+            "name": "Le Panier Doit Contenir",
+            "failed": false
+          },
+          {
+            "name": "Ouvrir Le Panier Et Passer Au Checkout",
+            "failed": false
+          },
+          {
+            "name": "Remplir Les Informations Client",
+            "failed": false
+          },
+          {
+            "name": "Un Total Doit Etre Affiche",
+            "failed": false
+          },
+          {
+            "name": "Finaliser La Commande",
+            "failed": false
+          },
+          {
+            "name": "La Commande Doit Etre Confirmee",
+            "failed": false
+          }
+        ],
+        "longname": "Multi Moteur.Achat Saucedemo.Achat - Deux Articles Jusqu'à La Confirmation",
+        "status": "PASS",
+        "elapsed": 3271,
+        "message": ""
+      },
+      {
+        "name": "Checkout - Complete Purchase",
+        "steps": [
+          {
+            "name": "Open Checkout With Product",
+            "failed": false
+          },
+          {
+            "name": "Fill Checkout Information",
+            "failed": false
+          },
+          {
+            "name": "Get Element States",
+            "failed": false
+          },
+          {
+            "name": "Click",
+            "failed": false
+          },
+          {
+            "name": "Wait For Screen",
+            "failed": false
+          },
+          {
+            "name": "Get Text",
+            "failed": false
+          },
+          {
+            "name": "Close Browser",
+            "failed": false
+          }
+        ],
+        "longname": "Web.Saucedemo.03 Checkout.Checkout - Complete Purchase",
+        "status": "PASS",
+        "elapsed": 2503,
+        "message": ""
+      },
+      {
+        "name": "Checkout - Missing Information Error",
+        "steps": [
+          {
+            "name": "Open Checkout With Product",
+            "failed": false
+          },
+          {
+            "name": "Click",
+            "failed": false
+          },
+          {
+            "name": "Get Element States",
+            "failed": false
+          },
+          {
+            "name": "Get Text",
+            "failed": false
+          },
+          {
+            "name": "Close Browser",
+            "failed": false
+          }
+        ],
+        "longname": "Web.Saucedemo.03 Checkout.Checkout - Missing Information Error",
+        "status": "PASS",
+        "elapsed": 2410,
+        "message": ""
+      },
+      {
+        "name": "Checkout - Verify Order Summary",
+        "steps": [
+          {
+            "name": "Open Checkout With Product",
+            "failed": false
+          },
+          {
+            "name": "Fill Checkout Information",
+            "failed": false
+          },
+          {
+            "name": "Get Text",
+            "failed": false
+          },
+          {
+            "name": "Get Element States",
+            "failed": false
+          },
+          {
+            "name": "Get Element States",
+            "failed": false
+          },
+          {
+            "name": "Get Element States",
+            "failed": false
+          },
+          {
+            "name": "Close Browser",
+            "failed": false
+          }
+        ],
+        "longname": "Web.Saucedemo.03 Checkout.Checkout - Verify Order Summary",
+        "status": "PASS",
+        "elapsed": 2574,
+        "message": ""
+      },
+      {
+        "name": "Smoke - Login Page Elements Visible",
+        "steps": [
+          {
+            "name": "Open SauceDemo",
+            "failed": false
+          },
+          {
+            "name": "Get Element States",
+            "failed": false
+          },
+          {
+            "name": "Get Element States",
+            "failed": false
+          },
+          {
+            "name": "Get Element States",
+            "failed": false
+          },
+          {
+            "name": "Close Browser",
+            "failed": false
+          }
+        ],
+        "longname": "Web.Saucedemo.00 Smoke.Smoke - Login Page Elements Visible",
+        "status": "PASS",
+        "elapsed": 1756,
+        "message": ""
+      },
+      {
+        "name": "Smoke - Open Browser And Verify Title",
+        "steps": [
+          {
+            "name": "Open SauceDemo",
+            "failed": false
+          },
+          {
+            "name": "Get Title",
+            "failed": false
+          },
+          {
+            "name": "Close Browser",
+            "failed": false
+          }
+        ],
+        "longname": "Web.Saucedemo.00 Smoke.Smoke - Open Browser And Verify Title",
+        "status": "PASS",
+        "elapsed": 1586,
+        "message": ""
+      },
+      {
+        "name": "Navigation - Login And Access Inventory",
+        "steps": [
+          {
+            "name": "Open And Login As",
+            "failed": false
+          },
+          {
+            "name": "Get Url",
+            "failed": false
+          },
+          {
+            "name": "Get Title",
+            "failed": false
+          },
+          {
+            "name": "Close Browser",
+            "failed": false
+          }
+        ],
+        "longname": "Web.Saucedemo.01 Navigation.Navigation - Login And Access Inventory",
+        "status": "PASS",
+        "elapsed": 1898,
+        "message": ""
+      },
+      {
+        "name": "Navigation - Sidebar Menu",
+        "steps": [
+          {
+            "name": "Open And Login As",
+            "failed": false
+          },
+          {
+            "name": "Click",
+            "failed": false
+          },
+          {
+            "name": "Wait For Screen",
+            "failed": false
+          },
+          {
+            "name": "Get Element States",
+            "failed": false
+          },
+          {
+            "name": "Get Element States",
+            "failed": false
+          },
+          {
+            "name": "Get Element States",
+            "failed": false
+          },
+          {
+            "name": "Click",
+            "failed": false
+          },
+          {
+            "name": "Close Browser",
+            "failed": false
+          }
+        ],
+        "longname": "Web.Saucedemo.01 Navigation.Navigation - Sidebar Menu",
+        "status": "PASS",
+        "elapsed": 2662,
+        "message": ""
+      },
+      {
+        "name": "Navigation - Access Product Detail",
+        "steps": [
+          {
+            "name": "Open And Login As",
+            "failed": false
+          },
+          {
+            "name": "Click",
+            "failed": false
+          },
+          {
+            "name": "Wait For Screen",
+            "failed": false
+          },
+          {
+            "name": "Get Url",
+            "failed": false
+          },
+          {
+            "name": "Get Element States",
+            "failed": false
+          },
+          {
+            "name": "Click",
+            "failed": false
+          },
+          {
+            "name": "Get Url",
+            "failed": false
+          },
+          {
+            "name": "Close Browser",
+            "failed": false
+          }
+        ],
+        "longname": "Web.Saucedemo.01 Navigation.Navigation - Access Product Detail",
+        "status": "PASS",
+        "elapsed": 2074,
+        "message": ""
+      },
+      {
+        "name": "Cart - Add Multiple Items",
+        "steps": [
+          {
+            "name": "Open And Login As",
+            "failed": false
+          },
+          {
+            "name": "Add Product To Cart",
+            "failed": false
+          },
+          {
+            "name": "Add Product To Cart",
+            "failed": false
+          },
+          {
+            "name": "Add Product To Cart",
+            "failed": false
+          },
+          {
+            "name": "Get Text",
+            "failed": false
+          },
+          {
+            "name": "Close Browser",
+            "failed": false
+          }
+        ],
+        "longname": "Web.Saucedemo.02 Cart.Cart - Add Multiple Items",
+        "status": "PASS",
+        "elapsed": 2083,
+        "message": ""
+      },
+      {
+        "name": "Cart - Remove Item",
+        "steps": [
+          {
+            "name": "Open And Login As",
+            "failed": false
+          },
+          {
+            "name": "Add Product To Cart",
+            "failed": false
+          },
+          {
+            "name": "Get Text",
+            "failed": false
+          },
+          {
+            "name": "Click",
+            "failed": false
+          },
+          {
+            "name": "Get Element States",
+            "failed": false
+          },
+          {
+            "name": "Close Browser",
+            "failed": false
+          }
+        ],
+        "longname": "Web.Saucedemo.02 Cart.Cart - Remove Item",
+        "status": "PASS",
+        "elapsed": 2278,
+        "message": ""
+      },
+      {
+        "name": "Cart - Add Single Item",
+        "steps": [
+          {
+            "name": "Open And Login As",
+            "failed": false
+          },
+          {
+            "name": "Add Product To Cart",
+            "failed": false
+          },
+          {
+            "name": "Get Text",
+            "failed": false
+          },
+          {
+            "name": "Close Browser",
+            "failed": false
+          }
+        ],
+        "longname": "Web.Saucedemo.02 Cart.Cart - Add Single Item",
+        "status": "PASS",
+        "elapsed": 2064,
+        "message": ""
+      },
+      {
+        "name": "Cart - View Cart Page",
+        "steps": [
+          {
+            "name": "Open And Login As",
+            "failed": false
+          },
+          {
+            "name": "Add Product To Cart",
+            "failed": false
+          },
+          {
+            "name": "Click",
+            "failed": false
+          },
+          {
+            "name": "Wait For Screen",
+            "failed": false
+          },
+          {
+            "name": "Get Url",
+            "failed": false
+          },
+          {
+            "name": "Get Element States",
+            "failed": false
+          },
+          {
+            "name": "Get Text",
+            "failed": false
+          },
+          {
+            "name": "Close Browser",
+            "failed": false
+          }
+        ],
+        "longname": "Web.Saucedemo.02 Cart.Cart - View Cart Page",
+        "status": "PASS",
+        "elapsed": 2257,
+        "message": ""
+      },
+      {
+        "name": "PIM - Create Employee",
+        "steps": [
+          {
+            "name": "Open OrangeHRM Session",
+            "failed": false
+          },
+          {
+            "name": "New Employee Id",
+            "failed": false
+          },
+          {
+            "name": "Open Employee List",
+            "failed": false
+          },
+          {
+            "name": "Open Add Employee Form",
+            "failed": false
+          },
+          {
+            "name": "Create Employee",
+            "failed": false
+          },
+          {
+            "name": "Employee Details Should Show",
+            "failed": false
+          },
+          {
+            "name": "Open Employee List",
+            "failed": false
+          },
+          {
+            "name": "Search Employee By Id",
+            "failed": false
+          },
+          {
+            "name": "Employee Should Be Listed Once",
+            "failed": false
+          },
+          {
+            "name": "Clean Up Created Employee",
+            "failed": false
+          }
+        ],
+        "longname": "Web.Orangehrm.01 Pim Employes.PIM - Create Employee",
+        "status": "PASS",
+        "elapsed": 13832,
+        "message": ""
+      }
+    ],
+    "webkit-mobile": [
+      {
+        "name": "Achat - Deux Articles Jusqu'à La Confirmation",
+        "steps": [
+          {
+            "name": "Ouvrir La Boutique",
+            "failed": false
+          },
+          {
+            "name": "Se Connecter",
+            "failed": false
+          },
+          {
+            "name": "Ajouter Deux Articles Au Panier",
+            "failed": false
+          },
+          {
+            "name": "Le Panier Doit Contenir",
+            "failed": false
+          },
+          {
+            "name": "Ouvrir Le Panier Et Passer Au Checkout",
+            "failed": false
+          },
+          {
+            "name": "Remplir Les Informations Client",
+            "failed": false
+          },
+          {
+            "name": "Un Total Doit Etre Affiche",
+            "failed": false
+          },
+          {
+            "name": "Finaliser La Commande",
+            "failed": false
+          },
+          {
+            "name": "La Commande Doit Etre Confirmee",
+            "failed": false
+          }
+        ],
+        "longname": "Multi Moteur.Achat Saucedemo.Achat - Deux Articles Jusqu'à La Confirmation",
+        "status": "PASS",
+        "elapsed": 4611,
+        "message": ""
+      },
+      {
+        "name": "Smoke - Open Browser And Verify Title",
+        "steps": [
+          {
+            "name": "Open SauceDemo",
+            "failed": false
+          },
+          {
+            "name": "Get Title",
+            "failed": false
+          },
+          {
+            "name": "Close Browser",
+            "failed": false
+          }
+        ],
+        "longname": "Web.Saucedemo.00 Smoke.Smoke - Open Browser And Verify Title",
+        "status": "PASS",
+        "elapsed": 1121,
+        "message": ""
+      },
+      {
+        "name": "Smoke - Login Page Elements Visible",
+        "steps": [
+          {
+            "name": "Open SauceDemo",
+            "failed": false
+          },
+          {
+            "name": "Get Element States",
+            "failed": false
+          },
+          {
+            "name": "Get Element States",
+            "failed": false
+          },
+          {
+            "name": "Get Element States",
+            "failed": false
+          },
+          {
+            "name": "Close Browser",
+            "failed": false
+          }
+        ],
+        "longname": "Web.Saucedemo.00 Smoke.Smoke - Login Page Elements Visible",
+        "status": "PASS",
+        "elapsed": 1611,
+        "message": ""
+      },
+      {
+        "name": "Navigation - Login And Access Inventory",
+        "steps": [
+          {
+            "name": "Open And Login As",
+            "failed": false
+          },
+          {
+            "name": "Get Url",
+            "failed": false
+          },
+          {
+            "name": "Get Title",
+            "failed": false
+          },
+          {
+            "name": "Close Browser",
+            "failed": false
+          }
+        ],
+        "longname": "Web.Saucedemo.01 Navigation.Navigation - Login And Access Inventory",
+        "status": "PASS",
+        "elapsed": 1652,
+        "message": ""
+      },
+      {
+        "name": "Navigation - Access Product Detail",
+        "steps": [
+          {
+            "name": "Open And Login As",
+            "failed": false
+          },
+          {
+            "name": "Click",
+            "failed": false
+          },
+          {
+            "name": "Wait For Screen",
+            "failed": false
+          },
+          {
+            "name": "Get Url",
+            "failed": false
+          },
+          {
+            "name": "Get Element States",
+            "failed": false
+          },
+          {
+            "name": "Click",
+            "failed": false
+          },
+          {
+            "name": "Get Url",
+            "failed": false
+          },
+          {
+            "name": "Close Browser",
+            "failed": false
+          }
+        ],
+        "longname": "Web.Saucedemo.01 Navigation.Navigation - Access Product Detail",
+        "status": "PASS",
+        "elapsed": 2210,
+        "message": ""
+      },
+      {
+        "name": "Navigation - Sidebar Menu",
+        "steps": [
+          {
+            "name": "Open And Login As",
+            "failed": false
+          },
+          {
+            "name": "Click",
+            "failed": false
+          },
+          {
+            "name": "Wait For Screen",
+            "failed": false
+          },
+          {
+            "name": "Get Element States",
+            "failed": false
+          },
+          {
+            "name": "Get Element States",
+            "failed": false
+          },
+          {
+            "name": "Get Element States",
+            "failed": false
+          },
+          {
+            "name": "Click",
+            "failed": false
+          },
+          {
+            "name": "Close Browser",
+            "failed": false
+          }
+        ],
+        "longname": "Web.Saucedemo.01 Navigation.Navigation - Sidebar Menu",
+        "status": "PASS",
+        "elapsed": 2906,
+        "message": ""
+      },
+      {
+        "name": "Cart - Add Single Item",
+        "steps": [
+          {
+            "name": "Open And Login As",
+            "failed": false
+          },
+          {
+            "name": "Add Product To Cart",
+            "failed": false
+          },
+          {
+            "name": "Get Text",
+            "failed": false
+          },
+          {
+            "name": "Close Browser",
+            "failed": false
+          }
+        ],
+        "longname": "Web.Saucedemo.02 Cart.Cart - Add Single Item",
+        "status": "PASS",
+        "elapsed": 1977,
+        "message": ""
+      },
+      {
+        "name": "Cart - Add Multiple Items",
+        "steps": [
+          {
+            "name": "Open And Login As",
+            "failed": false
+          },
+          {
+            "name": "Add Product To Cart",
+            "failed": false
+          },
+          {
+            "name": "Add Product To Cart",
+            "failed": false
+          },
+          {
+            "name": "Add Product To Cart",
+            "failed": false
+          },
+          {
+            "name": "Get Text",
+            "failed": false
+          },
+          {
+            "name": "Close Browser",
+            "failed": false
+          }
+        ],
+        "longname": "Web.Saucedemo.02 Cart.Cart - Add Multiple Items",
+        "status": "PASS",
+        "elapsed": 2509,
+        "message": ""
+      },
+      {
+        "name": "Cart - Remove Item",
+        "steps": [
+          {
+            "name": "Open And Login As",
+            "failed": false
+          },
+          {
+            "name": "Add Product To Cart",
+            "failed": false
+          },
+          {
+            "name": "Get Text",
+            "failed": false
+          },
+          {
+            "name": "Click",
+            "failed": false
+          },
+          {
+            "name": "Get Element States",
+            "failed": false
+          },
+          {
+            "name": "Close Browser",
+            "failed": false
+          }
+        ],
+        "longname": "Web.Saucedemo.02 Cart.Cart - Remove Item",
+        "status": "PASS",
+        "elapsed": 2506,
+        "message": ""
+      },
+      {
+        "name": "Cart - View Cart Page",
+        "steps": [
+          {
+            "name": "Open And Login As",
+            "failed": false
+          },
+          {
+            "name": "Add Product To Cart",
+            "failed": false
+          },
+          {
+            "name": "Click",
+            "failed": false
+          },
+          {
+            "name": "Wait For Screen",
+            "failed": false
+          },
+          {
+            "name": "Get Url",
+            "failed": false
+          },
+          {
+            "name": "Get Element States",
+            "failed": false
+          },
+          {
+            "name": "Get Text",
+            "failed": false
+          },
+          {
+            "name": "Close Browser",
+            "failed": false
+          }
+        ],
+        "longname": "Web.Saucedemo.02 Cart.Cart - View Cart Page",
+        "status": "PASS",
+        "elapsed": 2446,
+        "message": ""
+      },
+      {
+        "name": "Checkout - Complete Purchase",
+        "steps": [
+          {
+            "name": "Open Checkout With Product",
+            "failed": false
+          },
+          {
+            "name": "Fill Checkout Information",
+            "failed": false
+          },
+          {
+            "name": "Get Element States",
+            "failed": false
+          },
+          {
+            "name": "Click",
+            "failed": false
+          },
+          {
+            "name": "Wait For Screen",
+            "failed": false
+          },
+          {
+            "name": "Get Text",
+            "failed": false
+          },
+          {
+            "name": "Close Browser",
+            "failed": false
+          }
+        ],
+        "longname": "Web.Saucedemo.03 Checkout.Checkout - Complete Purchase",
+        "status": "PASS",
+        "elapsed": 3465,
+        "message": ""
+      },
+      {
+        "name": "Checkout - Missing Information Error",
+        "steps": [
+          {
+            "name": "Open Checkout With Product",
+            "failed": false
+          },
+          {
+            "name": "Click",
+            "failed": false
+          },
+          {
+            "name": "Get Element States",
+            "failed": false
+          },
+          {
+            "name": "Get Text",
+            "failed": false
+          },
+          {
+            "name": "Close Browser",
+            "failed": false
+          }
+        ],
+        "longname": "Web.Saucedemo.03 Checkout.Checkout - Missing Information Error",
+        "status": "PASS",
+        "elapsed": 2879,
+        "message": ""
+      },
+      {
+        "name": "Checkout - Verify Order Summary",
+        "steps": [
+          {
+            "name": "Open Checkout With Product",
+            "failed": false
+          },
+          {
+            "name": "Fill Checkout Information",
+            "failed": false
+          },
+          {
+            "name": "Get Text",
+            "failed": false
+          },
+          {
+            "name": "Get Element States",
+            "failed": false
+          },
+          {
+            "name": "Get Element States",
+            "failed": false
+          },
+          {
+            "name": "Get Element States",
+            "failed": false
+          },
+          {
+            "name": "Close Browser",
+            "failed": false
+          }
+        ],
+        "longname": "Web.Saucedemo.03 Checkout.Checkout - Verify Order Summary",
+        "status": "PASS",
+        "elapsed": 3278,
+        "message": ""
       }
     ]
   }
